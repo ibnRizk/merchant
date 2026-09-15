@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../hours/presentation/pages/hours_screen.dart';
 import '../../../menu/presentation/pages/menu_screen.dart';
-import '../../../orders/presentation/pages/orders_screen.dart';
+import '../../../orders/presentation/pages/order_history_screen.dart';
 import '../../../profile/presentation/pages/profile_screen.dart';
 import '../widgets/app_bottom_nav_bar.dart';
 import 'home_screen.dart';
@@ -22,7 +22,7 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   static const List<Widget> _tabs = <Widget>[
     HomeScreen(),
-    OrdersScreen(),
+    OrderHistoryScreen(),
     MenuScreen(),
     HoursScreen(),
     ProfileScreen(),

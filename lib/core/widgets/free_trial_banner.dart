@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../utils/values/brand_colors.dart';
 
-/// Light green banner announcing the free onboarding phase.
+/// Light green banner announcing the free onboarding phase. Shared by the
+/// login screen and the merchant profile screen.
 class FreeTrialBanner extends StatelessWidget {
   const FreeTrialBanner({super.key, required this.text});
 

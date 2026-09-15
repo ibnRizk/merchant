@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../utils/values/brand_colors.dart';
 
-/// Small pill-shaped on/off switch used by [StoreStatusBar].
-class StoreToggle extends StatelessWidget {
-  const StoreToggle({super.key, required this.value, required this.onChanged});
+/// Small pill-shaped on/off switch shared across the app (store open/closed,
+/// per-day working hours, ...).
+class BrandToggle extends StatelessWidget {
+  const BrandToggle({super.key, required this.value, required this.onChanged});
 
   final bool value;
   final ValueChanged<bool> onChanged;

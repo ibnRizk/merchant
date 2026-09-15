@@ -15,4 +15,8 @@ abstract class BrandColors {
   static const Color border = Color(0xFFE2E5EA);
   static const Color hintGray = Color(0xFFAAB2BD);
   static const Color textGray = Color(0xFF9AA1AC);
+  static const Color noteText = Color(0xFFAD6B1D);
+
+  static const Color cancelledBg = Color(0xFFFBE7EA);
+  static const Color cancelledText = Color(0xFFD9455F);
 }

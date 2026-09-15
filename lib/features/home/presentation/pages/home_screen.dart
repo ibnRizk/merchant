@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../widgets/action_card.dart';
+import '../../../../config/routes/app_routes.dart';
+import '../../../../core/widgets/action_card.dart';
 import '../widgets/attention_section_header.dart';
 import '../widgets/home_header.dart';
 import '../widgets/stats_grid.dart';
@@ -56,14 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
               title: '5 طلبات جديدة',
               subtitle: 'بانتظار قبولك الآن',
               actionLabel: 'فتح الطلبات',
-              onTap: () {},
+              onTap: () => context.pushNamed(AppRoutes.newOrdersName),
             ),
             const SizedBox(height: 12),
             ActionCard(
               title: '7 طلبات قيد التجهيز',
               subtitle: 'أبلغ المندوب عند الجاهزية',
               actionLabel: 'عرض',
-              onTap: () {},
+              onTap: () => context.pushNamed(AppRoutes.activeOrdersName),
             ),
           ],
         ),

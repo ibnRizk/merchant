@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/brand_colors.dart';
-import 'store_toggle.dart';
+import '../../../../core/widgets/brand_toggle.dart';
 
-/// Green "store open/closed" bar with the [StoreToggle] switch.
+/// Green "store open/closed" bar with the [BrandToggle] switch.
 class StoreStatusBar extends StatelessWidget {
   const StoreStatusBar({
     super.key,
@@ -24,7 +24,7 @@ class StoreStatusBar extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          StoreToggle(value: isOpen, onChanged: onChanged),
+          BrandToggle(value: isOpen, onChanged: onChanged),
           const SizedBox(width: 12),
           const Expanded(
             child: Text(

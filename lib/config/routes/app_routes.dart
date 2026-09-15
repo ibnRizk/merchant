@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/widgets/slider_photo.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
+import '../../features/orders/presentation/pages/active_orders_screen.dart';
+import '../../features/orders/presentation/pages/orders_screen.dart';
 import '../../injection_container.dart';
 import 'navigator_observer.dart';
 
@@ -12,12 +14,16 @@ abstract class AppRoutes {
   static const String home = '/home';
   static const String changeLanguage = '/change-language';
   static const String photoViewer = '/photo-viewer';
+  static const String newOrders = '/orders/new';
+  static const String activeOrders = '/orders/active';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
   static const String homeName = 'home';
   static const String changeLanguageName = 'changeLanguage';
   static const String photoViewerName = 'photoViewer';
+  static const String newOrdersName = 'newOrders';
+  static const String activeOrdersName = 'activeOrders';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -39,6 +45,16 @@ abstract class AppRoutes {
       //   name: changeLanguageName,
       //   builder: (_, __) => const ChangeLanguage(),
       // ),
+      GoRoute(
+        path: newOrders,
+        name: newOrdersName,
+        builder: (_, __) => const OrdersScreen(),
+      ),
+      GoRoute(
+        path: activeOrders,
+        name: activeOrdersName,
+        builder: (_, __) => const ActiveOrdersScreen(),
+      ),
       GoRoute(
         path: photoViewer,
         name: photoViewerName,

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../utils/values/brand_colors.dart';
 
-/// White card in the "تحتاج انتباهك" list: title/subtitle on the right, a
-/// small peach action button on the left.
+/// White summary card: title/subtitle on the right, a small peach action
+/// button on the left. Shared by the home "تحتاج انتباهك" list and the
+/// orders tab's collapsed order rows.
 class ActionCard extends StatelessWidget {
   const ActionCard({
     super.key,

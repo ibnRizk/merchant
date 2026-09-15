@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../utils/values/brand_colors.dart';
 
-/// Full-width orange "تسجيل الدخول" call-to-action button.
-class LoginPrimaryButton extends StatelessWidget {
-  const LoginPrimaryButton({
-    super.key,
-    required this.label,
-    required this.onPressed,
-  });
+/// Full-width orange call-to-action button. Shared by the login screen's
+/// "تسجيل الدخول" and the active-order card's "جاهز للاستلام" action.
+class PrimaryButton extends StatelessWidget {
+  const PrimaryButton({super.key, required this.label, required this.onPressed});
 
   final String label;
   final VoidCallback onPressed;

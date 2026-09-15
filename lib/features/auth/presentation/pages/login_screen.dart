@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/brand_colors.dart';
-import '../widgets/free_trial_banner.dart';
+import '../../../../core/widgets/free_trial_banner.dart';
+import '../../../../core/widgets/primary_button.dart';
 import '../widgets/login_header_text.dart';
 import '../widgets/login_logo.dart';
 import '../widgets/login_method_switcher.dart';
-import '../widgets/login_primary_button.dart';
 import '../widgets/login_text_field.dart';
 
 /// Merchant login screen — composed from small widgets under
@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 28),
-                LoginPrimaryButton(label: 'تسجيل الدخول', onPressed: () {}),
+                PrimaryButton(label: 'تسجيل الدخول', onPressed: () {}),
                 const SizedBox(height: 16),
                 Center(
                   child: TextButton(

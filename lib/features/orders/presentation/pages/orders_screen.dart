@@ -1,15 +1,73 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/widgets/tab_placeholder.dart';
+import '../../../../core/widgets/action_card.dart';
+import '../../../../core/widgets/brand_back_button.dart';
+import '../widgets/new_order_detail_card.dart';
+import '../widgets/order_live_banner.dart';
+import '../widgets/orders_screen_header.dart';
 
+/// New-orders screen, reached by pushing `AppRoutes.newOrdersName` (e.g.
+/// from the home dashboard's "فتح الطلبات" action). Self-contained: owns
+/// its own [Scaffold] and RTL [Directionality] since it's no longer hosted
+/// inside [MainScaffold]'s tab bar.
 class OrdersScreen extends StatelessWidget {
   const OrdersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const TabPlaceholder(
-      icon: Icons.receipt_long_outlined,
-      title: 'الطلبات',
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        backgroundColor: const Color(0xFFF7F8FA),
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                const OrdersScreenHeader(
+                  title: 'الطلبات الجديدة',
+                  badgeText: '5 بانتظار',
+                  leading: BrandBackButton(),
+                ),
+                const SizedBox(height: 16),
+                const OrderLiveBanner(
+                  title: 'وصل مباشرة من تطبيق العميل',
+                  subtitle: 'الإدارة تراقب فقط وتتدخل عند الحاجة',
+                ),
+                const SizedBox(height: 16),
+                NewOrderDetailCard(
+                  orderId: 'SSM-1048#',
+                  meta: 'منذ 3 دقائق - توصيل حي السلام',
+                  price: '71 ر.س',
+                  items: const <OrderLineItem>[
+                    OrderLineItem(name: 'برجر SSM × 1', price: '56 ر.س'),
+                    OrderLineItem(name: 'بطاطس مقرمشة × 1', price: '8 ر.س'),
+                  ],
+                  noteLabel: 'ملاحظة العميل: ',
+                  noteText: 'بدون بصل، وتغليف منفصل للبطاطس.',
+                  onAccept: () {},
+                  onReject: () {},
+                ),
+                const SizedBox(height: 16),
+                ActionCard(
+                  title: 'SSM-1047#',
+                  subtitle: 'كافيه سحابة - 38 ر.س',
+                  actionLabel: 'عرض',
+                  onTap: () {},
+                ),
+                const SizedBox(height: 12),
+                ActionCard(
+                  title: 'SSM-1046#',
+                  subtitle: 'سوبرماركت الواحة - 112 ر.س',
+                  actionLabel: 'عرض',
+                  onTap: () {},
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
