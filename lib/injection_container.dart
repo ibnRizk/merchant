@@ -12,7 +12,6 @@ import 'core/services/local_storage/app_secure_storage.dart';
 import 'core/services/local_storage/app_shared_preferences.dart';
 import 'core/utils/values/app_colors.dart';
 import 'features/home/home_injection.dart';
-import 'features/language/language_injection.dart';
 
 /// Composition root.
 ///
@@ -36,16 +35,19 @@ abstract class ServiceLocator {
     _injectDioConsumer();
     injectAppColors(AppColors.light);
     injectRoutesStackSingleton(<String>[]);
-    instance.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
+    instance.registerLazySingleton<ThemeCubit>(
+      () => ThemeCubit(),
+    );
 
     // --- Features ---
-    await initLanguageFeatureInjection();
+    // await initLanguageFeatureInjection();
     await initHomeFeatureInjection();
     // Register new features here.
   }
 
   static Future<void> _injectSharedPreferences() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final SharedPreferences prefs =
+        await SharedPreferences.getInstance();
     instance.registerLazySingleton<AppSharedPreferences>(
       () => AppSharedPreferencesImpl(instance: prefs),
     );
@@ -55,22 +57,27 @@ abstract class ServiceLocator {
     const AndroidOptions androidOptions = AndroidOptions(
       encryptedSharedPreferences: true,
     );
-    const FlutterSecureStorage storage = FlutterSecureStorage(
-      aOptions: androidOptions,
-    );
+    const FlutterSecureStorage storage =
+        FlutterSecureStorage(aOptions: androidOptions);
     instance.registerLazySingleton<AppSecureStorage>(
       () => AppSecureStorageImpl(instance: storage),
     );
   }
 
-  static void _injectDioConsumer() => instance
-      .registerLazySingleton<DioConsumer>(() => DioConsumerImpl(client: Dio()));
+  static void _injectDioConsumer() =>
+      instance.registerLazySingleton<DioConsumer>(
+        () => DioConsumerImpl(client: Dio()),
+      );
 
   static void _injectEventBus() =>
-      instance.registerLazySingleton<AuthEventBus>(() => AuthEventBus.instance);
+      instance.registerLazySingleton<AuthEventBus>(
+        () => AuthEventBus.instance,
+      );
 
   static void _injectAppInterceptors() =>
-      instance.registerLazySingleton<AppInterceptors>(() => AppInterceptors());
+      instance.registerLazySingleton<AppInterceptors>(
+        () => AppInterceptors(),
+      );
 
   static void _injectLogInterceptor() =>
       instance.registerLazySingleton<LogInterceptor>(
@@ -92,14 +99,18 @@ abstract class ServiceLocator {
 
   /// Called from `AppLocalizationsDelegate.load` so the `'key'.tr` extension
   /// works without a BuildContext.
-  static void injectAppLocalizations(AppLocalizations appLocalizations) =>
-      instance.registerSingleton<AppLocalizations>(appLocalizations);
+  static void injectAppLocalizations(
+    AppLocalizations appLocalizations,
+  ) => instance.registerSingleton<AppLocalizations>(
+    appLocalizations,
+  );
 
-  static void injectRoutesStackSingleton(List<String> routes) =>
-      instance.registerLazySingleton<List<String>>(
-        () => routes,
-        instanceName: 'routesStack',
-      );
+  static void injectRoutesStackSingleton(
+    List<String> routes,
+  ) => instance.registerLazySingleton<List<String>>(
+    () => routes,
+    instanceName: 'routesStack',
+  );
 }
 
 // --- Global accessors ---------------------------------------------------
@@ -110,19 +121,25 @@ AppSharedPreferences get sharedPreferences =>
 AppSecureStorage get secureStorage =>
     ServiceLocator.instance<AppSecureStorage>();
 
-DioConsumer get dioConsumer => ServiceLocator.instance<DioConsumer>();
+DioConsumer get dioConsumer =>
+    ServiceLocator.instance<DioConsumer>();
 
-AuthEventBus get eventBus => ServiceLocator.instance<AuthEventBus>();
+AuthEventBus get eventBus =>
+    ServiceLocator.instance<AuthEventBus>();
 
 AppInterceptors get appInterceptors =>
     ServiceLocator.instance<AppInterceptors>();
 
-LogInterceptor get logInterceptor => ServiceLocator.instance<LogInterceptor>();
+LogInterceptor get logInterceptor =>
+    ServiceLocator.instance<LogInterceptor>();
 
-AppColors get colors => ServiceLocator.instance<AppColors>();
+AppColors get colors =>
+    ServiceLocator.instance<AppColors>();
 
 AppLocalizations get appLocalizations =>
     ServiceLocator.instance<AppLocalizations>();
 
 List<String> get routesStack =>
-    ServiceLocator.instance<List<String>>(instanceName: 'routesStack');
+    ServiceLocator.instance<List<String>>(
+      instanceName: 'routesStack',
+    );

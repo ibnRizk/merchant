@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -9,9 +10,11 @@ import '../../core/utils/values/fonts.dart';
 /// These are getters, not constants: they use ScreenUtil (`.w/.h/.sp/.r`), so
 /// they must be evaluated *inside* the `ScreenUtilInit` builder — which is
 /// where `app.dart` reads them.
-ThemeData get lightTheme => _buildTheme(AppColors.light, Brightness.light);
+ThemeData get lightTheme =>
+    _buildTheme(AppColors.light, Brightness.light);
 
-ThemeData get darkTheme => _buildTheme(AppColors.dark, Brightness.dark);
+ThemeData get darkTheme =>
+    _buildTheme(AppColors.dark, Brightness.dark);
 
 ThemeData _buildTheme(AppColors c, Brightness brightness) {
   final bool isDark = brightness == Brightness.dark;
@@ -27,7 +30,9 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
       primary: c.primary,
       onPrimary: Colors.white,
       primaryContainer: c.primaryLight,
-      onPrimaryContainer: isDark ? Colors.white : c.primaryDark,
+      onPrimaryContainer: isDark
+          ? Colors.white
+          : c.primaryDark,
       secondary: c.secondary,
       onSecondary: Colors.white,
       surface: c.surface,
@@ -40,8 +45,14 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
     ),
 
     scaffoldBackgroundColor: c.background,
-    dividerTheme: DividerThemeData(thickness: 1, space: 1, color: c.border),
-    progressIndicatorTheme: ProgressIndicatorThemeData(color: c.primary),
+    dividerTheme: DividerThemeData(
+      thickness: 1,
+      space: 1,
+      color: c.border,
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: c.primary,
+    ),
 
     appBarTheme: AppBarTheme(
       elevation: 0,
@@ -51,8 +62,14 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
       foregroundColor: c.textPrimary,
       surfaceTintColor: Colors.transparent,
       toolbarHeight: 64.h,
-      iconTheme: IconThemeData(color: c.textPrimary, size: 24.r),
-      actionsIconTheme: IconThemeData(color: c.textPrimary, size: 24.r),
+      iconTheme: IconThemeData(
+        color: c.textPrimary,
+        size: 24.r,
+      ),
+      actionsIconTheme: IconThemeData(
+        color: c.textPrimary,
+        size: 24.r,
+      ),
       titleTextStyle: TextStyle(
         fontFamily: Fonts.primary,
         fontSize: 18.sp,
@@ -65,14 +82,18 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
       backgroundColor: c.surface,
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.r),
+        ),
       ),
     ),
 
     dialogTheme: DialogThemeData(
       backgroundColor: c.surface,
       surfaceTintColor: Colors.transparent,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.r)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.r),
+      ),
     ),
 
     cardTheme: CardThemeData(
@@ -89,13 +110,23 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: c.surface,
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
-      hintStyle: TextStyle(color: c.textSecondary, fontSize: 14.sp),
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: 16.w,
+        vertical: 14.h,
+      ),
+      hintStyle: TextStyle(
+        color: c.textSecondary,
+        fontSize: 14.sp,
+      ),
       border: _border(c.border, 12.r),
       enabledBorder: _border(c.border, 12.r),
       focusedBorder: _border(c.primary, 12.r, width: 1.5),
       errorBorder: _border(c.error, 12.r),
-      focusedErrorBorder: _border(c.error, 12.r, width: 1.5),
+      focusedErrorBorder: _border(
+        c.error,
+        12.r,
+        width: 1.5,
+      ),
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(
@@ -108,7 +139,10 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+        textStyle: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     ),
 
@@ -120,7 +154,10 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        textStyle: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
+        textStyle: TextStyle(
+          fontSize: 16.sp,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     ),
 
@@ -136,8 +173,12 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
     ),
 
     checkboxTheme: CheckboxThemeData(
-      checkColor: WidgetStateProperty.all<Color>(Colors.white),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.r)),
+      checkColor: WidgetStateProperty.all<Color>(
+        Colors.white,
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4.r),
+      ),
     ),
 
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
@@ -152,15 +193,20 @@ ThemeData _buildTheme(AppColors c, Brightness brightness) {
 
     pageTransitionsTheme: const PageTransitionsTheme(
       builders: <TargetPlatform, PageTransitionsBuilder>{
-        TargetPlatform.android: ZoomPageTransitionsBuilder(),
-        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.android:
+            ZoomPageTransitionsBuilder(),
+        TargetPlatform.iOS:
+            CupertinoPageTransitionsBuilder(),
       },
     ),
   );
 }
 
-OutlineInputBorder _border(Color color, double radius, {double width = 1}) =>
-    OutlineInputBorder(
-      borderRadius: BorderRadius.circular(radius),
-      borderSide: BorderSide(color: color, width: width),
-    );
+OutlineInputBorder _border(
+  Color color,
+  double radius, {
+  double width = 1,
+}) => OutlineInputBorder(
+  borderRadius: BorderRadius.circular(radius),
+  borderSide: BorderSide(color: color, width: width),
+);
