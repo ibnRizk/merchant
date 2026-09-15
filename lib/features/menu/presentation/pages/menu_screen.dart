@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../core/widgets/app_search_field.dart';
 import '../../../../core/widgets/tip_banner.dart';
 import '../widgets/menu_screen_header.dart';
@@ -67,7 +69,7 @@ class _MenuScreenState extends State<MenuScreen> {
             MenuScreenHeader(
               title: 'إدارة المنيو',
               addLabel: 'منتج',
-              onAddTap: () {},
+              onAddTap: () => context.pushNamed(AppRoutes.addProductName),
             ),
             const SizedBox(height: 16),
             AppSearchField(

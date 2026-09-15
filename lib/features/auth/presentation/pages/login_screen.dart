@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/brand_colors.dart';
 import '../../../../core/widgets/free_trial_banner.dart';
 import '../../../../core/widgets/primary_button.dart';
@@ -91,7 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 16),
                 Center(
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () =>
+                        context.pushNamed(AppRoutes.forgotPasswordName),
                     style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     child: const Text(
                       'نسيت كلمة المرور؟',

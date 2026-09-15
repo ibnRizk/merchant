@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/widgets/slider_photo.dart';
+import '../../features/auth/presentation/pages/forgot_password_screen.dart';
+import '../../features/auth/presentation/pages/otp_screen.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
+import '../../features/menu/presentation/pages/add_product_screen.dart';
 import '../../features/orders/presentation/pages/active_orders_screen.dart';
 import '../../features/orders/presentation/pages/orders_screen.dart';
 import '../../injection_container.dart';
@@ -16,6 +19,9 @@ abstract class AppRoutes {
   static const String photoViewer = '/photo-viewer';
   static const String newOrders = '/orders/new';
   static const String activeOrders = '/orders/active';
+  static const String forgotPassword = '/forgot-password';
+  static const String otp = '/forgot-password/otp';
+  static const String addProduct = '/menu/add-product';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -24,6 +30,9 @@ abstract class AppRoutes {
   static const String photoViewerName = 'photoViewer';
   static const String newOrdersName = 'newOrders';
   static const String activeOrdersName = 'activeOrders';
+  static const String forgotPasswordName = 'forgotPassword';
+  static const String otpName = 'otp';
+  static const String addProductName = 'addProduct';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -54,6 +63,21 @@ abstract class AppRoutes {
         path: activeOrders,
         name: activeOrdersName,
         builder: (_, __) => const ActiveOrdersScreen(),
+      ),
+      GoRoute(
+        path: forgotPassword,
+        name: forgotPasswordName,
+        builder: (_, __) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: otp,
+        name: otpName,
+        builder: (_, __) => const OtpScreen(),
+      ),
+      GoRoute(
+        path: addProduct,
+        name: addProductName,
+        builder: (_, __) => const AddProductScreen(),
       ),
       GoRoute(
         path: photoViewer,

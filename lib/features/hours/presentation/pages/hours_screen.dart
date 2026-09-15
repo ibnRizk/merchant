@@ -71,14 +71,14 @@ class _HoursScreenState extends State<HoursScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            HoursScreenHeader(
+            TitleActionHeader(
               title: 'ساعات العمل',
-              saveLabel: 'حفظ',
-              onSaveTap: () {},
+              actionLabel: 'حفظ',
+              onActionTap: () {},
             ),
             const SizedBox(height: 16),
             const TipBanner(
-              boldPrefix: 'التوقيت المحلي: محافظة جدة',
+              boldPrefix: 'التوقيت المحلي: محافظة نبرة',
               text: ' - يمكنك تغيير ساعات كل يوم.',
             ),
             const SizedBox(height: 16),

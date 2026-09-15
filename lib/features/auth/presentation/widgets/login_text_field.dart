@@ -13,6 +13,7 @@ class LoginTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.suffixIcon,
+    this.validator,
   });
 
   final String label;
@@ -21,6 +22,7 @@ class LoginTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool obscureText;
   final Widget? suffixIcon;
+  final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +39,11 @@ class LoginTextField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        TextField(
+        TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           obscureText: obscureText,
+          validator: validator,
           textAlign: TextAlign.right,
           style: const TextStyle(
             fontFamily: 'Cairo',
@@ -53,6 +56,11 @@ class LoginTextField extends StatelessWidget {
               fontFamily: 'Cairo',
               fontSize: 14,
               color: BrandColors.hintGray,
+            ),
+            errorStyle: const TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 12,
+              color: BrandColors.cancelledText,
             ),
             filled: true,
             fillColor: Colors.white,
@@ -72,6 +80,14 @@ class LoginTextField extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: BrandColors.navy, width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: BrandColors.cancelledText),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: BrandColors.cancelledText, width: 1.5),
             ),
           ),
         ),
