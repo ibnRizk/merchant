@@ -1,72 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 
-import '../../../../config/routes/app_routes.dart';
-import '../../../../config/themes/theme_cubit.dart';
-import '../../../../core/utils/enums.dart';
-import '../../../../core/utils/values/app_colors.dart';
-import '../../../../core/utils/values/strings.dart';
-import '../../../../core/widgets/app_button.dart';
+import '../widgets/action_card.dart';
+import '../widgets/attention_section_header.dart';
+import '../widgets/home_header.dart';
+import '../widgets/stats_grid.dart';
+import '../widgets/store_status_bar.dart';
 
-/// Placeholder landing screen. It exists to prove routing, theming, i18n and
-/// the shared widgets are wired — delete it when you build the real one.
-class HomeScreen extends StatelessWidget {
+/// Merchant home dashboard — composed from small widgets under
+/// `presentation/widgets/`. Rendered as the body of [MainScaffold]'s
+/// "الرئيسية" tab.
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final Themes theme = context.watch<ThemeCubit>().state;
+  State<HomeScreen> createState() => _HomeScreenState();
+}
 
-    return Scaffold(
-      appBar: AppBar(title: Text(Strings.appName)),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
+class _HomeScreenState extends State<HomeScreen> {
+  bool _isStoreOpen = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      bottom: false,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Icon(
-              Icons.rocket_launch_outlined,
-              size: 64.r,
-              color: context.colors.primary,
+            const HomeHeader(
+              greeting: 'صباح الخير',
+              storeName: 'مطاعم مذاق',
+              avatarLetter: 'م',
             ),
-            SizedBox(height: 16.h),
-            Text(
-              'Base architecture is running.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
-                color: context.colors.textPrimary,
-              ),
+            const SizedBox(height: 20),
+            StoreStatusBar(
+              isOpen: _isStoreOpen,
+              onChanged: (bool value) => setState(() => _isStoreOpen = value),
             ),
-            SizedBox(height: 8.h),
-            Text(
-              'Replace this screen with your first feature.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: context.colors.textSecondary,
-              ),
+            const SizedBox(height: 20),
+            const StatsGrid(
+              ordersToday: '24',
+              newOrders: '5',
+              revenueToday: '1,280',
+              preparingOrders: '7',
             ),
-            SizedBox(height: 32.h),
-            AppButton(
-              btnText: Strings.language,
-              onPressed: () => context.pushNamed(AppRoutes.changeLanguageName),
+            const SizedBox(height: 28),
+            AttentionSectionHeader(
+              title: 'تحتاج انتباهك',
+              actionLabel: 'عرض الكل',
+              onActionTap: () {},
             ),
-            SizedBox(height: 12.h),
-            OutlinedButton.icon(
-              onPressed: () => context.read<ThemeCubit>().toggle(),
-              icon: Icon(
-                theme == Themes.dark
-                    ? Icons.light_mode_outlined
-                    : Icons.dark_mode_outlined,
-              ),
-              label: Text(
-                theme == Themes.dark ? Strings.lightMode : Strings.darkMode,
-              ),
+            const SizedBox(height: 12),
+            ActionCard(
+              title: '5 طلبات جديدة',
+              subtitle: 'بانتظار قبولك الآن',
+              actionLabel: 'فتح الطلبات',
+              onTap: () {},
+            ),
+            const SizedBox(height: 12),
+            ActionCard(
+              title: '7 طلبات قيد التجهيز',
+              subtitle: 'أبلغ المندوب عند الجاهزية',
+              actionLabel: 'عرض',
+              onTap: () {},
             ),
           ],
         ),

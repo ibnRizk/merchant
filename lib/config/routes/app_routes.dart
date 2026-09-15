@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/widgets/slider_photo.dart';
-import '../../features/home/presentation/pages/home_screen.dart';
+import '../../features/home/presentation/pages/main_scaffold.dart';
 import '../../injection_container.dart';
 import 'navigator_observer.dart';
 
@@ -32,7 +32,7 @@ abstract class AppRoutes {
       GoRoute(
         path: home,
         name: homeName,
-        builder: (_, __) => const HomeScreen(),
+        builder: (_, __) => const MainScaffold(),
       ),
       // GoRoute(
       //   path: changeLanguage,
