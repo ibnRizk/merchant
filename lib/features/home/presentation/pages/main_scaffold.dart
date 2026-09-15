@@ -29,11 +29,31 @@ class _MainScaffoldState extends State<MainScaffold> {
   ];
 
   static const List<NavItemData> _items = <NavItemData>[
-    NavItemData(icon: Icons.home_outlined, activeIcon: Icons.home, label: 'الرئيسية'),
-    NavItemData(icon: Icons.receipt_long_outlined, activeIcon: Icons.receipt_long, label: 'الطلبات'),
-    NavItemData(icon: Icons.menu_book_outlined, activeIcon: Icons.menu_book, label: 'المنيو'),
-    NavItemData(icon: Icons.access_time_outlined, activeIcon: Icons.access_time, label: 'الساعات'),
-    NavItemData(icon: Icons.person_outline, activeIcon: Icons.person, label: 'حسابي'),
+    NavItemData(
+      icon: Icons.home_outlined,
+      activeIcon: Icons.home,
+      label: 'الرئيسية',
+    ),
+    NavItemData(
+      icon: Icons.receipt_long_outlined,
+      activeIcon: Icons.receipt_long,
+      label: 'الطلبات',
+    ),
+    NavItemData(
+      icon: Icons.menu_book_outlined,
+      activeIcon: Icons.menu_book,
+      label: 'المنيو',
+    ),
+    NavItemData(
+      icon: Icons.access_time_outlined,
+      activeIcon: Icons.access_time,
+      label: 'الساعات',
+    ),
+    NavItemData(
+      icon: Icons.person_outline,
+      activeIcon: Icons.person,
+      label: 'حسابي',
+    ),
   ];
 
   @override

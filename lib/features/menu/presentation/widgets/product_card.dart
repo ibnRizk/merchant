@@ -10,6 +10,7 @@ class ProductEntry {
     required this.price,
     required this.isAvailable,
     required this.statusLabel,
+    this.addOns = const <String>[],
   });
 
   final String name;
@@ -17,6 +18,7 @@ class ProductEntry {
   final String price;
   final bool isAvailable;
   final String statusLabel;
+  final List<String> addOns;
 }
 
 /// One row in the menu list: name/add-ons/edit link on the right, price +

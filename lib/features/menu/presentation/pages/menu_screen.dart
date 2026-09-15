@@ -3,9 +3,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/widgets/app_search_field.dart';
+import '../../../../core/widgets/brand_snack_bar.dart';
+import '../../../../core/widgets/show_modal_bottom_sheet.dart';
 import '../../../../core/widgets/tip_banner.dart';
 import '../widgets/menu_screen_header.dart';
 import '../widgets/product_card.dart';
+import '../widgets/product_options_sheet.dart';
 
 /// Menu management tab body — composed from small widgets under
 /// `presentation/widgets/`. Rendered inside [MainScaffold]; the bottom nav
@@ -25,6 +28,7 @@ class _MenuScreenState extends State<MenuScreen> {
       price: '28 ر.س',
       isAvailable: true,
       statusLabel: 'متوفر',
+      addOns: <String>['جبنة', 'صوص'],
     ),
     ProductEntry(
       name: 'بطاطس مقرمشة',
@@ -32,6 +36,7 @@ class _MenuScreenState extends State<MenuScreen> {
       price: '8 ر.س',
       isAvailable: true,
       statusLabel: 'متوفر',
+      addOns: <String>['حار', 'جبنة'],
     ),
     ProductEntry(
       name: 'مشروب غازي',
@@ -39,6 +44,7 @@ class _MenuScreenState extends State<MenuScreen> {
       price: '5 ر.س',
       isAvailable: false,
       statusLabel: 'غير متوفر',
+      addOns: <String>['صغير', 'كبير'],
     ),
     ProductEntry(
       name: 'وجبة عائلية',
@@ -55,6 +61,25 @@ class _MenuScreenState extends State<MenuScreen> {
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _showProductOptions(
+    BuildContext context,
+    ProductEntry entry,
+  ) async {
+    await showAppModalBottomSheet(
+      context: context,
+      child: ProductOptionsSheet(
+        onEdit: () {
+          Navigator.of(context).pop();
+          context.pushNamed(AppRoutes.addProductName, extra: entry);
+        },
+        onDelete: () {
+          Navigator.of(context).pop();
+          showBrandSnackBar(context, 'تم حذف ${entry.name}', isError: true);
+        },
+      ),
+    );
   }
 
   @override
@@ -78,12 +103,18 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
             const SizedBox(height: 16),
             for (final ProductEntry entry in _products) ...<Widget>[
-              ProductCard(entry: entry, onEdit: () {}, onMoreTap: () {}),
+              ProductCard(
+                entry: entry,
+                onEdit: () =>
+                    context.pushNamed(AppRoutes.addProductName, extra: entry),
+                onMoreTap: () => _showProductOptions(context, entry),
+              ),
               const SizedBox(height: 12),
             ],
             const TipBanner(
               boldPrefix: 'نصيحة: ',
-              text: 'أوقف المنتج مؤقتاً عندما لا يكون متوفراً حتى لا يستلمه العملاء بالخطأ.',
+              text:
+                  'أوقف المنتج مؤقتاً عندما لا يكون متوفراً حتى لا يستلمه العملاء بالخطأ.',
             ),
           ],
         ),

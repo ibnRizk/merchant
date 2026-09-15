@@ -3,9 +3,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/widgets/slider_photo.dart';
 import '../../features/auth/presentation/pages/forgot_password_screen.dart';
+import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/otp_screen.dart';
+import '../../features/auth/presentation/pages/reset_password_screen.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
 import '../../features/menu/presentation/pages/add_product_screen.dart';
+import '../../features/menu/presentation/widgets/product_card.dart'
+    show ProductEntry;
 import '../../features/orders/presentation/pages/active_orders_screen.dart';
 import '../../features/orders/presentation/pages/orders_screen.dart';
 import '../../injection_container.dart';
@@ -21,6 +25,7 @@ abstract class AppRoutes {
   static const String activeOrders = '/orders/active';
   static const String forgotPassword = '/forgot-password';
   static const String otp = '/forgot-password/otp';
+  static const String resetPassword = '/forgot-password/otp/reset';
   static const String addProduct = '/menu/add-product';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
@@ -32,6 +37,7 @@ abstract class AppRoutes {
   static const String activeOrdersName = 'activeOrders';
   static const String forgotPasswordName = 'forgotPassword';
   static const String otpName = 'otp';
+  static const String resetPasswordName = 'resetPassword';
   static const String addProductName = 'addProduct';
 
   static final GoRouter router = GoRouter(
@@ -39,11 +45,11 @@ abstract class AppRoutes {
     observers: <NavigatorObserver>[AppNavigatorObserver()],
     debugLogDiagnostics: true,
     routes: <RouteBase>[
-      // GoRoute(
-      //   path: splash,
-      //   name: splashName,
-      //   builder: (_, __) => const SplashScreen(),
-      // ),
+      GoRoute(
+        path: splash,
+        name: splashName,
+        builder: (_, __) => const LoginScreen(),
+      ),
       GoRoute(
         path: home,
         name: homeName,
@@ -69,23 +75,24 @@ abstract class AppRoutes {
         name: forgotPasswordName,
         builder: (_, __) => const ForgotPasswordScreen(),
       ),
+      GoRoute(path: otp, name: otpName, builder: (_, __) => const OtpScreen()),
       GoRoute(
-        path: otp,
-        name: otpName,
-        builder: (_, __) => const OtpScreen(),
+        path: resetPassword,
+        name: resetPasswordName,
+        builder: (_, __) => const ResetPasswordScreen(),
       ),
       GoRoute(
         path: addProduct,
         name: addProductName,
-        builder: (_, __) => const AddProductScreen(),
+        builder: (_, GoRouterState state) =>
+            AddProductScreen(existingProduct: state.extra as ProductEntry?),
       ),
       GoRoute(
         path: photoViewer,
         name: photoViewerName,
         builder: (_, GoRouterState state) {
           final Map<String, dynamic> args =
-              (state.extra as Map<String, dynamic>?) ??
-              <String, dynamic>{};
+              (state.extra as Map<String, dynamic>?) ?? <String, dynamic>{};
           return SliderPhotoScreen(
             imagesFiles: args['imagesFiles'],
             images: args['images'],
@@ -95,18 +102,14 @@ abstract class AppRoutes {
         },
       ),
     ],
-    errorBuilder: (_, GoRouterState state) => Scaffold(
-      body: Center(
-        child: Text('No route found for ${state.uri}'),
-      ),
-    ),
+    errorBuilder: (_, GoRouterState state) =>
+        Scaffold(body: Center(child: Text('No route found for ${state.uri}'))),
   );
 
   static String get currentRoute =>
       routesStack.isEmpty ? splash : routesStack.last;
 
-  static void pushRouteToRoutesStack(String route) =>
-      routesStack.add(route);
+  static void pushRouteToRoutesStack(String route) => routesStack.add(route);
 
   static void popRouteFromRoutesStack() {
     if (routesStack.isNotEmpty) routesStack.removeLast();

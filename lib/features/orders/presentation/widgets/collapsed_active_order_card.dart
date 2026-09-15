@@ -11,61 +11,70 @@ class CollapsedActiveOrderCard extends StatelessWidget {
     required this.orderId,
     required this.statusLabel,
     required this.subtitle,
+    this.onTap,
   });
 
   final String orderId;
   final String statusLabel;
   final String subtitle;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFEFF1F4)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Row(
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: const Color(0xFFEFF1F4)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Expanded(
-                child: Text(
-                  orderId,
-                  textAlign: TextAlign.right,
-                  style: const TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 15.5,
-                    fontWeight: FontWeight.w800,
-                    color: BrandColors.navy,
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Text(
+                      orderId,
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 15.5,
+                        fontWeight: FontWeight.w800,
+                        color: BrandColors.navy,
+                      ),
+                    ),
                   ),
-                ),
+                  Text(
+                    statusLabel,
+                    style: const TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w700,
+                      color: BrandColors.navy,
+                    ),
+                  ),
+                ],
               ),
+              const SizedBox(height: 6),
               Text(
-                statusLabel,
+                subtitle,
+                textAlign: TextAlign.right,
                 style: const TextStyle(
                   fontFamily: 'Cairo',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700,
-                  color: BrandColors.navy,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w400,
+                  color: BrandColors.textGray,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 6),
-          Text(
-            subtitle,
-            textAlign: TextAlign.right,
-            style: const TextStyle(
-              fontFamily: 'Cairo',
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: BrandColors.textGray,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

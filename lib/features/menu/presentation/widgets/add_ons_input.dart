@@ -86,7 +86,10 @@ class _AddOnsInputState extends State<AddOnsInput> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: BrandColors.navy, width: 1.5),
+                    borderSide: const BorderSide(
+                      color: BrandColors.navy,
+                      width: 1.5,
+                    ),
                   ),
                 ),
               ),

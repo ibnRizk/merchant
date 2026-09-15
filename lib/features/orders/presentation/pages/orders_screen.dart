@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../core/widgets/action_card.dart';
 import '../../../../core/widgets/brand_back_button.dart';
+import '../../../../core/widgets/brand_snack_bar.dart';
 import '../widgets/new_order_detail_card.dart';
 import '../widgets/order_live_banner.dart';
 import '../widgets/orders_screen_header.dart';
@@ -46,22 +49,42 @@ class OrdersScreen extends StatelessWidget {
                   ],
                   noteLabel: 'ملاحظة العميل: ',
                   noteText: 'بدون بصل، وتغليف منفصل للبطاطس.',
-                  onAccept: () {},
-                  onReject: () {},
+                  onAccept: () {
+                    showBrandSnackBar(context, 'تم قبول الطلب SSM-1048#');
+                    context.pushNamed(AppRoutes.activeOrdersName);
+                  },
+                  onReject: () {
+                    showBrandSnackBar(
+                      context,
+                      'تم رفض الطلب SSM-1048#',
+                      isError: true,
+                    );
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.go(AppRoutes.home);
+                    }
+                  },
                 ),
                 const SizedBox(height: 16),
                 ActionCard(
                   title: 'SSM-1047#',
                   subtitle: 'كافيه سحابة - 38 ر.س',
                   actionLabel: 'عرض',
-                  onTap: () {},
+                  onTap: () => showBrandSnackBar(
+                    context,
+                    'تفاصيل الطلب SSM-1047# ستتوفر قريباً',
+                  ),
                 ),
                 const SizedBox(height: 12),
                 ActionCard(
                   title: 'SSM-1046#',
                   subtitle: 'سوبرماركت الواحة - 112 ر.س',
                   actionLabel: 'عرض',
-                  onTap: () {},
+                  onTap: () => showBrandSnackBar(
+                    context,
+                    'تفاصيل الطلب SSM-1046# ستتوفر قريباً',
+                  ),
                 ),
               ],
             ),

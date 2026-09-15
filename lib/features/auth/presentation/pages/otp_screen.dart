@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/brand_colors.dart';
 import '../../../../core/widgets/brand_back_button.dart';
+import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../widgets/otp_input_row.dart';
 import '../widgets/resend_code_timer.dart';
@@ -22,8 +25,11 @@ class _OtpScreenState extends State<OtpScreen> {
   String _code = '';
 
   void _submit() {
-    if (_code.length != _codeLength) return;
-    // TODO: verify code.
+    if (_code.length != _codeLength) {
+      showBrandSnackBar(context, 'الرجاء إدخال الرمز كاملاً', isError: true);
+      return;
+    }
+    context.pushNamed(AppRoutes.resetPasswordName);
   }
 
   @override
@@ -77,7 +83,10 @@ class _OtpScreenState extends State<OtpScreen> {
                   onCompleted: (String value) => _code = value,
                 ),
                 const SizedBox(height: 20),
-                ResendCodeTimer(onResend: () {}),
+                ResendCodeTimer(
+                  onResend: () =>
+                      showBrandSnackBar(context, 'تم إرسال الرمز مرة أخرى'),
+                ),
                 const SizedBox(height: 32),
                 PrimaryButton(label: 'تأكيد', onPressed: _submit),
               ],

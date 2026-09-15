@@ -22,10 +22,11 @@ class OtpInputRow extends StatefulWidget {
 }
 
 class _OtpInputRowState extends State<OtpInputRow> {
-  late final List<TextEditingController> _controllers = List<TextEditingController>.generate(
-    widget.length,
-    (_) => TextEditingController(),
-  );
+  late final List<TextEditingController> _controllers =
+      List<TextEditingController>.generate(
+        widget.length,
+        (_) => TextEditingController(),
+      );
   late final List<FocusNode> _focusNodes = List<FocusNode>.generate(
     widget.length,
     (_) => FocusNode(),
@@ -49,7 +50,9 @@ class _OtpInputRowState extends State<OtpInputRow> {
       _focusNodes[index].unfocus();
     }
 
-    final String code = _controllers.map((TextEditingController c) => c.text).join();
+    final String code = _controllers
+        .map((TextEditingController c) => c.text)
+        .join();
     widget.onChanged(code);
     if (code.length == widget.length) {
       widget.onCompleted(code);
@@ -63,7 +66,9 @@ class _OtpInputRowState extends State<OtpInputRow> {
         index > 0) {
       _focusNodes[index - 1].requestFocus();
       _controllers[index - 1].clear();
-      widget.onChanged(_controllers.map((TextEditingController c) => c.text).join());
+      widget.onChanged(
+        _controllers.map((TextEditingController c) => c.text).join(),
+      );
       return KeyEventResult.handled;
     }
     return KeyEventResult.ignored;
@@ -110,7 +115,10 @@ class _OtpInputRowState extends State<OtpInputRow> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: BrandColors.navy, width: 1.5),
+                    borderSide: const BorderSide(
+                      color: BrandColors.navy,
+                      width: 1.5,
+                    ),
                   ),
                 ),
                 onChanged: (String value) => _handleChanged(i, value),

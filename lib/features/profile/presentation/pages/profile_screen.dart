@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/brand_colors.dart';
 import '../../../../core/widgets/app_form_field.dart';
+import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/free_trial_banner.dart';
 import '../../../../core/widgets/title_action_header.dart';
 import '../widgets/profile_address_field.dart';
@@ -19,15 +20,22 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  static const List<String> _categories = <String>['مطاعم', 'مقاهي', 'حلويات', 'بقالة'];
+  static const List<String> _categories = <String>[
+    'مطاعم',
+    'مقاهي',
+    'حلويات',
+    'بقالة',
+  ];
 
-  final TextEditingController _nameController =
-      TextEditingController(text: 'مطاعم مذاق');
+  final TextEditingController _nameController = TextEditingController(
+    text: 'مطاعم مذاق',
+  );
   final TextEditingController _descriptionController = TextEditingController(
     text: 'وجبات برجر طازجة، بطاطس مقرمشة ومشروبات تناسب كل أفراد العائلة.',
   );
-  final TextEditingController _contactController =
-      TextEditingController(text: '05X XXX XXXX');
+  final TextEditingController _contactController = TextEditingController(
+    text: '05X XXX XXXX',
+  );
 
   String _category = 'مطاعم';
   final String _address = 'حي الملك فهد - محافظة نبرة';
@@ -52,7 +60,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TitleActionHeader(
               title: 'الملف الشخصي',
               actionLabel: 'حفظ',
-              onActionTap: () {},
+              onActionTap: () =>
+                  showBrandSnackBar(context, 'تم حفظ التغييرات بنجاح'),
             ),
             const SizedBox(height: 20),
             const ProfileAvatarBlock(
@@ -87,9 +96,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ProfileAddressField(
               label: 'العنوان',
               address: _address,
-              onTap: () {
-                // TODO: launch map picker screen.
-              },
+              onTap: () => showBrandSnackBar(
+                context,
+                'اختيار الموقع على الخريطة قريباً',
+              ),
             ),
             const SizedBox(height: 20),
             const FreeTrialBanner(

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/brand_colors.dart';
 import '../../../../core/widgets/brand_back_button.dart';
+import '../../../../core/widgets/brand_snack_bar.dart';
 import '../widgets/active_order_detail_card.dart';
 import '../widgets/collapsed_active_order_card.dart';
 import '../widgets/new_order_detail_card.dart' show OrderLineItem;
@@ -40,21 +43,38 @@ class ActiveOrdersScreen extends StatelessWidget {
                   steps: const <ProgressStep>[
                     ProgressStep(label: 'مقبول', color: BrandColors.orange),
                     ProgressStep(label: 'قيد التجهيز', color: BrandColors.navy),
-                    ProgressStep(label: 'جاهز للاستلام', color: Color(0xFFD8DCE2)),
+                    ProgressStep(
+                      label: 'جاهز للاستلام',
+                      color: Color(0xFFD8DCE2),
+                    ),
                   ],
                   items: const <OrderLineItem>[
                     OrderLineItem(name: 'برجر SSM × 1', price: '56 ر.س'),
                     OrderLineItem(name: 'بطاطس مقرمشة × 1', price: '8 ر.س'),
                   ],
                   ctaLabel: 'جاهز للاستلام',
-                  onCtaPressed: () {},
+                  onCtaPressed: () {
+                    showBrandSnackBar(
+                      context,
+                      'تم تحديث الطلب SSM-1048# إلى جاهز للاستلام',
+                    );
+                    if (context.canPop()) {
+                      context.pop();
+                    } else {
+                      context.go(AppRoutes.home);
+                    }
+                  },
                   noticeText: 'سيتم إرسال النظام تلقائياً لأقرب مندوب متصل',
                 ),
                 const SizedBox(height: 16),
-                const CollapsedActiveOrderCard(
+                CollapsedActiveOrderCard(
                   orderId: 'SSM-1047#',
                   statusLabel: 'قيد التحضير',
                   subtitle: 'كافيه سحابة - منوع 12:55',
+                  onTap: () => showBrandSnackBar(
+                    context,
+                    'تفاصيل الطلب SSM-1047# ستتوفر قريباً',
+                  ),
                 ),
               ],
             ),

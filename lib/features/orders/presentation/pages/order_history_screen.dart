@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/widgets/app_search_field.dart';
+import '../../../../core/widgets/brand_snack_bar.dart';
 import '../widgets/history_filter_tabs.dart';
 import '../widgets/order_history_card.dart';
 import '../widgets/order_history_header.dart';
@@ -16,7 +17,11 @@ class OrderHistoryScreen extends StatefulWidget {
 }
 
 class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
-  static const List<String> _filters = <String>['كل الطلبات', 'مكتملة', 'ملغاة'];
+  static const List<String> _filters = <String>[
+    'كل الطلبات',
+    'مكتملة',
+    'ملغاة',
+  ];
 
   static const List<OrderHistoryEntry> _orders = <OrderHistoryEntry>[
     OrderHistoryEntry(
@@ -74,7 +79,8 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             OrderHistoryHeader(
               title: 'سجل الطلبات',
               exportLabel: 'تصدير',
-              onExportTap: () {},
+              onExportTap: () =>
+                  showBrandSnackBar(context, 'سيتم تصدير سجل الطلبات قريباً'),
             ),
             const SizedBox(height: 16),
             AppSearchField(
@@ -89,7 +95,13 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             ),
             const SizedBox(height: 16),
             for (final OrderHistoryEntry entry in _orders) ...<Widget>[
-              OrderHistoryCard(entry: entry),
+              OrderHistoryCard(
+                entry: entry,
+                onTap: () => showBrandSnackBar(
+                  context,
+                  'تفاصيل الطلب ${entry.orderId} ستتوفر قريباً',
+                ),
+              ),
               const SizedBox(height: 12),
             ],
           ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/tip_banner.dart';
 import '../../../../core/widgets/title_action_header.dart';
@@ -74,7 +75,8 @@ class _HoursScreenState extends State<HoursScreen> {
             TitleActionHeader(
               title: 'ساعات العمل',
               actionLabel: 'حفظ',
-              onActionTap: () {},
+              onActionTap: () =>
+                  showBrandSnackBar(context, 'تم حفظ ساعات العمل بنجاح'),
             ),
             const SizedBox(height: 16),
             const TipBanner(
@@ -85,14 +87,17 @@ class _HoursScreenState extends State<HoursScreen> {
             for (int i = 0; i < _days.length; i++) ...<Widget>[
               DayScheduleCard(
                 entry: _days[i],
-                onToggle: (bool value) => setState(
-                  () => _days[i] = _days[i].copyWith(isOpen: value),
-                ),
+                onToggle: (bool value) =>
+                    setState(() => _days[i] = _days[i].copyWith(isOpen: value)),
               ),
               const SizedBox(height: 10),
             ],
             const SizedBox(height: 10),
-            PrimaryButton(label: 'حفظ ساعات العمل', onPressed: () {}),
+            PrimaryButton(
+              label: 'حفظ ساعات العمل',
+              onPressed: () =>
+                  showBrandSnackBar(context, 'تم حفظ ساعات العمل بنجاح'),
+            ),
           ],
         ),
       ),

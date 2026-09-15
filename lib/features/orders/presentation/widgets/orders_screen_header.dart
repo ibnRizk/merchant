@@ -25,7 +25,10 @@ class OrdersScreenHeader extends StatelessWidget {
       children: <Widget>[
         Row(
           children: <Widget>[
-            if (leading != null) ...<Widget>[leading!, const SizedBox(width: 10)],
+            if (leading != null) ...<Widget>[
+              leading!,
+              const SizedBox(width: 10),
+            ],
             Text(
               title,
               style: const TextStyle(

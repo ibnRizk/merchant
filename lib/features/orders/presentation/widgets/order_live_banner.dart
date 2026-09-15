@@ -5,7 +5,11 @@ import '../../../../core/utils/values/brand_colors.dart';
 /// Green two-line banner explaining that new orders arrive automatically
 /// from the customer app.
 class OrderLiveBanner extends StatelessWidget {
-  const OrderLiveBanner({super.key, required this.title, required this.subtitle});
+  const OrderLiveBanner({
+    super.key,
+    required this.title,
+    required this.subtitle,
+  });
 
   final String title;
   final String subtitle;

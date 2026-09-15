@@ -29,13 +29,11 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
-    // Any 401/403 from any request lands here. Clear the session and bounce to
-    // the app entry point — swap for your login route once auth exists.
-    _unauthorizedSub = eventBus.unauthorizedStream.listen((
-      _,
-    ) async {
+    // Any 401/403 from any request lands here. Clear the session and bounce
+    // back to login.
+    _unauthorizedSub = eventBus.unauthorizedStream.listen((_) async {
       await secureStorage.clearAll();
-      AppRoutes.router.go(AppRoutes.home);
+      AppRoutes.router.go(AppRoutes.splash);
     });
   }
 
@@ -48,13 +46,11 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers:
-          <BlocProvider<StateStreamableSource<Object?>>>[
-            BlocProvider<ThemeCubit>(
-              create: (_) =>
-                  ServiceLocator.instance<ThemeCubit>(),
-            ),
-          ],
+      providers: <BlocProvider<StateStreamableSource<Object?>>>[
+        BlocProvider<ThemeCubit>(
+          create: (_) => ServiceLocator.instance<ThemeCubit>(),
+        ),
+      ],
       child: ScreenUtilInit(
         designSize: kDesignSize,
         minTextAdapt: true,
@@ -70,26 +66,20 @@ class _AppState extends State<App> {
                 themeMode: theme == Themes.dark
                     ? ThemeMode.dark
                     : ThemeMode.light,
-                supportedLocales: AppLocalizationsSetup
-                    .supportedLocales,
+                supportedLocales: AppLocalizationsSetup.supportedLocales,
                 localizationsDelegates:
-                    AppLocalizationsSetup
-                        .localizationsDelegates,
+                    AppLocalizationsSetup.localizationsDelegates,
                 localeResolutionCallback:
-                    AppLocalizationsSetup
-                        .localeResolutionCallback,
+                    AppLocalizationsSetup.localeResolutionCallback,
                 routerConfig: AppRoutes.router,
                 builder: (BuildContext ctx, Widget? child) {
                   // Keeps the context-free `colors` getter in sync with the
                   // active theme, replacing the side effect the source had
                   // inside AppColors.lerp().
                   ServiceLocator.injectAppColors(
-                    Theme.of(
-                      ctx,
-                    ).extension<AppColors>()!,
+                    Theme.of(ctx).extension<AppColors>()!,
                   );
-                  return child ??
-                      const SizedBox.shrink();
+                  return child ?? const SizedBox.shrink();
                 },
               );
             },

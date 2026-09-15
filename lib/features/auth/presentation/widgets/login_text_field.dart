@@ -87,7 +87,10 @@ class LoginTextField extends StatelessWidget {
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: BrandColors.cancelledText, width: 1.5),
+              borderSide: const BorderSide(
+                color: BrandColors.cancelledText,
+                width: 1.5,
+              ),
             ),
           ),
         ),

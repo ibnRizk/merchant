@@ -51,7 +51,9 @@ class AppBottomNavBar extends StatelessWidget {
                     Icon(
                       isSelected ? item.activeIcon : item.icon,
                       size: 22,
-                      color: isSelected ? BrandColors.orange : BrandColors.textGray,
+                      color: isSelected
+                          ? BrandColors.orange
+                          : BrandColors.textGray,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -59,8 +61,12 @@ class AppBottomNavBar extends StatelessWidget {
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 10.5,
-                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
-                        color: isSelected ? BrandColors.orange : BrandColors.textGray,
+                        fontWeight: isSelected
+                            ? FontWeight.w700
+                            : FontWeight.w400,
+                        color: isSelected
+                            ? BrandColors.orange
+                            : BrandColors.textGray,
                       ),
                     ),
                   ],

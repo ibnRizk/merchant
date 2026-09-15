@@ -51,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
             AttentionSectionHeader(
               title: 'تحتاج انتباهك',
               actionLabel: 'عرض الكل',
-              onActionTap: () {},
+              onActionTap: () => context.pushNamed(AppRoutes.newOrdersName),
             ),
             const SizedBox(height: 12),
             ActionCard(
