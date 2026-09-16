@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../hours/presentation/pages/hours_screen.dart';
 import '../../../menu/presentation/pages/menu_screen.dart';
 import '../../../orders/presentation/pages/order_history_screen.dart';
@@ -58,16 +59,13 @@ class _MainScaffoldState extends State<MainScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF7F8FA),
-        body: IndexedStack(index: _selectedIndex, children: _tabs),
-        bottomNavigationBar: AppBottomNavBar(
-          items: _items,
-          selectedIndex: _selectedIndex,
-          onTap: (int index) => setState(() => _selectedIndex = index),
-        ),
+    return Scaffold(
+      backgroundColor: context.colors.background,
+      body: IndexedStack(index: _selectedIndex, children: _tabs),
+      bottomNavigationBar: AppBottomNavBar(
+        items: _items,
+        selectedIndex: _selectedIndex,
+        onTap: (int index) => setState(() => _selectedIndex = index),
       ),
     );
   }

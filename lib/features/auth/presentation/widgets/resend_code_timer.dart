@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// "إعادة إرسال الرمز" link with a countdown; the link only becomes
 /// tappable once the countdown reaches zero, then resets it.
@@ -65,6 +65,7 @@ class _ResendCodeTimerState extends State<ResendCodeTimer> {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -76,7 +77,7 @@ class _ResendCodeTimerState extends State<ResendCodeTimer> {
               fontFamily: 'Cairo',
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: _canResend ? BrandColors.orange : BrandColors.textGray,
+              color: _canResend ? colors.primary : colors.textSecondary,
             ),
           ),
         ),
@@ -84,11 +85,11 @@ class _ResendCodeTimerState extends State<ResendCodeTimer> {
           const SizedBox(width: 6),
           Text(
             _formatted,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: BrandColors.textGray,
+              color: colors.textSecondary,
             ),
           ),
         ],

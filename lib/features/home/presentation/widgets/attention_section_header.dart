@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// "تحتاج انتباهك" title + "عرض الكل" link row.
 class AttentionSectionHeader extends StatelessWidget {
@@ -22,11 +22,11 @@ class AttentionSectionHeader extends StatelessWidget {
       children: <Widget>[
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 16,
             fontWeight: FontWeight.w700,
-            color: BrandColors.navy,
+            color: context.colors.textPrimary,
           ),
         ),
         TextButton(
@@ -38,11 +38,11 @@ class AttentionSectionHeader extends StatelessWidget {
           ),
           child: Text(
             actionLabel,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: BrandColors.orange,
+              color: context.colors.primary,
             ),
           ),
         ),

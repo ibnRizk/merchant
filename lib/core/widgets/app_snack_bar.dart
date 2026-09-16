@@ -80,13 +80,13 @@ extension ToastTypeColor on ToastType {
   Color get color {
     switch (this) {
       case ToastType.success:
-        return _Colors.success;
+        return colors.success;
       case ToastType.error:
-        return _Colors.red;
+        return colors.error;
       case ToastType.warning:
-        return _Colors.warning;
+        return colors.warning;
       case ToastType.info:
-        return _Colors.info;
+        return colors.info;
     }
   }
 
@@ -102,11 +102,4 @@ extension ToastTypeColor on ToastType {
         return Icons.info_rounded;
     }
   }
-}
-
-abstract class _Colors {
-  static const Color success = Color(0xFF10A94B);
-  static const Color red = Color(0xFFE63D35);
-  static const Color info = Color(0xFF296CAF);
-  static const Color warning = Color(0xFFF7B313);
 }

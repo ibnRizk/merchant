@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// "سجل الطلبات" title with a "تصدير" export link on the left.
 class OrderHistoryHeader extends StatelessWidget {
@@ -17,16 +17,17 @@ class OrderHistoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 20,
             fontWeight: FontWeight.w800,
-            color: BrandColors.navy,
+            color: colors.textPrimary,
           ),
         ),
         TextButton(
@@ -38,11 +39,11 @@ class OrderHistoryHeader extends StatelessWidget {
           ),
           child: Text(
             exportLabel,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 13,
               fontWeight: FontWeight.w600,
-              color: BrandColors.orange,
+              color: colors.primary,
             ),
           ),
         ),

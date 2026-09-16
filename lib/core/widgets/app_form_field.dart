@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../utils/values/brand_colors.dart';
+import '../utils/values/app_colors.dart';
 import 'labeled_field.dart';
 
-/// Labeled, white rounded form field shared by the profile and add-product
-/// forms (single-line inputs and multi-line text areas alike).
+/// Labeled, surface-colored rounded form field shared by the profile and
+/// add-product forms (single-line inputs and multi-line text areas alike).
 class AppFormField extends StatelessWidget {
   const AppFormField({
     super.key,
@@ -12,7 +12,7 @@ class AppFormField extends StatelessWidget {
     required this.controller,
     this.maxLines = 1,
     this.keyboardType = TextInputType.text,
-    this.valueColor = BrandColors.navy,
+    this.valueColor,
     this.suffixText,
     this.validator,
   });
@@ -21,12 +21,16 @@ class AppFormField extends StatelessWidget {
   final TextEditingController controller;
   final int maxLines;
   final TextInputType keyboardType;
-  final Color valueColor;
+
+  /// Defaults to [AppColors.textPrimary] when omitted — kept nullable
+  /// because a context-aware default can't be a compile-time constant.
+  final Color? valueColor;
   final String? suffixText;
   final FormFieldValidator<String>? validator;
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return LabeledField(
       label: label,
       child: TextFormField(
@@ -34,54 +38,51 @@ class AppFormField extends StatelessWidget {
         maxLines: maxLines,
         keyboardType: keyboardType,
         validator: validator,
-        textAlign: TextAlign.right,
+        textAlign: TextAlign.start,
         style: TextStyle(
           fontFamily: 'Cairo',
           fontSize: 14,
           fontWeight: FontWeight.w600,
-          color: valueColor,
+          color: valueColor ?? colors.textPrimary,
         ),
         decoration: InputDecoration(
           suffixText: suffixText,
-          suffixStyle: const TextStyle(
+          suffixStyle: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: BrandColors.textGray,
+            color: colors.textSecondary,
           ),
-          errorStyle: const TextStyle(
+          errorStyle: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 12,
-            color: BrandColors.cancelledText,
+            color: colors.error,
           ),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: colors.surface,
           contentPadding: EdgeInsets.symmetric(
             horizontal: 16,
             vertical: maxLines > 1 ? 14 : 16,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: BrandColors.border),
+            borderSide: BorderSide(color: colors.border),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: BrandColors.border),
+            borderSide: BorderSide(color: colors.border),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: BrandColors.navy, width: 1.5),
+            borderSide: BorderSide(color: colors.secondary, width: 1.5),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: BrandColors.cancelledText),
+            borderSide: BorderSide(color: colors.error),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(
-              color: BrandColors.cancelledText,
-              width: 1.5,
-            ),
+            borderSide: BorderSide(color: colors.error, width: 1.5),
           ),
         ),
       ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/status_pill.dart';
 import 'new_order_detail_card.dart' show OrderLineItem;
@@ -35,12 +35,13 @@ class ActiveOrderDetailCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFEFF1F4)),
+        border: Border.all(color: colors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -55,22 +56,22 @@ class ActiveOrderDetailCard extends StatelessWidget {
                     Text(
                       orderId,
                       textAlign: TextAlign.right,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 15.5,
                         fontWeight: FontWeight.w800,
-                        color: BrandColors.navy,
+                        color: colors.textPrimary,
                       ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'العميل: $customerName',
                       textAlign: TextAlign.right,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 11.5,
                         fontWeight: FontWeight.w400,
-                        color: BrandColors.textGray,
+                        color: colors.textSecondary,
                       ),
                     ),
                   ],

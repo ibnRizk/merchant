@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Single stat tile used in the dashboard's 2x2 grid (white/navy or
 /// peach/orange, depending on [background] and [valueColor]).
@@ -35,11 +35,11 @@ class StatCard extends StatelessWidget {
           Text(
             label,
             textAlign: TextAlign.right,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 12.5,
               fontWeight: FontWeight.w600,
-              color: BrandColors.textGray,
+              color: context.colors.textSecondary,
             ),
           ),
           const SizedBox(height: 10),

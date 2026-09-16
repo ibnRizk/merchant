@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import 'add_product_button.dart';
 
 /// "إدارة المنيو" title with the "+ منتج" add button on the left.
@@ -23,11 +23,11 @@ class MenuScreenHeader extends StatelessWidget {
       children: <Widget>[
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 20,
             fontWeight: FontWeight.w800,
-            color: BrandColors.navy,
+            color: context.colors.textPrimary,
           ),
         ),
         AddProductButton(label: addLabel, onTap: onAddTap),

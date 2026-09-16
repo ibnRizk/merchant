@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// One line item inside [NewOrderDetailCard]: name on the right, price on
 /// the left.
@@ -12,6 +12,7 @@ class OrderItemRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
@@ -20,22 +21,22 @@ class OrderItemRow extends StatelessWidget {
             child: Text(
               name,
               textAlign: TextAlign.right,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 13.5,
                 fontWeight: FontWeight.w500,
-                color: BrandColors.navy,
+                color: colors.textPrimary,
               ),
             ),
           ),
           const SizedBox(width: 12),
           Text(
             price,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 13.5,
               fontWeight: FontWeight.w600,
-              color: BrandColors.textGray,
+              color: colors.textSecondary,
             ),
           ),
         ],

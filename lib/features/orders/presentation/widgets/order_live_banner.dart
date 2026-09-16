@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Green two-line banner explaining that new orders arrive automatically
 /// from the customer app.
@@ -16,11 +16,12 @@ class OrderLiveBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: BrandColors.statusBg,
+        color: colors.successContainer,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -28,11 +29,11 @@ class OrderLiveBanner extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 13.5,
               fontWeight: FontWeight.w700,
-              color: BrandColors.statusText,
+              color: colors.success,
             ),
           ),
           const SizedBox(height: 4),
@@ -43,7 +44,7 @@ class OrderLiveBanner extends StatelessWidget {
               fontFamily: 'Cairo',
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: BrandColors.statusText.withValues(alpha: 0.75),
+              color: colors.success.withValues(alpha: 0.75),
             ),
           ),
         ],

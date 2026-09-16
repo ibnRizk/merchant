@@ -106,7 +106,7 @@ class AppSharedPreferencesImpl extends AppSharedPreferences {
   // --- Language ---
   @override
   LanguageCode getLanguageCode() => LanguageCodeExtension.fromString(
-    instance.getString(_Keys.languageCode) ?? LanguageCode.en.name,
+    instance.getString(_Keys.languageCode) ?? LanguageCode.ar.name,
   );
 
   @override

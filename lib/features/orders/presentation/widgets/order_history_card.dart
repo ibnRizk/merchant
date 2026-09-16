@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/status_pill.dart';
 
 class OrderHistoryEntry {
@@ -31,12 +31,13 @@ class OrderHistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     final Color itemsColor = entry.isCancelled
-        ? BrandColors.cancelledText
-        : BrandColors.textGray;
+        ? colors.error
+        : colors.textSecondary;
 
     return Material(
-      color: Colors.white,
+      color: colors.surface,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -45,7 +46,7 @@ class OrderHistoryCard extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFEFF1F4)),
+            border: Border.all(color: colors.border),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -56,11 +57,11 @@ class OrderHistoryCard extends StatelessWidget {
                     child: Text(
                       entry.orderId,
                       textAlign: TextAlign.right,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 15.5,
                         fontWeight: FontWeight.w800,
-                        color: BrandColors.navy,
+                        color: colors.textPrimary,
                       ),
                     ),
                   ),
@@ -68,11 +69,9 @@ class OrderHistoryCard extends StatelessWidget {
                   StatusPill(
                     label: entry.statusLabel,
                     background: entry.isCancelled
-                        ? BrandColors.cancelledBg
-                        : BrandColors.statusBg,
-                    textColor: entry.isCancelled
-                        ? BrandColors.cancelledText
-                        : BrandColors.statusText,
+                        ? colors.errorContainer
+                        : colors.successContainer,
+                    textColor: entry.isCancelled ? colors.error : colors.success,
                   ),
                 ],
               ),
@@ -80,11 +79,11 @@ class OrderHistoryCard extends StatelessWidget {
               Text(
                 entry.meta,
                 textAlign: TextAlign.right,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
-                  color: BrandColors.textGray,
+                  color: colors.textSecondary,
                 ),
               ),
               const SizedBox(height: 10),
@@ -102,11 +101,11 @@ class OrderHistoryCard extends StatelessWidget {
                   ),
                   Text(
                     entry.price,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Cairo',
                       fontSize: 15,
                       fontWeight: FontWeight.w800,
-                      color: BrandColors.orange,
+                      color: colors.primary,
                     ),
                   ),
                 ],

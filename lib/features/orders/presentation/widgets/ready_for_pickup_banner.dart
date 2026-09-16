@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Navy info banner explaining what happens after the merchant marks an
 /// order ready — the quoted phrase is highlighted in brand orange.
@@ -18,11 +18,13 @@ class ReadyForPickupBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: BrandColors.navy,
+        color: colors.secondary,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -30,17 +32,17 @@ class ReadyForPickupBanner extends StatelessWidget {
           RichText(
             textAlign: TextAlign.center,
             text: TextSpan(
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
+                color: scheme.onSecondary,
               ),
               children: <InlineSpan>[
                 TextSpan(text: prefix),
                 TextSpan(
                   text: highlighted,
-                  style: const TextStyle(color: BrandColors.orange),
+                  style: TextStyle(color: colors.primary),
                 ),
               ],
             ),
@@ -49,11 +51,11 @@ class ReadyForPickupBanner extends StatelessWidget {
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 11.5,
               fontWeight: FontWeight.w400,
-              color: Colors.white70,
+              color: scheme.onSecondary.withValues(alpha: 0.7),
             ),
           ),
         ],

@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/locale/app_localizations.dart';
+import 'config/locale/locale_cubit.dart';
 import 'config/themes/theme_cubit.dart';
 import 'core/api/app_interceptors.dart';
 import 'core/api/auth_event_bus.dart';
@@ -36,6 +37,7 @@ abstract class ServiceLocator {
     injectAppColors(AppColors.light);
     injectRoutesStackSingleton(<String>[]);
     instance.registerLazySingleton<ThemeCubit>(() => ThemeCubit());
+    instance.registerLazySingleton<LocaleCubit>(() => LocaleCubit());
 
     // --- Features ---
     // await initLanguageFeatureInjection();

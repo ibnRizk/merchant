@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import 'time_chip.dart';
 
 /// Start/end time pair for one day. Renders as two tappable [TimeChip]s
@@ -20,14 +20,15 @@ class DayTimeRange extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     if (!isEditable) {
       return Text(
         '$startTime  —  $endTime',
-        style: const TextStyle(
+        style: TextStyle(
           fontFamily: 'Cairo',
           fontSize: 12,
           fontWeight: FontWeight.w500,
-          color: BrandColors.textGray,
+          color: colors.textSecondary,
         ),
       );
     }
@@ -37,9 +38,9 @@ class DayTimeRange extends StatelessWidget {
       children: <Widget>[
         TimeChip(label: startTime),
         const SizedBox(width: 8),
-        const Text(
+        Text(
           '—',
-          style: TextStyle(color: BrandColors.textGray, fontSize: 13),
+          style: TextStyle(color: colors.textSecondary, fontSize: 13),
         ),
         const SizedBox(width: 8),
         TimeChip(label: endTime),

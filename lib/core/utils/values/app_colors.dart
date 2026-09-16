@@ -1,33 +1,42 @@
 import 'package:flutter/material.dart';
 
-/// Raw brand palette. Swap these values per project — nothing else in the
-/// boilerplate hardcodes a colour.
+/// Raw SSM Merchant brand palette. Brand Orange drives primary actions
+/// (buttons, toggles, progress); Primary Navy drives headings/emphasized
+/// text in light mode and the navy-branded accents (selected chips, focused
+/// borders) that stay constant across both modes.
 abstract class Palette {
   // Brand
-  static const Color primary = Color(0xFF3A6FF7);
-  static const Color primaryDark = Color(0xFF2450C8);
-  static const Color primaryLight = Color(0xFFDCE6FF);
-  static const Color secondary = Color(0xFF7A5AF8);
+  static const Color primary = Color(0xFFF6921E); // Brand Orange
+  static const Color primaryDark = Color(0xFFD97B12); // pressed/emphasis
+  static const Color primaryLight = Color(0xFFFCE9D8); // peach tint
+  static const Color secondary = Color(0xFF173C66); // Primary Navy
 
   // Neutrals — light
-  static const Color background = Color(0xFFF6F7F9);
+  static const Color background = Color(0xFFF5F6F8);
   static const Color surface = Color(0xFFFFFFFF);
-  static const Color textPrimary = Color(0xFF14171F);
-  static const Color textSecondary = Color(0xFF6B7280);
-  static const Color border = Color(0xFFE4E7EC);
+  static const Color textPrimary = Color(0xFF173C66); // Navy doubles as
+  // the heading/emphasized text color in light mode.
+  static const Color textSecondary = Color(0xFF9AA1AC);
+  static const Color border = Color(0xFFE2E5EA);
 
   // Neutrals — dark
-  static const Color backgroundDark = Color(0xFF0F1115);
-  static const Color surfaceDark = Color(0xFF181B22);
+  static const Color backgroundDark = Color(0xFF121212);
+  static const Color surfaceDark = Color(0xFF1E1E1E);
   static const Color textPrimaryDark = Color(0xFFF3F4F6);
-  static const Color textSecondaryDark = Color(0xFF9CA3AF);
+  static const Color textSecondaryDark = Color(0xFFAAB2BD);
   static const Color borderDark = Color(0xFF2A2F3A);
 
   // Semantic
-  static const Color error = Color(0xFFDC2626);
-  static const Color success = Color(0xFF16A34A);
-  static const Color warning = Color(0xFFF59E0B);
+  static const Color error = Color(0xFFD9455F);
+  static const Color success = Color(0xFF2E9E5B);
+  static const Color warning = Color(0xFFAD6B1D);
   static const Color info = Color(0xFF2563EB);
+
+  // Semantic containers (tinted backgrounds paired with the colors above)
+  static const Color successContainer = Color(0xFFE6F5EC);
+  static const Color successContainerDark = Color(0xFF1E3B2A);
+  static const Color errorContainer = Color(0xFFFBE7EA);
+  static const Color errorContainerDark = Color(0xFF3B1E24);
 }
 
 /// Theme-aware colour set, exposed as a [ThemeExtension] so light/dark resolve
@@ -51,6 +60,8 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color success;
   final Color warning;
   final Color info;
+  final Color successContainer;
+  final Color errorContainer;
 
   const AppColors({
     required this.primary,
@@ -66,6 +77,8 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.success,
     required this.warning,
     required this.info,
+    required this.successContainer,
+    required this.errorContainer,
   });
 
   static const AppColors light = AppColors(
@@ -82,6 +95,8 @@ class AppColors extends ThemeExtension<AppColors> {
     success: Palette.success,
     warning: Palette.warning,
     info: Palette.info,
+    successContainer: Palette.successContainer,
+    errorContainer: Palette.errorContainer,
   );
 
   static const AppColors dark = AppColors(
@@ -98,6 +113,8 @@ class AppColors extends ThemeExtension<AppColors> {
     success: Palette.success,
     warning: Palette.warning,
     info: Palette.info,
+    successContainer: Palette.successContainerDark,
+    errorContainer: Palette.errorContainerDark,
   );
 
   @override
@@ -115,6 +132,8 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? success,
     Color? warning,
     Color? info,
+    Color? successContainer,
+    Color? errorContainer,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -130,6 +149,8 @@ class AppColors extends ThemeExtension<AppColors> {
       success: success ?? this.success,
       warning: warning ?? this.warning,
       info: info ?? this.info,
+      successContainer: successContainer ?? this.successContainer,
+      errorContainer: errorContainer ?? this.errorContainer,
     );
   }
 
@@ -150,6 +171,12 @@ class AppColors extends ThemeExtension<AppColors> {
       success: Color.lerp(success, other.success, t)!,
       warning: Color.lerp(warning, other.warning, t)!,
       info: Color.lerp(info, other.info, t)!,
+      successContainer: Color.lerp(
+        successContainer,
+        other.successContainer,
+        t,
+      )!,
+      errorContainer: Color.lerp(errorContainer, other.errorContainer, t)!,
     );
   }
 
@@ -170,6 +197,8 @@ class AppColors extends ThemeExtension<AppColors> {
     success,
     warning,
     info,
+    successContainer,
+    errorContainer,
   ];
 
   @override

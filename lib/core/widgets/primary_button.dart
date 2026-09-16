@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/values/brand_colors.dart';
+import '../utils/values/app_colors.dart';
 
-/// Full-width orange call-to-action button. Shared by the login screen's
+/// Full-width primary call-to-action button. Shared by the login screen's
 /// "تسجيل الدخول" and the active-order card's "جاهز للاستلام" action.
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
@@ -16,13 +16,14 @@ class PrimaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return SizedBox(
       height: 52,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: BrandColors.orange,
-          foregroundColor: Colors.white,
+          backgroundColor: context.colors.primary,
+          foregroundColor: scheme.onPrimary,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

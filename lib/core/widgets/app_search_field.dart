@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/values/brand_colors.dart';
+import '../utils/values/app_colors.dart';
 
 /// Rounded search field shared by list screens (order history, menu
 /// management, ...).
@@ -16,40 +16,37 @@ class AppSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return TextField(
       controller: controller,
       textAlign: TextAlign.right,
-      style: const TextStyle(
+      style: TextStyle(
         fontFamily: 'Cairo',
         fontSize: 13.5,
-        color: BrandColors.navy,
+        color: colors.textPrimary,
       ),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: const TextStyle(
+        hintStyle: TextStyle(
           fontFamily: 'Cairo',
           fontSize: 13.5,
-          color: BrandColors.hintGray,
+          color: colors.textSecondary,
         ),
-        prefixIcon: const Icon(
-          Icons.search,
-          color: BrandColors.hintGray,
-          size: 20,
-        ),
+        prefixIcon: Icon(Icons.search, color: colors.textSecondary, size: 20),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: colors.surface,
         contentPadding: const EdgeInsets.symmetric(vertical: 14),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: BrandColors.border),
+          borderSide: BorderSide(color: colors.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: BrandColors.border),
+          borderSide: BorderSide(color: colors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: BrandColors.navy, width: 1.5),
+          borderSide: BorderSide(color: colors.secondary, width: 1.5),
         ),
       ),
     );

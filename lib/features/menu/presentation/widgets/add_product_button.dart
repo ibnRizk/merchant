@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Orange "+ منتج" pill button that opens the add-product flow.
 class AddProductButton extends StatelessWidget {
@@ -11,8 +11,10 @@ class AddProductButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return Material(
-      color: BrandColors.orange,
+      color: colors.primary,
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         onTap: onTap,
@@ -24,15 +26,15 @@ class AddProductButton extends StatelessWidget {
             children: <Widget>[
               Text(
                 label,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 12.5,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: scheme.onPrimary,
                 ),
               ),
               const SizedBox(width: 4),
-              const Icon(Icons.add, size: 16, color: Colors.white),
+              Icon(Icons.add, size: 16, color: scheme.onPrimary),
             ],
           ),
         ),

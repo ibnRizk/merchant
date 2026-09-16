@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/values/brand_colors.dart';
+import '../utils/values/app_colors.dart';
 
 /// Small pill-shaped on/off switch shared across the app (store open/closed,
 /// per-day working hours, ...).
@@ -12,6 +12,7 @@ class BrandToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return GestureDetector(
       onTap: () => onChanged(!value),
       child: AnimatedContainer(
@@ -20,7 +21,7 @@ class BrandToggle extends StatelessWidget {
         height: 26,
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
-          color: value ? BrandColors.orange : const Color(0xFFD8DCE2),
+          color: value ? colors.primary : colors.border,
           borderRadius: BorderRadius.circular(20),
         ),
         child: AnimatedAlign(
@@ -29,8 +30,8 @@ class BrandToggle extends StatelessWidget {
           child: Container(
             width: 20,
             height: 20,
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: colors.surface,
               shape: BoxShape.circle,
             ),
           ),

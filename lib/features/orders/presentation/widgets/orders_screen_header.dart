@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/status_pill.dart';
 
 /// Screen title with a peach count badge on the left (e.g. "5 بانتظار",
@@ -31,11 +31,11 @@ class OrdersScreenHeader extends StatelessWidget {
             ],
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
-                color: BrandColors.navy,
+                color: context.colors.textPrimary,
               ),
             ),
           ],

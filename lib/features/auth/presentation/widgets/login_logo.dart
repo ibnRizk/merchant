@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Navy "SSM" badge shown at the top of the login screen.
 class LoginLogo extends StatelessWidget {
@@ -8,22 +8,24 @@ class LoginLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return Center(
       child: Container(
         width: 72,
         height: 72,
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: BrandColors.navy,
+          color: colors.secondary,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: const Text(
+        child: Text(
           'SSM',
           style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 22,
             fontWeight: FontWeight.w800,
-            color: Colors.white,
+            color: scheme.onSecondary,
             letterSpacing: 0.5,
           ),
         ),

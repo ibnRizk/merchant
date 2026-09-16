@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Compact active-order row: order id + plain status label on top, a
 /// store/time subtitle underneath. Used for active orders that don't need
@@ -21,8 +21,9 @@ class CollapsedActiveOrderCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Material(
-      color: Colors.white,
+      color: colors.surface,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: onTap,
@@ -31,7 +32,7 @@ class CollapsedActiveOrderCard extends StatelessWidget {
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFEFF1F4)),
+            border: Border.all(color: colors.border),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -42,21 +43,21 @@ class CollapsedActiveOrderCard extends StatelessWidget {
                     child: Text(
                       orderId,
                       textAlign: TextAlign.right,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 15.5,
                         fontWeight: FontWeight.w800,
-                        color: BrandColors.navy,
+                        color: colors.textPrimary,
                       ),
                     ),
                   ),
                   Text(
                     statusLabel,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontFamily: 'Cairo',
                       fontSize: 13,
                       fontWeight: FontWeight.w700,
-                      color: BrandColors.navy,
+                      color: colors.textPrimary,
                     ),
                   ),
                 ],
@@ -65,11 +66,11 @@ class CollapsedActiveOrderCard extends StatelessWidget {
               Text(
                 subtitle,
                 textAlign: TextAlign.right,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 12,
                   fontWeight: FontWeight.w400,
-                  color: BrandColors.textGray,
+                  color: colors.textSecondary,
                 ),
               ),
             ],

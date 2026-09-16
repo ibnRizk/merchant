@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/primary_button.dart';
@@ -34,63 +34,60 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF7F8FA),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFF7F8FA),
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          automaticallyImplyLeading: false,
-          leading: const Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: BrandBackButton(),
-          ),
+    return Scaffold(
+      backgroundColor: context.colors.background,
+      appBar: AppBar(
+        backgroundColor: context.colors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        automaticallyImplyLeading: false,
+        leading: const Padding(
+          padding: EdgeInsetsDirectional.only(start: 16),
+          child: BrandBackButton(),
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const SizedBox(height: 12),
-                const Text(
-                  'رمز التحقق',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: BrandColors.navy,
-                  ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const SizedBox(height: 12),
+              Text(
+                'رمز التحقق',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 22,
+                  fontWeight: FontWeight.w800,
+                  color: context.colors.textPrimary,
                 ),
-                const SizedBox(height: 8),
-                const Text(
-                  'الرجاء إدخال الرمز المكون من 4 أرقام المرسل إلى جوالك',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 13.5,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.black54,
-                  ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'الرجاء إدخال الرمز المكون من 4 أرقام المرسل إلى جوالك',
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 13.5,
+                  fontWeight: FontWeight.w400,
+                  color: context.colors.textSecondary,
                 ),
-                const SizedBox(height: 32),
-                OtpInputRow(
-                  length: _codeLength,
-                  onChanged: (String value) => _code = value,
-                  onCompleted: (String value) => _code = value,
-                ),
-                const SizedBox(height: 20),
-                ResendCodeTimer(
-                  onResend: () =>
-                      showBrandSnackBar(context, 'تم إرسال الرمز مرة أخرى'),
-                ),
-                const SizedBox(height: 32),
-                PrimaryButton(label: 'تأكيد', onPressed: _submit),
-              ],
-            ),
+              ),
+              const SizedBox(height: 32),
+              OtpInputRow(
+                length: _codeLength,
+                onChanged: (String value) => _code = value,
+                onCompleted: (String value) => _code = value,
+              ),
+              const SizedBox(height: 20),
+              ResendCodeTimer(
+                onResend: () =>
+                    showBrandSnackBar(context, 'تم إرسال الرمز مرة أخرى'),
+              ),
+              const SizedBox(height: 32),
+              PrimaryButton(label: 'تأكيد', onPressed: _submit),
+            ],
           ),
         ),
       ),

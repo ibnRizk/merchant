@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/app_form_field.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
@@ -85,87 +85,84 @@ class _AddProductScreenState extends State<AddProductScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF7F8FA),
-        appBar: AppBar(
-          backgroundColor: const Color(0xFFF7F8FA),
-          elevation: 0,
-          scrolledUnderElevation: 0,
-          automaticallyImplyLeading: false,
-          leading: const Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: BrandBackButton(),
-          ),
-          title: Text(
-            _isEditing ? 'تعديل منتج' : 'إضافة منتج',
-            style: const TextStyle(
-              fontFamily: 'Cairo',
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              color: BrandColors.navy,
-            ),
+    return Scaffold(
+      backgroundColor: context.colors.background,
+      appBar: AppBar(
+        backgroundColor: context.colors.background,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        automaticallyImplyLeading: false,
+        leading: const Padding(
+          padding: EdgeInsetsDirectional.only(start: 16),
+          child: BrandBackButton(),
+        ),
+        title: Text(
+          _isEditing ? 'تعديل منتج' : 'إضافة منتج',
+          style: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: context.colors.textPrimary,
           ),
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  ProductImagePicker(
-                    onTap: () => showBrandSnackBar(
-                      context,
-                      'ميزة اختيار الصورة قيد التطوير',
-                    ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                ProductImagePicker(
+                  onTap: () => showBrandSnackBar(
+                    context,
+                    'ميزة اختيار الصورة قيد التطوير',
                   ),
-                  const SizedBox(height: 24),
-                  AppFormField(
-                    label: 'اسم المنتج',
-                    controller: _nameController,
-                    validator: _requiredValidator,
+                ),
+                const SizedBox(height: 24),
+                AppFormField(
+                  label: 'اسم المنتج',
+                  controller: _nameController,
+                  validator: _requiredValidator,
+                ),
+                const SizedBox(height: 16),
+                AppFormField(
+                  label: 'السعر',
+                  controller: _priceController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
                   ),
-                  const SizedBox(height: 16),
-                  AppFormField(
-                    label: 'السعر',
-                    controller: _priceController,
-                    keyboardType: const TextInputType.numberWithOptions(
-                      decimal: true,
-                    ),
-                    suffixText: 'ر.س',
-                    validator: _priceValidator,
+                  suffixText: 'ر.س',
+                  validator: _priceValidator,
+                ),
+                const SizedBox(height: 16),
+                AppFormField(
+                  label: 'وصف المنتج',
+                  controller: _descriptionController,
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+                LabeledField(
+                  label: 'الإضافات',
+                  child: AddOnsInput(
+                    initialTags: _addOns,
+                    onChanged: (List<String> tags) => _addOns = tags,
                   ),
-                  const SizedBox(height: 16),
-                  AppFormField(
-                    label: 'وصف المنتج',
-                    controller: _descriptionController,
-                    maxLines: 3,
-                  ),
-                  const SizedBox(height: 16),
-                  LabeledField(
-                    label: 'الإضافات',
-                    child: AddOnsInput(
-                      initialTags: _addOns,
-                      onChanged: (List<String> tags) => _addOns = tags,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  AvailabilityToggleRow(
-                    label: _isAvailable ? 'متوفر' : 'غير متوفر',
-                    value: _isAvailable,
-                    onChanged: (bool value) =>
-                        setState(() => _isAvailable = value),
-                  ),
-                  const SizedBox(height: 28),
-                  PrimaryButton(
-                    label: _isEditing ? 'حفظ التعديلات' : 'حفظ المنتج',
-                    onPressed: _submit,
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 16),
+                AvailabilityToggleRow(
+                  label: _isAvailable ? 'متوفر' : 'غير متوفر',
+                  value: _isAvailable,
+                  onChanged: (bool value) =>
+                      setState(() => _isAvailable = value),
+                ),
+                const SizedBox(height: 28),
+                PrimaryButton(
+                  label: _isEditing ? 'حفظ التعديلات' : 'حفظ المنتج',
+                  onPressed: _submit,
+                ),
+              ],
             ),
           ),
         ),

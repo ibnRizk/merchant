@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Labeled, right-aligned text field shared by every field on the login
 /// screen (identifier + password).
@@ -26,16 +26,17 @@ class LoginTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Colors.black54,
+            color: colors.textSecondary,
           ),
         ),
         const SizedBox(height: 8),
@@ -45,25 +46,25 @@ class LoginTextField extends StatelessWidget {
           obscureText: obscureText,
           validator: validator,
           textAlign: TextAlign.right,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 14,
-            color: BrandColors.navy,
+            color: colors.textPrimary,
           ),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: const TextStyle(
+            hintStyle: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 14,
-              color: BrandColors.hintGray,
+              color: colors.textSecondary,
             ),
-            errorStyle: const TextStyle(
+            errorStyle: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 12,
-              color: BrandColors.cancelledText,
+              color: colors.error,
             ),
             filled: true,
-            fillColor: Colors.white,
+            fillColor: colors.surface,
             suffixIcon: suffixIcon,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
@@ -71,24 +72,24 @@ class LoginTextField extends StatelessWidget {
             ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: BrandColors.border),
+              borderSide: BorderSide(color: colors.border),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: BrandColors.border),
+              borderSide: BorderSide(color: colors.border),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: BrandColors.navy, width: 1.5),
+              borderSide: BorderSide(color: colors.secondary, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: BrandColors.cancelledText),
+              borderSide: BorderSide(color: colors.error),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(
-                color: BrandColors.cancelledText,
+              borderSide: BorderSide(
+                color: colors.error,
                 width: 1.5,
               ),
             ),

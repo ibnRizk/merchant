@@ -124,7 +124,7 @@ class DiffImage extends StatelessWidget {
                           getInitials(userName ?? ''),
                           style: TextStyles.bold16(
                             color: userNameColor == null
-                                ? Colors.black
+                                ? colors.textPrimary
                                 : colors.primary,
                           ),
                         ),

@@ -110,7 +110,7 @@ class MyTextFormField extends StatelessWidget {
             : prefix != null
             ? Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                child: Icon(prefix, size: 16, color: Colors.grey),
+                child: Icon(prefix, size: 16, color: colors.textSecondary),
               )
             : null,
         fillColor: backgroundColor ?? colors.primary,
@@ -118,7 +118,7 @@ class MyTextFormField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(radius ?? 12.r)),
           borderSide: BorderSide(
-            color: borderColor ?? Color(0xFFF2F2F2), //todo
+            color: borderColor ?? colors.border,
             width: 1.0,
           ),
         ),
@@ -149,11 +149,11 @@ class MyTextFormField extends StatelessWidget {
           fontSize: myFontSize,
         ),
         errorStyle: theme.bodySmall!.copyWith(
-          color: Colors.red,
+          color: colors.error,
           fontSize: myFontSize - 4,
         ),
         hintStyle: theme.bodyMedium!.copyWith(
-          color: Colors.grey,
+          color: colors.textSecondary,
           fontSize: myFontSize,
         ),
       ),

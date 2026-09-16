@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../utils/values/app_colors.dart';
+
 Future<bool?> showAppDialog({
   required BuildContext context,
   required Widget child,
@@ -20,7 +22,7 @@ Future<bool?> showAppDialog({
         ),
         child: Dialog(
           insetAnimationDuration: Duration(seconds: 3),
-          backgroundColor: backgroundColor ?? Colors.white,
+          backgroundColor: backgroundColor ?? context.colors.surface,
           insetPadding: EdgeInsets.symmetric(
             horizontal: horizontalPadding.w,
             vertical: verticalPadding.h,

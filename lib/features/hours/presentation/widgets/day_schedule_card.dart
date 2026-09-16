@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/brand_toggle.dart';
 import 'day_time_range.dart';
 
@@ -47,9 +47,9 @@ class DayScheduleCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: const Color(0xFFEFF1F4)),
+        border: Border.all(color: context.colors.border),
       ),
       child: Row(
         children: <Widget>[
@@ -58,11 +58,11 @@ class DayScheduleCard extends StatelessWidget {
             child: Text(
               entry.dayName,
               textAlign: TextAlign.right,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 13.5,
                 fontWeight: FontWeight.w700,
-                color: BrandColors.navy,
+                color: context.colors.textPrimary,
               ),
             ),
           ),

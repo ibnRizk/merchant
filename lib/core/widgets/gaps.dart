@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../injection_container.dart';
+
 class Gaps {
   //Horizontal
   static Widget hGap05 = SizedBox(width: .5.w);
@@ -56,10 +58,10 @@ class Gaps {
   static Widget vGap24 = SizedBox(height: 24.h);
   static Widget vGap25 = SizedBox(height: 25.h);
 
-  static Widget line = const SizedBox(
+  static Widget get line => SizedBox(
     height: 0.6,
     width: double.infinity,
-    child: DecoratedBox(decoration: BoxDecoration(color: Colors.grey)),
+    child: DecoratedBox(decoration: BoxDecoration(color: colors.border)),
   );
 
   static const Widget empty = SizedBox();

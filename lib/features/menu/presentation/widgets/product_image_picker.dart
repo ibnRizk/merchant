@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Tappable square placeholder for the product photo. Empty [onTap] is
 /// ready to launch an image picker.
@@ -11,9 +11,10 @@ class ProductImagePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Center(
       child: Material(
-        color: BrandColors.fieldFill,
+        color: colors.background,
         borderRadius: BorderRadius.circular(16),
         child: InkWell(
           onTap: onTap,
@@ -24,25 +25,25 @@ class ProductImagePicker extends StatelessWidget {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: BrandColors.border),
+              border: Border.all(color: colors.border),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                const Icon(
+                Icon(
                   Icons.add_a_photo_outlined,
                   size: 28,
-                  color: BrandColors.textGray,
+                  color: colors.textSecondary,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'إضافة صورة المنتج',
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 11.5,
                     fontWeight: FontWeight.w600,
-                    color: BrandColors.textGray,
+                    color: colors.textSecondary,
                   ),
                 ),
               ],

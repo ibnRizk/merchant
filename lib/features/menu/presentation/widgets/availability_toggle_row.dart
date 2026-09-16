@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/brand_toggle.dart';
 
 /// Label + [BrandToggle] row for the product's availability status.
@@ -18,12 +18,13 @@ class AvailabilityToggleRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: BrandColors.border),
+        border: Border.all(color: colors.border),
       ),
       child: Row(
         children: <Widget>[
@@ -31,11 +32,11 @@ class AvailabilityToggleRow extends StatelessWidget {
             child: Text(
               label,
               textAlign: TextAlign.right,
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: BrandColors.navy,
+                color: colors.textPrimary,
               ),
             ),
           ),

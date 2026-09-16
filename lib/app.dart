@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'config/env/app_env.dart';
 import 'config/locale/app_localizations_setup.dart';
+import 'config/locale/locale_cubit.dart';
 import 'config/routes/app_routes.dart';
 import 'config/themes/app_theme.dart';
 import 'config/themes/theme_cubit.dart';
@@ -50,6 +51,9 @@ class _AppState extends State<App> {
         BlocProvider<ThemeCubit>(
           create: (_) => ServiceLocator.instance<ThemeCubit>(),
         ),
+        BlocProvider<LocaleCubit>(
+          create: (_) => ServiceLocator.instance<LocaleCubit>(),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: kDesignSize,
@@ -58,28 +62,38 @@ class _AppState extends State<App> {
         builder: (_, __) {
           return BlocBuilder<ThemeCubit, Themes>(
             builder: (_, Themes theme) {
-              return MaterialApp.router(
-                title: AppEnv.appName,
-                debugShowCheckedModeBanner: false,
-                theme: lightTheme,
-                darkTheme: darkTheme,
-                themeMode: theme == Themes.dark
-                    ? ThemeMode.dark
-                    : ThemeMode.light,
-                supportedLocales: AppLocalizationsSetup.supportedLocales,
-                localizationsDelegates:
-                    AppLocalizationsSetup.localizationsDelegates,
-                localeResolutionCallback:
-                    AppLocalizationsSetup.localeResolutionCallback,
-                routerConfig: AppRoutes.router,
-                builder: (BuildContext ctx, Widget? child) {
-                  // Keeps the context-free `colors` getter in sync with the
-                  // active theme, replacing the side effect the source had
-                  // inside AppColors.lerp().
-                  ServiceLocator.injectAppColors(
-                    Theme.of(ctx).extension<AppColors>()!,
+              return BlocBuilder<LocaleCubit, LanguageCode>(
+                builder: (_, LanguageCode languageCode) {
+                  return MaterialApp.router(
+                    title: AppEnv.appName,
+                    debugShowCheckedModeBanner: false,
+                    theme: lightTheme,
+                    darkTheme: darkTheme,
+                    themeMode: switch (theme) {
+                      Themes.light => ThemeMode.light,
+                      Themes.dark => ThemeMode.dark,
+                      Themes.system => ThemeMode.system,
+                    },
+                    // Explicit locale (rather than following the device)
+                    // so LocaleCubit's toggle is the single source of
+                    // truth; Directionality follows it automatically.
+                    locale: Locale(languageCode.name),
+                    supportedLocales: AppLocalizationsSetup.supportedLocales,
+                    localizationsDelegates:
+                        AppLocalizationsSetup.localizationsDelegates,
+                    localeResolutionCallback:
+                        AppLocalizationsSetup.localeResolutionCallback,
+                    routerConfig: AppRoutes.router,
+                    builder: (BuildContext ctx, Widget? child) {
+                      // Keeps the context-free `colors` getter in sync with
+                      // the active theme, replacing the side effect the
+                      // source had inside AppColors.lerp().
+                      ServiceLocator.injectAppColors(
+                        Theme.of(ctx).extension<AppColors>()!,
+                      );
+                      return child ?? const SizedBox.shrink();
+                    },
                   );
-                  return child ?? const SizedBox.shrink();
                 },
               );
             },

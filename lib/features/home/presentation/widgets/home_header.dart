@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Navy avatar + greeting/store-name pair shown at the top of the dashboard.
 class HomeHeader extends StatelessWidget {
@@ -17,6 +17,8 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return Row(
       children: <Widget>[
         Container(
@@ -24,16 +26,16 @@ class HomeHeader extends StatelessWidget {
           height: 48,
           alignment: Alignment.center,
           decoration: BoxDecoration(
-            color: BrandColors.navy,
+            color: colors.secondary,
             borderRadius: BorderRadius.circular(14),
           ),
           child: Text(
             avatarLetter,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 20,
               fontWeight: FontWeight.w700,
-              color: Colors.white,
+              color: scheme.onSecondary,
             ),
           ),
         ),
@@ -44,22 +46,22 @@ class HomeHeader extends StatelessWidget {
             children: <Widget>[
               Text(
                 greeting,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 13,
                   fontWeight: FontWeight.w400,
-                  color: BrandColors.textGray,
+                  color: colors.textSecondary,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 storeName,
                 textAlign: TextAlign.right,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 20,
                   fontWeight: FontWeight.w800,
-                  color: BrandColors.navy,
+                  color: colors.textPrimary,
                 ),
               ),
             ],

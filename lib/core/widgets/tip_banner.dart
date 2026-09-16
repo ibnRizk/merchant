@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../utils/values/brand_colors.dart';
+import '../utils/values/app_colors.dart';
 
 /// Peach note/tip banner with a bold leading label (e.g. "ملاحظة العميل:",
 /// "نصيحة:") followed by regular-weight body text.
@@ -12,21 +12,22 @@ class TipBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: BrandColors.peachBg,
+        color: colors.primaryLight,
         borderRadius: BorderRadius.circular(12),
       ),
       child: RichText(
         textAlign: TextAlign.right,
         text: TextSpan(
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 12.5,
             fontWeight: FontWeight.w400,
-            color: BrandColors.noteText,
+            color: colors.warning,
           ),
           children: <InlineSpan>[
             TextSpan(

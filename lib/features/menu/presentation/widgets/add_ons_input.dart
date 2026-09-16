@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import 'add_on_chip.dart';
 
 /// Text field + add button that builds a list of add-on tags (e.g. جبنة،
@@ -46,6 +46,8 @@ class _AddOnsInputState extends State<AddOnsInput> {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -57,37 +59,37 @@ class _AddOnsInputState extends State<AddOnsInput> {
                 textAlign: TextAlign.right,
                 textInputAction: TextInputAction.done,
                 onSubmitted: (_) => _addTag(),
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
-                  color: BrandColors.navy,
+                  color: colors.textPrimary,
                 ),
                 decoration: InputDecoration(
                   hintText: 'أضف إضافة مثل جبنة، صوص',
-                  hintStyle: const TextStyle(
+                  hintStyle: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 13,
-                    color: BrandColors.hintGray,
+                    color: colors.textSecondary,
                   ),
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: colors.surface,
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 14,
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: BrandColors.border),
+                    borderSide: BorderSide(color: colors.border),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: BrandColors.border),
+                    borderSide: BorderSide(color: colors.border),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(
-                      color: BrandColors.navy,
+                    borderSide: BorderSide(
+                      color: colors.secondary,
                       width: 1.5,
                     ),
                   ),
@@ -96,14 +98,14 @@ class _AddOnsInputState extends State<AddOnsInput> {
             ),
             const SizedBox(width: 8),
             Material(
-              color: BrandColors.orange,
+              color: colors.primary,
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
                 onTap: _addTag,
                 borderRadius: BorderRadius.circular(12),
-                child: const Padding(
-                  padding: EdgeInsets.all(14),
-                  child: Icon(Icons.add, size: 18, color: Colors.white),
+                child: Padding(
+                  padding: const EdgeInsets.all(14),
+                  child: Icon(Icons.add, size: 18, color: scheme.onPrimary),
                 ),
               ),
             ),

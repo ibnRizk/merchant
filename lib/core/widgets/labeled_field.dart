@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../utils/values/app_colors.dart';
+
 /// Field label above an arbitrary input widget, matching the label style
 /// used across the app's form fields (profile, add product, ...).
 class LabeledField extends StatelessWidget {
@@ -15,11 +17,11 @@ class LabeledField extends StatelessWidget {
       children: <Widget>[
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 13,
             fontWeight: FontWeight.w600,
-            color: Colors.black54,
+            color: context.colors.textSecondary,
           ),
         ),
         const SizedBox(height: 8),

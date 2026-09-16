@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import 'stat_card.dart';
 
 /// 2x2 grid of [StatCard]s: white/navy cards on the right column, peach/
@@ -21,6 +21,7 @@ class StatsGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Column(
       children: <Widget>[
         Row(
@@ -29,8 +30,8 @@ class StatsGrid extends StatelessWidget {
               child: StatCard(
                 label: 'طلبات اليوم',
                 value: ordersToday,
-                background: Colors.white,
-                valueColor: BrandColors.navy,
+                background: colors.surface,
+                valueColor: colors.textPrimary,
               ),
             ),
             const SizedBox(width: 12),
@@ -38,8 +39,8 @@ class StatsGrid extends StatelessWidget {
               child: StatCard(
                 label: 'طلبات جديدة',
                 value: newOrders,
-                background: BrandColors.peachBg,
-                valueColor: BrandColors.orange,
+                background: colors.primaryLight,
+                valueColor: colors.primary,
               ),
             ),
           ],
@@ -52,8 +53,8 @@ class StatsGrid extends StatelessWidget {
                 label: 'إيرادات اليوم',
                 value: revenueToday,
                 suffix: 'ر.س',
-                background: Colors.white,
-                valueColor: BrandColors.navy,
+                background: colors.surface,
+                valueColor: colors.textPrimary,
               ),
             ),
             const SizedBox(width: 12),
@@ -61,8 +62,8 @@ class StatsGrid extends StatelessWidget {
               child: StatCard(
                 label: 'قيد التجهيز',
                 value: preparingOrders,
-                background: BrandColors.peachBg,
-                valueColor: BrandColors.orange,
+                background: colors.primaryLight,
+                valueColor: colors.primary,
               ),
             ),
           ],

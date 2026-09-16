@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../utils/values/brand_colors.dart';
+import '../utils/values/app_colors.dart';
 
-/// Screen title with a small orange pill action button on the left (e.g.
+/// Screen title with a small primary-colored pill action button (e.g.
 /// "حفظ"). Shared by the working-hours and profile screens.
 class TitleActionHeader extends StatelessWidget {
   const TitleActionHeader({
@@ -18,20 +18,22 @@ class TitleActionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 20,
             fontWeight: FontWeight.w800,
-            color: BrandColors.navy,
+            color: colors.textPrimary,
           ),
         ),
         Material(
-          color: BrandColors.orange,
+          color: colors.primary,
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
             onTap: onActionTap,
@@ -40,11 +42,11 @@ class TitleActionHeader extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
               child: Text(
                 actionLabel,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 12.5,
                   fontWeight: FontWeight.w700,
-                  color: Colors.white,
+                  color: scheme.onPrimary,
                 ),
               ),
             ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Options sheet opened from a [ProductCard]'s kebab menu.
 class ProductOptionsSheet extends StatelessWidget {
@@ -15,29 +15,26 @@ class ProductOptionsSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _OptionTile(
-              icon: Icons.edit_outlined,
-              label: 'تعديل المنتج',
-              color: BrandColors.navy,
-              onTap: onEdit,
-            ),
-            const SizedBox(height: 4),
-            _OptionTile(
-              icon: Icons.delete_outline,
-              label: 'حذف المنتج',
-              color: BrandColors.cancelledText,
-              onTap: onDelete,
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _OptionTile(
+            icon: Icons.edit_outlined,
+            label: 'تعديل المنتج',
+            color: context.colors.textPrimary,
+            onTap: onEdit,
+          ),
+          const SizedBox(height: 4),
+          _OptionTile(
+            icon: Icons.delete_outline,
+            label: 'حذف المنتج',
+            color: context.colors.error,
+            onTap: onDelete,
+          ),
+        ],
       ),
     );
   }

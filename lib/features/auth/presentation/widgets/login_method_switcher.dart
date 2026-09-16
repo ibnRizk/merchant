@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 enum LoginMethod { username, phone }
 
@@ -20,7 +20,7 @@ class LoginMethodSwitcher extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: BrandColors.fieldFill,
+        color: context.colors.background,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
@@ -54,6 +54,7 @@ class _Tab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -62,7 +63,7 @@ class _Tab extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
             color: isSelected
-                ? BrandColors.orange.withValues(alpha: 0.15)
+                ? colors.primary.withValues(alpha: 0.15)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
@@ -73,7 +74,7 @@ class _Tab extends StatelessWidget {
               fontFamily: 'Cairo',
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: isSelected ? BrandColors.orange : Colors.black45,
+              color: isSelected ? colors.primary : colors.textSecondary,
             ),
           ),
         ),

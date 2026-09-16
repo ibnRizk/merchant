@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '../utils/values/brand_colors.dart';
+import '../utils/values/app_colors.dart';
 
-/// White summary card: title/subtitle on the right, a small peach action
-/// button on the left. Shared by the home "تحتاج انتباهك" list and the
-/// orders tab's collapsed order rows.
+/// Surface-colored summary card: title/subtitle on the right, a small
+/// primary-tinted action button on the left. Shared by the home
+/// "تحتاج انتباهك" list and the orders tab's collapsed order rows.
 class ActionCard extends StatelessWidget {
   const ActionCard({
     super.key,
@@ -21,16 +21,17 @@ class ActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFEFF1F4)),
+        border: Border.all(color: colors.border),
       ),
       child: Row(
         children: <Widget>[
-          _buildActionButton(),
+          _buildActionButton(context),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -39,22 +40,22 @@ class ActionCard extends StatelessWidget {
                 Text(
                   title,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14.5,
                     fontWeight: FontWeight.w700,
-                    color: BrandColors.navy,
+                    color: colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 12.5,
                     fontWeight: FontWeight.w400,
-                    color: BrandColors.textGray,
+                    color: colors.textSecondary,
                   ),
                 ),
               ],
@@ -65,9 +66,10 @@ class ActionCard extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton() {
+  Widget _buildActionButton(BuildContext context) {
+    final AppColors colors = context.colors;
     return Material(
-      color: BrandColors.peachBg,
+      color: colors.primaryLight,
       borderRadius: BorderRadius.circular(10),
       child: InkWell(
         onTap: onTap,
@@ -76,11 +78,11 @@ class ActionCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           child: Text(
             actionLabel,
-            style: const TextStyle(
+            style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 12.5,
               fontWeight: FontWeight.w700,
-              color: BrandColors.orange,
+              color: colors.primary,
             ),
           ),
         ),

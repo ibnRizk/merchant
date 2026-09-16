@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/status_pill.dart';
 
 class ProductEntry {
@@ -37,12 +37,13 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFEFF1F4)),
+        border: Border.all(color: colors.border),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,34 +55,34 @@ class ProductCard extends StatelessWidget {
                 Text(
                   entry.name,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
-                    color: BrandColors.navy,
+                    color: colors.textPrimary,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   entry.subtitle,
                   textAlign: TextAlign.right,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 11.5,
                     fontWeight: FontWeight.w400,
-                    color: BrandColors.textGray,
+                    color: colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 8),
                 GestureDetector(
                   onTap: onEdit,
-                  child: const Text(
+                  child: Text(
                     'تعديل المنتج',
                     style: TextStyle(
                       fontFamily: 'Cairo',
                       fontSize: 11.5,
                       fontWeight: FontWeight.w700,
-                      color: BrandColors.orange,
+                      color: colors.primary,
                     ),
                   ),
                 ),
@@ -94,22 +95,22 @@ class ProductCard extends StatelessWidget {
             children: <Widget>[
               Text(
                 entry.price,
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
-                  color: BrandColors.orange,
+                  color: colors.primary,
                 ),
               ),
               const SizedBox(height: 8),
               StatusPill(
                 label: entry.statusLabel,
                 background: entry.isAvailable
-                    ? BrandColors.statusBg
-                    : BrandColors.fieldFill,
+                    ? colors.successContainer
+                    : colors.background,
                 textColor: entry.isAvailable
-                    ? BrandColors.statusText
-                    : BrandColors.textGray,
+                    ? colors.success
+                    : colors.textSecondary,
               ),
             ],
           ),
@@ -119,10 +120,10 @@ class ProductCard extends StatelessWidget {
               onPressed: onMoreTap,
               padding: EdgeInsets.zero,
               constraints: const BoxConstraints(),
-              icon: const Icon(
+              icon: Icon(
                 Icons.more_vert,
                 size: 20,
-                color: BrandColors.textGray,
+                color: colors.textSecondary,
               ),
             ),
           ),

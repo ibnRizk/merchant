@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Row of single-digit boxes for OTP entry. Auto-advances focus forward on
 /// input and backward on backspace from an empty box.
@@ -76,6 +76,7 @@ class _OtpInputRowState extends State<OtpInputRow> {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -95,28 +96,28 @@ class _OtpInputRowState extends State<OtpInputRow> {
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
                 ],
-                style: const TextStyle(
+                style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
-                  color: BrandColors.navy,
+                  color: colors.textPrimary,
                 ),
                 decoration: InputDecoration(
                   counterText: '',
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: colors.surface,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: BrandColors.border),
+                    borderSide: BorderSide(color: colors.border),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(color: BrandColors.border),
+                    borderSide: BorderSide(color: colors.border),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
-                    borderSide: const BorderSide(
-                      color: BrandColors.navy,
+                    borderSide: BorderSide(
+                      color: colors.secondary,
                       width: 1.5,
                     ),
                   ),

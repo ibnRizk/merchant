@@ -72,6 +72,9 @@ abstract class Strings {
   static const String _darkMode = 'dark_mode';
   static String get darkMode => _darkMode.tr;
 
+  static const String _systemMode = 'system_mode';
+  static String get systemMode => _systemMode.tr;
+
   // --- Validation ---
   static const String _fieldRequired = 'field_required';
   static String get fieldRequired => _fieldRequired.tr;
@@ -93,4 +96,44 @@ abstract class Strings {
 
   static const String _passwordsDoNotMatch = 'passwords_do_not_match';
   static String get passwordsDoNotMatch => _passwordsDoNotMatch.tr;
+
+  // --- Profile screen ---
+  static const String _profileTitle = 'profile_title';
+  static String get profileTitle => _profileTitle.tr;
+
+  static const String _storeNameLabel = 'store_name_label';
+  static String get storeNameLabel => _storeNameLabel.tr;
+
+  static const String _categoryLabel = 'category_label';
+  static String get categoryLabel => _categoryLabel.tr;
+
+  static const String _storeDescriptionLabel = 'store_description_label';
+  static String get storeDescriptionLabel => _storeDescriptionLabel.tr;
+
+  static const String _contactNumberLabel = 'contact_number_label';
+  static String get contactNumberLabel => _contactNumberLabel.tr;
+
+  static const String _addressLabel = 'address_label';
+  static String get addressLabel => _addressLabel.tr;
+
+  static const String _categoryRestaurants = 'category_restaurants';
+  static String get categoryRestaurants => _categoryRestaurants.tr;
+
+  static const String _categoryCafes = 'category_cafes';
+  static String get categoryCafes => _categoryCafes.tr;
+
+  static const String _categorySweets = 'category_sweets';
+  static String get categorySweets => _categorySweets.tr;
+
+  static const String _categoryGrocery = 'category_grocery';
+  static String get categoryGrocery => _categoryGrocery.tr;
+
+  static const String _freeTrialBanner = 'free_trial_banner';
+  static String get freeTrialBanner => _freeTrialBanner.tr;
+
+  static const String _mapPickerComingSoon = 'map_picker_coming_soon';
+  static String get mapPickerComingSoon => _mapPickerComingSoon.tr;
+
+  static const String _profileSavedSuccess = 'profile_saved_success';
+  static String get profileSavedSuccess => _profileSavedSuccess.tr;
 }

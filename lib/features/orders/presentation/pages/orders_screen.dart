@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/action_card.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
@@ -18,76 +19,73 @@ class OrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        backgroundColor: const Color(0xFFF7F8FA),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const OrdersScreenHeader(
-                  title: 'الطلبات الجديدة',
-                  badgeText: '5 بانتظار',
-                  leading: BrandBackButton(),
-                ),
-                const SizedBox(height: 16),
-                const OrderLiveBanner(
-                  title: 'وصل مباشرة من تطبيق العميل',
-                  subtitle: 'الإدارة تراقب فقط وتتدخل عند الحاجة',
-                ),
-                const SizedBox(height: 16),
-                NewOrderDetailCard(
-                  orderId: 'SSM-1048#',
-                  meta: 'منذ 3 دقائق - توصيل حي السلام',
-                  price: '71 ر.س',
-                  items: const <OrderLineItem>[
-                    OrderLineItem(name: 'برجر SSM × 1', price: '56 ر.س'),
-                    OrderLineItem(name: 'بطاطس مقرمشة × 1', price: '8 ر.س'),
-                  ],
-                  noteLabel: 'ملاحظة العميل: ',
-                  noteText: 'بدون بصل، وتغليف منفصل للبطاطس.',
-                  onAccept: () {
-                    showBrandSnackBar(context, 'تم قبول الطلب SSM-1048#');
-                    context.pushNamed(AppRoutes.activeOrdersName);
-                  },
-                  onReject: () {
-                    showBrandSnackBar(
-                      context,
-                      'تم رفض الطلب SSM-1048#',
-                      isError: true,
-                    );
-                    if (context.canPop()) {
-                      context.pop();
-                    } else {
-                      context.go(AppRoutes.home);
-                    }
-                  },
-                ),
-                const SizedBox(height: 16),
-                ActionCard(
-                  title: 'SSM-1047#',
-                  subtitle: 'كافيه سحابة - 38 ر.س',
-                  actionLabel: 'عرض',
-                  onTap: () => showBrandSnackBar(
+    return Scaffold(
+      backgroundColor: context.colors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              const OrdersScreenHeader(
+                title: 'الطلبات الجديدة',
+                badgeText: '5 بانتظار',
+                leading: BrandBackButton(),
+              ),
+              const SizedBox(height: 16),
+              const OrderLiveBanner(
+                title: 'وصل مباشرة من تطبيق العميل',
+                subtitle: 'الإدارة تراقب فقط وتتدخل عند الحاجة',
+              ),
+              const SizedBox(height: 16),
+              NewOrderDetailCard(
+                orderId: 'SSM-1048#',
+                meta: 'منذ 3 دقائق - توصيل حي السلام',
+                price: '71 ر.س',
+                items: const <OrderLineItem>[
+                  OrderLineItem(name: 'برجر SSM × 1', price: '56 ر.س'),
+                  OrderLineItem(name: 'بطاطس مقرمشة × 1', price: '8 ر.س'),
+                ],
+                noteLabel: 'ملاحظة العميل: ',
+                noteText: 'بدون بصل، وتغليف منفصل للبطاطس.',
+                onAccept: () {
+                  showBrandSnackBar(context, 'تم قبول الطلب SSM-1048#');
+                  context.pushNamed(AppRoutes.activeOrdersName);
+                },
+                onReject: () {
+                  showBrandSnackBar(
                     context,
-                    'تفاصيل الطلب SSM-1047# ستتوفر قريباً',
-                  ),
+                    'تم رفض الطلب SSM-1048#',
+                    isError: true,
+                  );
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go(AppRoutes.home);
+                  }
+                },
+              ),
+              const SizedBox(height: 16),
+              ActionCard(
+                title: 'SSM-1047#',
+                subtitle: 'كافيه سحابة - 38 ر.س',
+                actionLabel: 'عرض',
+                onTap: () => showBrandSnackBar(
+                  context,
+                  'تفاصيل الطلب SSM-1047# ستتوفر قريباً',
                 ),
-                const SizedBox(height: 12),
-                ActionCard(
-                  title: 'SSM-1046#',
-                  subtitle: 'سوبرماركت الواحة - 112 ر.س',
-                  actionLabel: 'عرض',
-                  onTap: () => showBrandSnackBar(
-                    context,
-                    'تفاصيل الطلب SSM-1046# ستتوفر قريباً',
-                  ),
+              ),
+              const SizedBox(height: 12),
+              ActionCard(
+                title: 'SSM-1046#',
+                subtitle: 'سوبرماركت الواحة - 112 ر.س',
+                actionLabel: 'عرض',
+                onTap: () => showBrandSnackBar(
+                  context,
+                  'تفاصيل الطلب SSM-1046# ستتوفر قريباً',
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

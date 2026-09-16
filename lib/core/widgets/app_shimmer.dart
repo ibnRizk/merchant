@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
-import '../utils/constants.dart';
+import '../utils/values/app_colors.dart';
 
 class AppShimmer extends StatefulWidget {
   final Widget child;
@@ -15,9 +15,10 @@ class AppShimmer extends StatefulWidget {
 class _AppShimmerState extends State<AppShimmer> {
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return Shimmer.fromColors(
-      baseColor: baseColorShimmer,
-      highlightColor: highlightColorShimmer,
+      baseColor: colors.border,
+      highlightColor: colors.background,
       child: widget.child,
     );
   }

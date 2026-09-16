@@ -6,10 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'enums.dart';
 import 'values/app_colors.dart';
 
-/// Shimmer base/highlight, kept here so [AppShimmer] has no colour of its own.
-const Color baseColorShimmer = Color(0xFFE9EBEF);
-const Color highlightColorShimmer = Color(0xFFF6F7F9);
-
 /// Device language as a [LanguageCode], used to seed the locale on first run.
 LanguageCode getSystemLang() {
   final String code = ui.PlatformDispatcher.instance.locale.languageCode;

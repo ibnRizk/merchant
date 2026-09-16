@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Accept/reject row for a new order: the larger orange "accept" action
 /// sits on the right (primary), the smaller outlined "reject" on the left.
@@ -16,6 +16,8 @@ class OrderActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return Row(
       children: <Widget>[
         Expanded(
@@ -25,8 +27,8 @@ class OrderActionButtons extends StatelessWidget {
             child: ElevatedButton(
               onPressed: onAccept,
               style: ElevatedButton.styleFrom(
-                backgroundColor: BrandColors.orange,
-                foregroundColor: Colors.white,
+                backgroundColor: colors.primary,
+                foregroundColor: scheme.onPrimary,
                 elevation: 0,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -51,8 +53,8 @@ class OrderActionButtons extends StatelessWidget {
             child: OutlinedButton(
               onPressed: onReject,
               style: OutlinedButton.styleFrom(
-                foregroundColor: BrandColors.textGray,
-                side: const BorderSide(color: BrandColors.border),
+                foregroundColor: colors.textSecondary,
+                side: BorderSide(color: colors.border),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

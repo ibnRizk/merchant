@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 /// Row of equal-width filter pills (e.g. "كل الطلبات" / "مكتملة" / "ملغاة").
 /// List order flows right-to-left under an RTL [Directionality].
@@ -48,13 +48,15 @@ class _FilterChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? BrandColors.navy : BrandColors.fieldFill,
+          color: isSelected ? colors.secondary : colors.background,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
@@ -64,7 +66,7 @@ class _FilterChip extends StatelessWidget {
             fontFamily: 'Cairo',
             fontSize: 12.5,
             fontWeight: FontWeight.w700,
-            color: isSelected ? Colors.white : BrandColors.textGray,
+            color: isSelected ? scheme.onSecondary : colors.textSecondary,
           ),
         ),
       ),

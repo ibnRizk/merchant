@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/brand_colors.dart';
+import '../../../../core/utils/values/app_colors.dart';
 
 class NavItemData {
   const NavItemData({
@@ -30,13 +30,14 @@ class AppBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
     return SafeArea(
       top: false,
       child: Container(
         height: 64,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          border: Border(top: BorderSide(color: Color(0xFFEFF1F4))),
+        decoration: BoxDecoration(
+          color: colors.surface,
+          border: Border(top: BorderSide(color: context.colors.border)),
         ),
         child: Row(
           children: List<Widget>.generate(items.length, (int index) {
@@ -51,9 +52,7 @@ class AppBottomNavBar extends StatelessWidget {
                     Icon(
                       isSelected ? item.activeIcon : item.icon,
                       size: 22,
-                      color: isSelected
-                          ? BrandColors.orange
-                          : BrandColors.textGray,
+                      color: isSelected ? colors.primary : colors.textSecondary,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -65,8 +64,8 @@ class AppBottomNavBar extends StatelessWidget {
                             ? FontWeight.w700
                             : FontWeight.w400,
                         color: isSelected
-                            ? BrandColors.orange
-                            : BrandColors.textGray,
+                            ? colors.primary
+                            : colors.textSecondary,
                       ),
                     ),
                   ],
