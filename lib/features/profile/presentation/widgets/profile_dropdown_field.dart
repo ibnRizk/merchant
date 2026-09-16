@@ -29,46 +29,48 @@ class ProfileDropdownField extends StatelessWidget {
     final AppColors colors = context.colors;
     return LabeledField(
       label: label,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        decoration: BoxDecoration(
-          color: colors.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: colors.border),
-        ),
-        child: DropdownButtonHideUnderline(
-          child: DropdownButtonFormField<String>(
-            initialValue: value,
-            isExpanded: true,
-            alignment: AlignmentDirectional.centerEnd,
-            icon: Icon(Icons.keyboard_arrow_down, color: colors.textSecondary),
-            decoration: const InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 14,
-              ),
-            ),
-            items: options.entries
-                .map(
-                  (MapEntry<String, String> entry) => DropdownMenuItem<String>(
-                    value: entry.key,
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: Text(
-                      entry.value,
-                      style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                        color: colors.textPrimary,
-                      ),
-                    ),
-                  ),
-                )
-                .toList(),
-            onChanged: onChanged,
+      child: DropdownButtonFormField<String>(
+        initialValue: value,
+        isExpanded: true,
+        icon: Icon(Icons.keyboard_arrow_down, color: colors.textSecondary),
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: colors.surface,
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 16,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: colors.border),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: colors.border),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: colors.secondary, width: 1.5),
           ),
         ),
+        items: options.entries
+            .map(
+              (MapEntry<String, String> entry) => DropdownMenuItem<String>(
+                value: entry.key,
+                child: Text(
+                  entry.value,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: colors.textPrimary,
+                  ),
+                ),
+              ),
+            )
+            .toList(),
+        onChanged: onChanged,
       ),
     );
   }

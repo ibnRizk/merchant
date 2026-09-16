@@ -25,10 +25,11 @@ class OrderLiveBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             title,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 13.5,
@@ -39,7 +40,7 @@ class OrderLiveBanner extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             subtitle,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 12,

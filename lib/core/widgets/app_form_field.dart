@@ -15,6 +15,9 @@ class AppFormField extends StatelessWidget {
     this.valueColor,
     this.suffixText,
     this.validator,
+    this.hintText,
+    this.obscureText = false,
+    this.suffixIcon,
   });
 
   final String label;
@@ -27,6 +30,9 @@ class AppFormField extends StatelessWidget {
   final Color? valueColor;
   final String? suffixText;
   final FormFieldValidator<String>? validator;
+  final String? hintText;
+  final bool obscureText;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +43,11 @@ class AppFormField extends StatelessWidget {
         controller: controller,
         maxLines: maxLines,
         keyboardType: keyboardType,
+        obscureText: obscureText,
         validator: validator,
         textAlign: TextAlign.start,
+        textDirection:
+            keyboardType == TextInputType.phone ? TextDirection.ltr : null,
         style: TextStyle(
           fontFamily: 'Cairo',
           fontSize: 14,
@@ -46,7 +55,14 @@ class AppFormField extends StatelessWidget {
           color: valueColor ?? colors.textPrimary,
         ),
         decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 14,
+            color: colors.textSecondary,
+          ),
           suffixText: suffixText,
+          suffixIcon: suffixIcon,
           suffixStyle: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 13,

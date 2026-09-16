@@ -31,15 +31,13 @@ class ActionCard extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          _buildActionButton(context),
-          const SizedBox(width: 12),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   title,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 14.5,
@@ -50,7 +48,7 @@ class ActionCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 12.5,
@@ -61,6 +59,8 @@ class ActionCard extends StatelessWidget {
               ],
             ),
           ),
+          const SizedBox(width: 12),
+          _buildActionButton(context),
         ],
       ),
     );

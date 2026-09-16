@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/enums.dart';
-import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 
 /// "Appearance / المظهر" segmented switcher, driving [ThemeCubit]. Mirrors
@@ -14,13 +13,13 @@ class ThemeToggleRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppColors colors = context.colors;
+    final ColorScheme scheme = Theme.of(context).colorScheme;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: colors.surface,
+        color: scheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: colors.border),
+        border: Border.all(color: scheme.outline),
       ),
       child: Row(
         children: <Widget>[
@@ -32,7 +31,7 @@ class ThemeToggleRow extends StatelessWidget {
                 fontFamily: 'Cairo',
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
-                color: colors.textPrimary,
+                color: scheme.onSurface,
               ),
             ),
           ),
@@ -40,7 +39,7 @@ class ThemeToggleRow extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(3),
             decoration: BoxDecoration(
-              color: colors.background,
+              color: scheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -84,14 +83,13 @@ class _Segment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ColorScheme scheme = Theme.of(context).colorScheme;
-    final AppColors colors = context.colors;
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? colors.primary : Colors.transparent,
+          color: isSelected ? scheme.primary : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
@@ -100,7 +98,7 @@ class _Segment extends StatelessWidget {
             fontFamily: 'Cairo',
             fontSize: 12.5,
             fontWeight: FontWeight.w700,
-            color: isSelected ? scheme.onPrimary : colors.textSecondary,
+            color: isSelected ? scheme.onPrimary : scheme.onSurfaceVariant,
           ),
         ),
       ),

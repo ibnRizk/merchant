@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 
 /// "أهلاً بك" title + subtitle shown under the logo.
 class LoginHeaderText extends StatelessWidget {
@@ -12,7 +13,7 @@ class LoginHeaderText extends StatelessWidget {
     return Column(
       children: <Widget>[
         Text(
-          'أهلاً بك',
+          Strings.welcome,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Cairo',
@@ -23,7 +24,7 @@ class LoginHeaderText extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'سجّل الدخول لإدارة متجرك',
+          Strings.loginToManageStore,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Cairo',

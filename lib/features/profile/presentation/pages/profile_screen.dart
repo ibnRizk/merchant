@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base/core/widgets/free_trial_banner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../config/locale/locale_cubit.dart';
+import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/theme_cubit.dart';
 import '../../../../core/utils/enums.dart';
-import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/action_card.dart';
 import '../../../../core/widgets/app_form_field.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
-import '../../../../core/widgets/free_trial_banner.dart';
 import '../../../../core/widgets/title_action_header.dart';
-import '../widgets/language_toggle_row.dart';
 import '../widgets/profile_address_field.dart';
 import '../widgets/profile_avatar_block.dart';
 import '../widgets/profile_dropdown_field.dart';
@@ -30,7 +31,8 @@ class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<ProfileScreen> createState() =>
+      _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -58,15 +60,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
-  final TextEditingController _nameController = TextEditingController(
-    text: 'مطاعم مذاق',
+  final TextEditingController _nameController =
+      TextEditingController(text: 'مطاعم مذاق');
+  final TextEditingController
+  _descriptionController = TextEditingController(
+    text:
+        'وجبات برجر طازجة، بطاطس مقرمشة ومشروبات تناسب كل أفراد العائلة.',
   );
-  final TextEditingController _descriptionController = TextEditingController(
-    text: 'وجبات برجر طازجة، بطاطس مقرمشة ومشروبات تناسب كل أفراد العائلة.',
-  );
-  final TextEditingController _contactController = TextEditingController(
-    text: '05X XXX XXXX',
-  );
+  final TextEditingController _contactController =
+      TextEditingController(text: '05X XXX XXXX');
 
   String _category = 'restaurants';
   final String _address = 'حي الملك فهد - محافظة نبرة';
@@ -81,7 +83,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final LanguageCode languageCode = context.watch<LocaleCubit>().state;
+    final LanguageCode languageCode = context
+        .watch<LocaleCubit>()
+        .state;
     final Themes theme = context.watch<ThemeCubit>().state;
 
     return SafeArea(
@@ -94,13 +98,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TitleActionHeader(
               title: Strings.profileTitle,
               actionLabel: Strings.save,
-              onActionTap: () =>
-                  showBrandSnackBar(context, Strings.profileSavedSuccess),
+              onActionTap: () => showBrandSnackBar(
+                context,
+                Strings.profileSavedSuccess,
+              ),
             ),
             const SizedBox(height: 20),
             ProfileAvatarBlock(
               storeName: _nameController.text,
-              subtitle: '${_categoryLabel(_category)} - نبرة',
+              subtitle:
+                  '${_categoryLabel(_category)} - نبرة',
             ),
             const SizedBox(height: 24),
             AppFormField(
@@ -116,7 +123,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   value: _categoryLabel(value),
               },
               onChanged: (String? value) {
-                if (value != null) setState(() => _category = value);
+                if (value != null) {
+                  setState(() => _category = value);
+                }
               },
             ),
             const SizedBox(height: 16),
@@ -130,29 +139,120 @@ class _ProfileScreenState extends State<ProfileScreen> {
               label: Strings.contactNumberLabel,
               controller: _contactController,
               keyboardType: TextInputType.phone,
-              valueColor: context.colors.primary,
             ),
             const SizedBox(height: 16),
             ProfileAddressField(
               label: Strings.addressLabel,
               address: _address,
-              onTap: () =>
-                  showBrandSnackBar(context, Strings.mapPickerComingSoon),
+              onTap: () => showBrandSnackBar(
+                context,
+                Strings.mapPickerComingSoon,
+              ),
             ),
-            const SizedBox(height: 16),
+            Text(
+              Strings.theme,
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 14,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+            const SizedBox(height: 12),
             ThemeToggleRow(
               theme: theme,
               onChanged: (Themes value) =>
                   context.read<ThemeCubit>().setTheme(value),
             ),
-            const SizedBox(height: 12),
-            LanguageToggleRow(
-              languageCode: languageCode,
-              onChanged: (LanguageCode code) =>
-                  context.read<LocaleCubit>().setLocale(code),
+            const SizedBox(height: 24),
+            ActionCard(
+              title: Strings.language,
+              subtitle: languageCode == LanguageCode.ar ? 'العربية' : 'English',
+              actionLabel: 'تغيير',
+              onTap: () {
+                showModalBottomSheet<void>(
+                  context: context,
+                  builder: (BuildContext sheetContext) {
+                    return SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            Text(
+                              Strings.language,
+                              style: Theme.of(context).textTheme.titleLarge,
+                            ),
+                            const SizedBox(height: 20),
+                            ListTile(
+                              title: const Text(
+                                'العربية',
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              trailing: languageCode == LanguageCode.ar
+                                  ? Icon(Icons.check,
+                                      color: Theme.of(context).colorScheme.primary)
+                                  : null,
+                              onTap: () {
+                                context.read<LocaleCubit>().setLocale(LanguageCode.ar);
+                                Navigator.pop(sheetContext);
+                              },
+                            ),
+                            ListTile(
+                              title: const Text(
+                                'English',
+                                style: TextStyle(
+                                  fontFamily: 'Cairo',
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              trailing: languageCode == LanguageCode.en
+                                  ? Icon(Icons.check,
+                                      color: Theme.of(context).colorScheme.primary)
+                                  : null,
+                              onTap: () {
+                                context.read<LocaleCubit>().setLocale(LanguageCode.en);
+                                Navigator.pop(sheetContext);
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
             const SizedBox(height: 20),
             FreeTrialBanner(text: Strings.freeTrialBanner),
+            const SizedBox(height: 32),
+            OutlinedButton(
+              onPressed: () {
+                // Perform logout actions here (e.g. clear tokens)
+                context.go(AppRoutes.splash);
+              },
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                side: BorderSide(color: Theme.of(context).colorScheme.error),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+              ),
+              child: Text(
+                Strings.logout,
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.error,
+                ),
+              ),
+            ),
           ],
         ),
       ),

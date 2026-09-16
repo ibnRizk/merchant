@@ -102,10 +102,10 @@ class AppColors extends ThemeExtension<AppColors> {
   static const AppColors dark = AppColors(
     primary: Palette.primary,
     primaryDark: Palette.primaryDark,
-    primaryLight: Palette.primaryDark,
+    primaryLight: Color(0xFF332313), // Deep brown/orange tinted surface for containers
     secondary: Palette.secondary,
-    background: Palette.backgroundDark,
-    surface: Palette.surfaceDark,
+    background: Palette.backgroundDark, // #121212
+    surface: Palette.surfaceDark, // #1E1E1E
     textPrimary: Palette.textPrimaryDark,
     textSecondary: Palette.textSecondaryDark,
     border: Palette.borderDark,

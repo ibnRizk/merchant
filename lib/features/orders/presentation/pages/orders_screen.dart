@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/action_card.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
@@ -27,26 +28,26 @@ class OrdersScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              const OrdersScreenHeader(
-                title: 'الطلبات الجديدة',
-                badgeText: '5 بانتظار',
-                leading: BrandBackButton(),
+              OrdersScreenHeader(
+                title: Strings.newOrdersTitle,
+                badgeText: '5 ${Strings.waiting}',
+                leading: const BrandBackButton(),
               ),
               const SizedBox(height: 16),
-              const OrderLiveBanner(
-                title: 'وصل مباشرة من تطبيق العميل',
-                subtitle: 'الإدارة تراقب فقط وتتدخل عند الحاجة',
+              OrderLiveBanner(
+                title: Strings.directFromCustomer,
+                subtitle: Strings.managementMonitors,
               ),
               const SizedBox(height: 16),
               NewOrderDetailCard(
                 orderId: 'SSM-1048#',
                 meta: 'منذ 3 دقائق - توصيل حي السلام',
-                price: '71 ر.س',
+                price: '71 ${Strings.currencySar}',
                 items: const <OrderLineItem>[
                   OrderLineItem(name: 'برجر SSM × 1', price: '56 ر.س'),
                   OrderLineItem(name: 'بطاطس مقرمشة × 1', price: '8 ر.س'),
                 ],
-                noteLabel: 'ملاحظة العميل: ',
+                noteLabel: Strings.customerNote,
                 noteText: 'بدون بصل، وتغليف منفصل للبطاطس.',
                 onAccept: () {
                   showBrandSnackBar(context, 'تم قبول الطلب SSM-1048#');
@@ -69,7 +70,7 @@ class OrdersScreen extends StatelessWidget {
               ActionCard(
                 title: 'SSM-1047#',
                 subtitle: 'كافيه سحابة - 38 ر.س',
-                actionLabel: 'عرض',
+                actionLabel: Strings.view,
                 onTap: () => showBrandSnackBar(
                   context,
                   'تفاصيل الطلب SSM-1047# ستتوفر قريباً',
@@ -79,7 +80,7 @@ class OrdersScreen extends StatelessWidget {
               ActionCard(
                 title: 'SSM-1046#',
                 subtitle: 'سوبرماركت الواحة - 112 ر.س',
-                actionLabel: 'عرض',
+                actionLabel: Strings.view,
                 onTap: () => showBrandSnackBar(
                   context,
                   'تفاصيل الطلب SSM-1046# ستتوفر قريباً',

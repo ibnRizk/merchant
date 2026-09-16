@@ -28,9 +28,10 @@ class ReadyForPickupBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           RichText(
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             text: TextSpan(
               style: TextStyle(
                 fontFamily: 'Cairo',
@@ -50,7 +51,7 @@ class ReadyForPickupBanner extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             subtitle,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.start,
             style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 11.5,

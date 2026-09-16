@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_base/core/utils/enums.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../config/locale/locale_cubit.dart';
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../hours/presentation/pages/hours_screen.dart';
 import '../../../menu/presentation/pages/menu_screen.dart';
 import '../../../orders/presentation/pages/order_history_screen.dart';
@@ -29,43 +33,50 @@ class _MainScaffoldState extends State<MainScaffold> {
     ProfileScreen(),
   ];
 
-  static const List<NavItemData> _items = <NavItemData>[
-    NavItemData(
-      icon: Icons.home_outlined,
-      activeIcon: Icons.home,
-      label: 'الرئيسية',
-    ),
-    NavItemData(
-      icon: Icons.receipt_long_outlined,
-      activeIcon: Icons.receipt_long,
-      label: 'الطلبات',
-    ),
-    NavItemData(
-      icon: Icons.menu_book_outlined,
-      activeIcon: Icons.menu_book,
-      label: 'المنيو',
-    ),
-    NavItemData(
-      icon: Icons.access_time_outlined,
-      activeIcon: Icons.access_time,
-      label: 'الساعات',
-    ),
-    NavItemData(
-      icon: Icons.person_outline,
-      activeIcon: Icons.person,
-      label: 'حسابي',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
+    // Watch LocaleCubit so the scaffold rebuilds when the language changes.
+    final LanguageCode lang = context.watch<LocaleCubit>().state;
+
+    final List<NavItemData> items = <NavItemData>[
+      NavItemData(
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home,
+        label: Strings.navHome,
+      ),
+      NavItemData(
+        icon: Icons.receipt_long_outlined,
+        activeIcon: Icons.receipt_long,
+        label: Strings.navOrders,
+      ),
+      NavItemData(
+        icon: Icons.menu_book_outlined,
+        activeIcon: Icons.menu_book,
+        label: Strings.navMenu,
+      ),
+      NavItemData(
+        icon: Icons.access_time_outlined,
+        activeIcon: Icons.access_time,
+        label: Strings.navHours,
+      ),
+      NavItemData(
+        icon: Icons.person_outline,
+        activeIcon: Icons.person,
+        label: Strings.navProfile,
+      ),
+    ];
+
     return Scaffold(
       backgroundColor: context.colors.background,
-      body: IndexedStack(index: _selectedIndex, children: _tabs),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _tabs,
+      ),
       bottomNavigationBar: AppBottomNavBar(
-        items: _items,
+        items: items,
         selectedIndex: _selectedIndex,
-        onTap: (int index) => setState(() => _selectedIndex = index),
+        onTap: (int index) =>
+            setState(() => _selectedIndex = index),
       ),
     );
   }

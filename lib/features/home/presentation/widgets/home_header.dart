@@ -21,6 +21,34 @@ class HomeHeader extends StatelessWidget {
     final ColorScheme scheme = Theme.of(context).colorScheme;
     return Row(
       children: <Widget>[
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                greeting,
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: colors.textSecondary,
+                ),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                storeName,
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: colors.textPrimary,
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: 12),
         Container(
           width: 48,
           height: 48,
@@ -37,34 +65,6 @@ class HomeHeader extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: scheme.onSecondary,
             ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Text(
-                greeting,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 13,
-                  fontWeight: FontWeight.w400,
-                  color: colors.textSecondary,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                storeName,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 20,
-                  fontWeight: FontWeight.w800,
-                  color: colors.textPrimary,
-                ),
-              ),
-            ],
           ),
         ),
       ],

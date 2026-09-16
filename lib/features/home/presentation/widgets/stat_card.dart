@@ -30,11 +30,11 @@ class StatCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
             label,
-            textAlign: TextAlign.right,
+            textAlign: TextAlign.start,
             style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 12.5,

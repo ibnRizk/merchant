@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 
 enum LoginMethod { username, phone }
 
@@ -26,14 +27,14 @@ class LoginMethodSwitcher extends StatelessWidget {
       child: Row(
         children: <Widget>[
           _Tab(
-            label: 'اسم المستخدم',
-            isSelected: selected == LoginMethod.username,
-            onTap: () => onChanged(LoginMethod.username),
-          ),
-          _Tab(
-            label: 'رقم الجوال',
+            label: Strings.mobileNumber,
             isSelected: selected == LoginMethod.phone,
             onTap: () => onChanged(LoginMethod.phone),
+          ),
+          _Tab(
+            label: Strings.username,
+            isSelected: selected == LoginMethod.username,
+            onTap: () => onChanged(LoginMethod.username),
           ),
         ],
       ),
@@ -74,7 +75,9 @@ class _Tab extends StatelessWidget {
               fontFamily: 'Cairo',
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: isSelected ? colors.primary : colors.textSecondary,
+              color: isSelected
+                  ? colors.primary
+                  : colors.textSecondary,
             ),
           ),
         ),

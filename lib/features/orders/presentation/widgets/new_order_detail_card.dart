@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/tip_banner.dart';
 import 'order_action_buttons.dart';
 import 'order_item_row.dart';
@@ -56,11 +57,11 @@ class NewOrderDetailCard extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       orderId,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 15.5,
@@ -71,7 +72,7 @@ class NewOrderDetailCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       meta,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 11.5,
@@ -104,10 +105,10 @@ class NewOrderDetailCard extends StatelessWidget {
           const SizedBox(height: 16),
           OrderActionButtons(onAccept: onAccept, onReject: onReject),
           const SizedBox(height: 14),
-          const ReadyForPickupBanner(
-            prefix: 'بعد الضغط ',
-            highlighted: '«جاهز للاستلام»',
-            subtitle: 'سيتم إرسال النظام تلقائياً لأقرب مندوب متصل',
+          ReadyForPickupBanner(
+            prefix: Strings.afterPressing,
+            highlighted: Strings.readyForPickupQuoted,
+            subtitle: Strings.systemWillNotifyDriver,
           ),
         ],
       ),

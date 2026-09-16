@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/app_form_field.dart';
 import '../../../../core/widgets/free_trial_banner.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../widgets/login_header_text.dart';
 import '../widgets/login_logo.dart';
 import '../widgets/login_method_switcher.dart';
-import '../widgets/login_text_field.dart';
 
 /// Merchant login screen — composed from small widgets under
 /// `presentation/widgets/`. RTL is applied once here and inherited by every
@@ -40,22 +40,22 @@ class _LoginScreenState extends State<LoginScreen> {
   String? _validateIdentifier(String? value) {
     if (value == null || value.trim().isEmpty) {
       return _method == LoginMethod.phone
-          ? 'الرجاء إدخال رقم الجوال'
-          : 'الرجاء إدخال اسم المستخدم';
+          ? Strings.enterMobileNumber
+          : Strings.enterUsername;
     }
     if (_method == LoginMethod.phone &&
-        !RegExp(r'^05\d{8}$').hasMatch(value.trim())) {
-      return 'رقم الجوال غير صحيح';
+        !RegExp(r'^0\d{9,14}$').hasMatch(value.trim())) {
+      return Strings.invalidPhone;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'الرجاء إدخال كلمة المرور';
+      return Strings.enterPassword;
     }
     if (value.length < 6) {
-      return 'كلمة المرور 6 أحرف على الأقل';
+      return Strings.passwordTooShort;
     }
     return null;
   }
@@ -89,23 +89,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() => _method = method),
                 ),
                 const SizedBox(height: 24),
-                LoginTextField(
-                  label: _method == LoginMethod.phone
-                      ? 'رقم الجوال'
-                      : 'اسم المستخدم',
+                AppFormField(
                   controller: _identifierController,
+                  label: _method == LoginMethod.phone
+                      ? Strings.mobileNumber
+                      : Strings.username,
                   hintText: _method == LoginMethod.phone
                       ? '05X XXX XXXX'
-                      : 'اسم المستخدم',
+                      : Strings.username,
                   keyboardType: _method == LoginMethod.phone
                       ? TextInputType.phone
                       : TextInputType.text,
                   validator: _validateIdentifier,
                 ),
-                const SizedBox(height: 20),
-                LoginTextField(
-                  label: 'كلمة المرور',
+                const SizedBox(height: 16),
+                AppFormField(
                   controller: _passwordController,
+                  label: Strings.password,
                   hintText: '••••••••',
                   obscureText: _obscurePassword,
                   validator: _validatePassword,
@@ -121,16 +121,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         setState(() => _obscurePassword = !_obscurePassword),
                   ),
                 ),
-                const SizedBox(height: 28),
-                PrimaryButton(label: 'تسجيل الدخول', onPressed: _submit),
-                const SizedBox(height: 16),
+                const SizedBox(height: 24),
+                PrimaryButton(label: Strings.login, onPressed: _submit),
+                const SizedBox(height: 20),
                 Center(
-                  child: TextButton(
-                    onPressed: () =>
+                  child: GestureDetector(
+                    onTap: () =>
                         context.pushNamed(AppRoutes.forgotPasswordName),
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
                     child: Text(
-                      'نسيت كلمة المرور؟',
+                      Strings.forgotPassword,
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 13,

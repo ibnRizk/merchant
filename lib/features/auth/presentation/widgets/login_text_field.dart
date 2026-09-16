@@ -45,7 +45,7 @@ class LoginTextField extends StatelessWidget {
           keyboardType: keyboardType,
           obscureText: obscureText,
           validator: validator,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
           style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 14,

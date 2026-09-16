@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/primary_button.dart';
@@ -26,7 +27,11 @@ class _OtpScreenState extends State<OtpScreen> {
 
   void _submit() {
     if (_code.length != _codeLength) {
-      showBrandSnackBar(context, 'الرجاء إدخال الرمز كاملاً', isError: true);
+      showBrandSnackBar(
+        context,
+        Strings.enterFullCode,
+        isError: true,
+      );
       return;
     }
     context.pushNamed(AppRoutes.resetPasswordName);
@@ -48,25 +53,28 @@ class _OtpScreenState extends State<OtpScreen> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 24,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               const SizedBox(height: 12),
-              Text(
-                'رمز التحقق',
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                  color: context.colors.textPrimary,
+              Center(
+                child: Text(
+                  Strings.verificationCode,
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    color: context.colors.textPrimary,
+                  ),
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 12),
               Text(
-                'الرجاء إدخال الرمز المكون من 4 أرقام المرسل إلى جوالك',
-                textAlign: TextAlign.right,
+                Strings.enter4DigitCode,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 13.5,
@@ -78,15 +86,23 @@ class _OtpScreenState extends State<OtpScreen> {
               OtpInputRow(
                 length: _codeLength,
                 onChanged: (String value) => _code = value,
-                onCompleted: (String value) => _code = value,
+                onCompleted: (String value) =>
+                    _code = value,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               ResendCodeTimer(
-                onResend: () =>
-                    showBrandSnackBar(context, 'تم إرسال الرمز مرة أخرى'),
+                onResend: () {
+                  showBrandSnackBar(
+                    context,
+                    Strings.codeResent,
+                  );
+                },
               ),
-              const SizedBox(height: 32),
-              PrimaryButton(label: 'تأكيد', onPressed: _submit),
+              const SizedBox(height: 24),
+              PrimaryButton(
+                label: Strings.confirm,
+                onPressed: _submit,
+              ),
             ],
           ),
         ),

@@ -24,7 +24,7 @@ class BrandBackButton extends StatelessWidget {
           border: Border.all(color: colors.border),
         ),
         child: Icon(
-          Icons.arrow_forward_ios_rounded,
+          Icons.arrow_back_ios_new,
           size: 16,
           color: colors.textPrimary,
         ),

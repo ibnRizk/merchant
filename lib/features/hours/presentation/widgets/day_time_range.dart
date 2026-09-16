@@ -23,7 +23,7 @@ class DayTimeRange extends StatelessWidget {
     final AppColors colors = context.colors;
     if (!isEditable) {
       return Text(
-        '$startTime  —  $endTime',
+        '$endTime  —  $startTime',
         style: TextStyle(
           fontFamily: 'Cairo',
           fontSize: 12,
@@ -36,14 +36,14 @@ class DayTimeRange extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        TimeChip(label: startTime),
+        TimeChip(label: endTime),
         const SizedBox(width: 8),
         Text(
           '—',
           style: TextStyle(color: colors.textSecondary, fontSize: 13),
         ),
         const SizedBox(width: 8),
-        TimeChip(label: endTime),
+        TimeChip(label: startTime),
       ],
     );
   }

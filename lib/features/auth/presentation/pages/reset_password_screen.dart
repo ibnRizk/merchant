@@ -3,10 +3,11 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/app_form_field.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/primary_button.dart';
-import '../widgets/login_text_field.dart';
 
 /// Final step of the forgot-password flow: set a new password after OTP
 /// verification, then return to login.
@@ -33,20 +34,20 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'الرجاء إدخال كلمة المرور الجديدة';
+      return Strings.enterNewPassword;
     }
     if (value.length < 6) {
-      return 'كلمة المرور 6 أحرف على الأقل';
+      return Strings.passwordTooShort;
     }
     return null;
   }
 
-  String? _validateConfirm(String? value) {
+  String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'الرجاء تأكيد كلمة المرور';
+      return Strings.confirmPasswordError;
     }
     if (value != _passwordController.text) {
-      return 'كلمتا المرور غير متطابقتين';
+      return Strings.passwordsDoNotMatch;
     }
     return null;
   }
@@ -55,7 +56,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (_formKey.currentState!.validate()) {
       showBrandSnackBar(
         context,
-        'تم تحديث كلمة المرور بنجاح، الرجاء تسجيل الدخول',
+        Strings.passwordUpdatedSuccess,
+        isError: false,
       );
       context.go(AppRoutes.splash);
     }
@@ -86,7 +88,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
               children: <Widget>[
                 const SizedBox(height: 12),
                 Text(
-                  'كلمة مرور جديدة',
+                  Strings.newPassword,
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontFamily: 'Cairo',
@@ -97,7 +99,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'الرجاء إدخال كلمة مرور جديدة لحسابك.',
+                  Strings.enterNewPasswordSubtitle,
                   textAlign: TextAlign.right,
                   style: TextStyle(
                     fontFamily: 'Cairo',
@@ -107,9 +109,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
                 const SizedBox(height: 32),
-                LoginTextField(
-                  label: 'كلمة المرور الجديدة',
+                AppFormField(
                   controller: _passwordController,
+                  label: Strings.newPassword,
                   hintText: '••••••••',
                   obscureText: _obscurePassword,
                   validator: _validatePassword,
@@ -126,12 +128,12 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                LoginTextField(
-                  label: 'تأكيد كلمة المرور',
+                AppFormField(
                   controller: _confirmController,
+                  label: Strings.confirmPassword,
                   hintText: '••••••••',
                   obscureText: _obscureConfirm,
-                  validator: _validateConfirm,
+                  validator: _validateConfirmPassword,
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureConfirm
@@ -145,7 +147,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
                 const SizedBox(height: 28),
-                PrimaryButton(label: 'تعيين كلمة المرور', onPressed: _submit),
+                PrimaryButton(label: Strings.setPassword, onPressed: _submit),
               ],
             ),
           ),

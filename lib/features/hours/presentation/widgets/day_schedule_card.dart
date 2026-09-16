@@ -57,7 +57,7 @@ class DayScheduleCard extends StatelessWidget {
             width: 64,
             child: Text(
               entry.dayName,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
               style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 13.5,

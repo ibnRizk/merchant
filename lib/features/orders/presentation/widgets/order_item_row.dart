@@ -20,7 +20,7 @@ class OrderItemRow extends StatelessWidget {
           Expanded(
             child: Text(
               name,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
               style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 13.5,

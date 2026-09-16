@@ -3,9 +3,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/app_form_field.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/primary_button.dart';
-import '../widgets/login_text_field.dart';
 
 /// Forgot-password screen: phone entry step for requesting an OTP.
 /// Self-contained, matching the login screen's visual language.
@@ -20,6 +21,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _phoneController = TextEditingController();
 
+  AppColors get colors => context.colors;
+
   @override
   void dispose() {
     _phoneController.dispose();
@@ -27,11 +30,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   }
 
   String? _validatePhone(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return 'الرجاء إدخال رقم الجوال';
+    if (value == null || value.isEmpty) {
+      return Strings.enterMobileNumber;
     }
-    if (!RegExp(r'^05\d{8}$').hasMatch(value.trim())) {
-      return 'رقم الجوال غير صحيح';
+    if (value.length < 9) {
+      return Strings.invalidPhone;
     }
     return null;
   }
@@ -45,9 +48,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.colors.background,
+      backgroundColor: colors.background,
       appBar: AppBar(
-        backgroundColor: context.colors.background,
+        backgroundColor: colors.background,
         elevation: 0,
         scrolledUnderElevation: 0,
         automaticallyImplyLeading: false,
@@ -65,37 +68,38 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 const SizedBox(height: 12),
-                Text(
-                  'نسيت كلمة المرور؟',
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w800,
-                    color: context.colors.textPrimary,
+                Center(
+                  child: Text(
+                    Strings.forgotPassword,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 24,
+                      fontWeight: FontWeight.w800,
+                      color: colors.textPrimary,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 12),
                 Text(
-                  'الرجاء إدخال رقم الجوال المرتبط بحسابك لإرسال رمز التحقق.',
-                  textAlign: TextAlign.right,
+                  Strings.enterMobileToReset,
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 13.5,
-                    fontWeight: FontWeight.w400,
-                    color: context.colors.textSecondary,
+                    height: 1.5,
+                    color: colors.textSecondary,
                   ),
                 ),
                 const SizedBox(height: 32),
-                LoginTextField(
-                  label: 'رقم الجوال',
+                AppFormField(
                   controller: _phoneController,
+                  label: Strings.mobileNumber,
                   hintText: '05X XXX XXXX',
                   keyboardType: TextInputType.phone,
                   validator: _validatePhone,
                 ),
-                const SizedBox(height: 28),
-                PrimaryButton(label: 'إرسال رمز التحقق', onPressed: _submit),
+                const SizedBox(height: 24),
+                PrimaryButton(label: Strings.sendVerificationCode, onPressed: _submit),
               ],
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/status_pill.dart';
 import 'new_order_detail_card.dart' show OrderLineItem;
@@ -51,11 +52,11 @@ class ActiveOrderDetailCard extends StatelessWidget {
             children: <Widget>[
               Expanded(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
                       orderId,
-                      textAlign: TextAlign.right,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 15.5,
@@ -65,8 +66,8 @@ class ActiveOrderDetailCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'العميل: $customerName',
-                      textAlign: TextAlign.right,
+                      '${Strings.customerPrefix}$customerName',
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 11.5,

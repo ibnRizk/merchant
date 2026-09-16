@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/status_pill.dart';
 
 class ProductEntry {
@@ -50,11 +51,11 @@ class ProductCard extends StatelessWidget {
         children: <Widget>[
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
                   entry.name,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 15,
@@ -65,7 +66,7 @@ class ProductCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   entry.subtitle,
-                  textAlign: TextAlign.right,
+                  textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'Cairo',
                     fontSize: 11.5,
@@ -77,7 +78,7 @@ class ProductCard extends StatelessWidget {
                 GestureDetector(
                   onTap: onEdit,
                   child: Text(
-                    'تعديل المنتج',
+                    Strings.editProduct,
                     style: TextStyle(
                       fontFamily: 'Cairo',
                       fontSize: 11.5,

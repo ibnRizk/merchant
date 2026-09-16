@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_toggle.dart';
 
 /// Green "store open/closed" bar with the [BrandToggle] switch.
@@ -24,12 +25,10 @@ class StoreStatusBar extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          BrandToggle(value: isOpen, onChanged: onChanged),
-          const SizedBox(width: 12),
           Expanded(
             child: Text(
-              'المتجر مفتوح لاستقبال الطلبات',
-              textAlign: TextAlign.right,
+              isOpen ? Strings.storeOpen : Strings.storeClosed,
+              textAlign: TextAlign.start,
               style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 13.5,
@@ -38,6 +37,8 @@ class StoreStatusBar extends StatelessWidget {
               ),
             ),
           ),
+          const SizedBox(width: 12),
+          BrandToggle(value: isOpen, onChanged: onChanged),
         ],
       ),
     );

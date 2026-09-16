@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 
 /// "إعادة إرسال الرمز" link with a countdown; the link only becomes
 /// tappable once the countdown reaches zero, then resets it.
@@ -72,7 +73,7 @@ class _ResendCodeTimerState extends State<ResendCodeTimer> {
         GestureDetector(
           onTap: _handleTap,
           child: Text(
-            'إعادة إرسال الرمز',
+            Strings.resendCode,
             style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 13,
