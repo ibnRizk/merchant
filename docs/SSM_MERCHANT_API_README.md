@@ -1,6 +1,6 @@
 # SSM Merchant API — Postman Collection
 
-Postman collection for the **Merchant (store owner) mobile app**: 86 requests covering all 38 merchant endpoints on the server. Every endpoint in the collection exists on the server, and every merchant endpoint on the server is in the collection (checked against `php artisan route:list` on 2026-09-24).
+Postman collection for the **Merchant (store owner) mobile app**: 88 requests covering all 39 merchant endpoints on the server. Every endpoint in the collection exists on the server, and every merchant endpoint on the server is in the collection (checked against `php artisan route:list` on 2026-09-25).
 
 | File | Purpose |
 |---|---|
@@ -23,7 +23,7 @@ Postman collection for the **Merchant (store owner) mobile app**: 86 requests co
 
 | Step | Folder | What happens |
 |---|---|---|
-| 1 | `01 Registration & Onboarding` | Registers a new merchant and store. The account starts as **pending**, so operational routes return 403. Uploads an onboarding document. |
+| 1 | `01 Registration & Onboarding` | Lists the merchant categories (saves the first as `store_category_id`), then registers a new merchant and store in that category. The account starts as **pending**, so operational routes return 403. Uploads an onboarding document. |
 | 2 | *(admin panel)* | An admin approves the merchant at `https://ssm.husseintech.com/ssm-admin`. **There is no API to approve.** |
 | 3 | `02 Post-approval check` | Same token, and now `can_operate: true`. |
 | 4 | `03 Session & Profile` | Logs in as the approved merchant (saves `merchant_token`), then reads and updates the profile and opens the store. |
@@ -46,6 +46,7 @@ Postman collection for the **Merchant (store owner) mobile app**: 86 requests co
 
 | Variable | Saved by |
 |---|---|
+| `store_category_id` | `List merchant categories (registration screen)` — first active category, empty if none |
 | `merchant_email`, `merchant_password`, `merchant_b_*` | `Register merchant` (random, unique per run) |
 | `merchant_b_token` | `Login (pending account)` |
 | `merchant_doc_id` | `Upload onboarding document` |
@@ -92,6 +93,7 @@ Postman collection for the **Merchant (store owner) mobile app**: 86 requests co
 
 | Method | Path | Notes |
 |---|---|---|
+| GET | `/auth/vendor/store-categories` | Merchant categories for the registration screen (see below) |
 | POST | `/auth/vendor/register` | **multipart**, see below. 200 `{store_id, message}` |
 | POST | `/auth/vendor/login` | `{email, password, vendor_type: "owner"}` → `{token, zone_wise_topic, module_type}`, plus `approval_status: "pending"` for pending accounts |
 | POST | `/auth/vendor/forgot-password` | Sends the reset OTP by e-mail |
@@ -103,11 +105,24 @@ Postman collection for the **Merchant (store owner) mobile app**: 86 requests co
 - Store location: `latitude` and `longitude`, which **must be inside `zone_id`**; otherwise the API returns 403.
 - Delivery time: `minimum_delivery_time`, `maximum_delivery_time`, `delivery_time_type`.
 - Other: `zone_id`, `module_id`, `tax`.
+- `store_category_id`: the merchant's category, from `GET /auth/vendor/store-categories`. **Optional for now** (older app builds don't send it); an unknown or inactive id returns 403 with error code `store_category_id`.
 - `translations`: a JSON string. Item 0 is the store name and item 1 is the address:
   ```json
   [{"locale":"en","key":"name","value":"My Store"},{"locale":"en","key":"address","value":"Street, City"}]
   ```
 - Files: `logo` (required) and `cover_photo`.
+
+### Merchant categories
+
+The admin manages the list in the admin panel under **Business → Merchant categories** (Arabic and English names, order, active flag). The merchant picks one at registration.
+
+`GET /auth/vendor/store-categories` needs **no token** (the merchant has no account yet). It returns only active categories, in display order. `name` follows the `X-localization` header; `name_ar` and `name_en` are always included:
+
+```json
+{ "categories": [ { "id": 1, "name": "مطعم", "name_ar": "مطعم", "name_en": "Restaurant" } ] }
+```
+
+The chosen category comes back in the profile as `stores[0].category` (same shape), or `null` for stores without one.
 
 ### Onboarding (token, works while pending)
 
@@ -122,7 +137,7 @@ Postman collection for the **Merchant (store owner) mobile app**: 86 requests co
 | Method | Path | Notes |
 |---|---|---|
 | GET | `/vendor/session/validate` | Merchant and store. Returns 403 while the store is still disabled (pending). |
-| GET | `/vendor/profile` | Merchant and `stores[]` (name, phone, address, status, logo/cover URLs, schedules) |
+| GET | `/vendor/profile` | Merchant and `stores[]` (name, phone, address, status, logo/cover URLs, `category`, schedules) |
 | PATCH / PUT | `/vendor/profile` | `f_name`, `l_name`, `phone`, `email`, `password` + `password_confirmation`, `store_name`, `store_phone`, `store_email`, `store_address`. An empty body returns 422. |
 | POST | `/vendor/update-fcm-token` | `{fcm_token}` |
 | POST | `/vendor/update-active-status` | **Approved.** `{is_open: true|false}` opens or closes your store and returns `{message, active}`. Any `store_id` in the body is ignored. |
@@ -218,6 +233,7 @@ There is no accept or quote endpoint for pharmacy requests yet.
 | Symptom | Cause |
 |---|---|
 | Every request goes to `127.0.0.1` | The `SSM Local` environment is selected. Switch to *No Environment*. |
+| Register returns 403 with code `store_category_id` | The id isn't an active category. Run `List merchant categories` first, or leave the field empty. |
 | Register returns 403 about location | `latitude`/`longitude` are outside `zone_id`. For zone 7, use the collection's `zone_latitude`/`zone_longitude`. |
 | Every order request returns 403 `merchant-not-approved` | The admin hasn't approved the merchant yet |
 | `Current orders` is empty and `order_id` isn't saved | There are no customer orders for this store yet |

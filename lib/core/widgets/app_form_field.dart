@@ -37,6 +37,12 @@ class AppFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
+    // Phone numbers and e-mails are always typed left-to-right, but they
+    // still hug the layout's start edge, so an Arabic form stays right-aligned.
+    final bool isLtrContent =
+        keyboardType == TextInputType.phone ||
+        keyboardType == TextInputType.emailAddress;
+    final bool isRtlLayout = Directionality.of(context) == TextDirection.rtl;
     return LabeledField(
       label: label,
       child: TextFormField(
@@ -45,9 +51,10 @@ class AppFormField extends StatelessWidget {
         keyboardType: keyboardType,
         obscureText: obscureText,
         validator: validator,
-        textAlign: TextAlign.start,
-        textDirection:
-            keyboardType == TextInputType.phone ? TextDirection.ltr : null,
+        textAlign: !isLtrContent
+            ? TextAlign.start
+            : (isRtlLayout ? TextAlign.right : TextAlign.left),
+        textDirection: isLtrContent ? TextDirection.ltr : null,
         style: TextStyle(
           fontFamily: 'Cairo',
           fontSize: 14,

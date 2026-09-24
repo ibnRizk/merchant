@@ -10,16 +10,23 @@ class TitleActionHeader extends StatelessWidget {
     required this.title,
     required this.actionLabel,
     required this.onActionTap,
+    this.isLoading = false,
   });
 
   final String title;
   final String actionLabel;
-  final VoidCallback onActionTap;
+
+  /// `null` renders the pill disabled.
+  final VoidCallback? onActionTap;
+
+  /// Swaps the label for a spinner and ignores taps.
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
     final ColorScheme scheme = Theme.of(context).colorScheme;
+    final bool isEnabled = onActionTap != null && !isLoading;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -33,21 +40,36 @@ class TitleActionHeader extends StatelessWidget {
           ),
         ),
         Material(
-          color: colors.primary,
+          color: isEnabled || isLoading
+              ? colors.primary
+              : colors.primary.withValues(alpha: 0.45),
           borderRadius: BorderRadius.circular(20),
           child: InkWell(
-            onTap: onActionTap,
+            onTap: isEnabled ? onActionTap : null,
             borderRadius: BorderRadius.circular(20),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-              child: Text(
-                actionLabel,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 12.5,
-                  fontWeight: FontWeight.w700,
-                  color: scheme.onPrimary,
-                ),
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                child: isLoading
+                    ? SizedBox.square(
+                        key: const ValueKey<bool>(true),
+                        dimension: 17,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: scheme.onPrimary,
+                        ),
+                      )
+                    : Text(
+                        actionLabel,
+                        key: const ValueKey<bool>(false),
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 12.5,
+                          fontWeight: FontWeight.w700,
+                          color: scheme.onPrimary,
+                        ),
+                      ),
               ),
             ),
           ),

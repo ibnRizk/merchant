@@ -137,6 +137,24 @@ abstract class Strings {
   static const String _profileSavedSuccess = 'profile_saved_success';
   static String get profileSavedSuccess => _profileSavedSuccess.tr;
 
+  static const String _profileNoChanges = 'profile_no_changes';
+  static String get profileNoChanges => _profileNoChanges.tr;
+
+  static const String _storePhoneLabel = 'store_phone_label';
+  static String get storePhoneLabel => _storePhoneLabel.tr;
+
+  static const String _storeEmailLabel = 'store_email_label';
+  static String get storeEmailLabel => _storeEmailLabel.tr;
+
+  static const String _chooseAppLanguage = 'choose_app_language';
+  static String get chooseAppLanguage => _chooseAppLanguage.tr;
+
+  static const String _logoutConfirmTitle = 'logout_confirm_title';
+  static String get logoutConfirmTitle => _logoutConfirmTitle.tr;
+
+  static const String _logoutConfirmMessage = 'logout_confirm_message';
+  static String get logoutConfirmMessage => _logoutConfirmMessage.tr;
+
   // --- Home ---
   static const String _goodMorning = 'good_morning';
   static String get goodMorning => _goodMorning.tr;

@@ -15,7 +15,10 @@ class LocaleCubit extends Cubit<LanguageCode> {
   Future<void> setLocale(LanguageCode code) async {
     if (code == state) return;
     await sharedPreferences.saveLanguageCode(code.name);
-    
+    // The server localises its messages from `X-localization`; without this
+    // the old language sticks until the next app start.
+    dioConsumer.updateLanguageCodeHeader();
+
     // Pre-load the new localizations and update the singleton BEFORE emitting.
     // This ensures that when the UI widgets rebuild synchronously upon emit,
     // the `.tr` extension already serves the new strings, avoiding the race 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/core/widgets/free_trial_banner.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
@@ -8,252 +7,218 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../config/themes/theme_cubit.dart';
 import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/values/strings.dart';
-import '../../../../core/widgets/action_card.dart';
-import '../../../../core/widgets/app_form_field.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
+import '../../../../core/widgets/free_trial_banner.dart';
 import '../../../../core/widgets/title_action_header.dart';
-import '../widgets/profile_address_field.dart';
-import '../widgets/profile_avatar_block.dart';
-import '../widgets/profile_dropdown_field.dart';
-import '../widgets/theme_toggle_row.dart';
+import '../../domain/entities/merchant_profile.dart';
+import '../cubit/logout/logout_cubit.dart';
+import '../cubit/profile/profile_cubit.dart';
+import '../widgets/language_bottom_sheet.dart';
+import '../widgets/language_tile.dart';
+import '../widgets/logout_button.dart';
+import '../widgets/profile_form.dart';
+import '../widgets/profile_section_card.dart';
+import '../widgets/profile_status_views.dart';
+import '../widgets/theme_mode_selector.dart';
 
-/// Profile tab body — composed from small widgets under
-/// `presentation/widgets/`. Rendered inside [MainScaffold]; the bottom nav
-/// bar and RTL directionality are provided by the parent scaffold.
-///
-/// Every UI label/message here comes from `Strings`/`.tr` (backed by
-/// `lang/ar.json` + `lang/en.json`) so the screen re-renders correctly for
-/// either language. The sample data in the controllers below (store name,
-/// description, phone, address) is deliberately left as-is — it stands in
-/// for content a real backend would return, not UI chrome, so it isn't
-/// translated.
+/// Profile tab body, rendered inside [MainScaffold]. [ProfileCubit] and
+/// [LogoutCubit] are provided by the home route.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() =>
-      _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  /// Stable, locale-independent values mapped to their localized labels.
-  /// Keeping these separate means the selected category stays matched after
-  /// a language switch, instead of losing its selection because the display
-  /// text (and therefore the dropdown's value) changed underneath it.
-  static const List<String> _categoryValues = <String>[
-    'restaurants',
-    'cafes',
-    'sweets',
-    'grocery',
-  ];
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _storeNameController = TextEditingController();
+  final TextEditingController _storePhoneController = TextEditingController();
+  final TextEditingController _storeEmailController = TextEditingController();
+  final TextEditingController _storeAddressController =
+      TextEditingController();
 
-  static String _categoryLabel(String value) {
-    switch (value) {
-      case 'restaurants':
-        return Strings.categoryRestaurants;
-      case 'cafes':
-        return Strings.categoryCafes;
-      case 'sweets':
-        return Strings.categorySweets;
-      default:
-        return Strings.categoryGrocery;
-    }
+  @override
+  void initState() {
+    super.initState();
+    // The profile may already be loaded if this screen is rebuilt.
+    final ProfileState state = context.read<ProfileCubit>().state;
+    if (state is ProfileReady) _fillFrom(state.profile);
   }
-
-  final TextEditingController _nameController =
-      TextEditingController(text: 'مطاعم مذاق');
-  final TextEditingController
-  _descriptionController = TextEditingController(
-    text:
-        'وجبات برجر طازجة، بطاطس مقرمشة ومشروبات تناسب كل أفراد العائلة.',
-  );
-  final TextEditingController _contactController =
-      TextEditingController(text: '05X XXX XXXX');
-
-  String _category = 'restaurants';
-  final String _address = 'حي الملك فهد - محافظة نبرة';
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _descriptionController.dispose();
-    _contactController.dispose();
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _storeNameController.dispose();
+    _storePhoneController.dispose();
+    _storeEmailController.dispose();
+    _storeAddressController.dispose();
     super.dispose();
+  }
+
+  void _fillFrom(MerchantProfile profile) {
+    _firstNameController.text = profile.firstName;
+    _lastNameController.text = profile.lastName;
+    _storeNameController.text = profile.store?.name ?? '';
+    _storePhoneController.text = profile.store?.phone ?? '';
+    _storeEmailController.text = profile.store?.email ?? '';
+    _storeAddressController.text = profile.store?.address ?? '';
+  }
+
+  void _save() {
+    FocusScope.of(context).unfocus();
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    context.read<ProfileCubit>().saveProfile(
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      storeName: _storeNameController.text,
+      storePhone: _storePhoneController.text,
+      storeEmail: _storeEmailController.text,
+      storeAddress: _storeAddressController.text,
+    );
+  }
+
+  Future<void> _logout() async {
+    final bool confirmed = await showLogoutConfirmation(context);
+    if (!confirmed || !mounted) return;
+    context.read<LogoutCubit>().logout();
+  }
+
+  void _onProfileState(BuildContext context, ProfileState state) {
+    switch (state) {
+      case ProfileLoaded(:final profile):
+        _fillFrom(profile);
+      case ProfileSaved(:final profile):
+        _fillFrom(profile);
+        showBrandSnackBar(context, Strings.profileSavedSuccess);
+      case ProfileUnchanged():
+        showBrandSnackBar(context, Strings.profileNoChanges);
+      case ProfileSaveFailure(:final message):
+        showBrandSnackBar(context, message, isError: true);
+      case ProfileInitial() ||
+          ProfileLoading() ||
+          ProfileLoadFailure() ||
+          ProfileSaving():
+        break;
+    }
+  }
+
+  void _onLogoutState(BuildContext context, LogoutState state) {
+    switch (state) {
+      case LogoutSuccess():
+        context.go(AppRoutes.splash);
+      case LogoutFailure(:final message):
+        showBrandSnackBar(context, message, isError: true);
+      case LogoutInitial() || LogoutLoading():
+        break;
+    }
+  }
+
+  /// Save-status changes don't alter the form itself; skip those rebuilds.
+  static bool _contentChanged(ProfileState previous, ProfileState current) {
+    if (previous is ProfileReady && current is ProfileReady) {
+      return previous.profile != current.profile;
+    }
+    return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    final LanguageCode languageCode = context
-        .watch<LocaleCubit>()
-        .state;
-    final Themes theme = context.watch<ThemeCubit>().state;
+    // Labels come from the global `Strings.*.tr`, so a language switch has
+    // to rebuild this screen for them to refresh.
+    final LanguageCode languageCode = context.watch<LocaleCubit>().state;
 
-    return SafeArea(
-      bottom: false,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TitleActionHeader(
-              title: Strings.profileTitle,
-              actionLabel: Strings.save,
-              onActionTap: () => showBrandSnackBar(
-                context,
-                Strings.profileSavedSuccess,
+    return MultiBlocListener(
+      listeners: <BlocListener<dynamic, dynamic>>[
+        BlocListener<ProfileCubit, ProfileState>(listener: _onProfileState),
+        BlocListener<LogoutCubit, LogoutState>(listener: _onLogoutState),
+      ],
+      child: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              BlocSelector<
+                ProfileCubit,
+                ProfileState,
+                ({bool isReady, bool isSaving})
+              >(
+                selector: (ProfileState state) => (
+                  isReady: state is ProfileReady,
+                  isSaving: state is ProfileSaving,
+                ),
+                builder: (_, ({bool isReady, bool isSaving}) status) =>
+                    TitleActionHeader(
+                      title: Strings.profileTitle,
+                      actionLabel: Strings.save,
+                      onActionTap: status.isReady ? _save : null,
+                      isLoading: status.isSaving,
+                    ),
               ),
-            ),
-            const SizedBox(height: 20),
-            ProfileAvatarBlock(
-              storeName: _nameController.text,
-              subtitle:
-                  '${_categoryLabel(_category)} - نبرة',
-            ),
-            const SizedBox(height: 24),
-            AppFormField(
-              label: Strings.storeNameLabel,
-              controller: _nameController,
-            ),
-            const SizedBox(height: 16),
-            ProfileDropdownField(
-              label: Strings.categoryLabel,
-              value: _category,
-              options: <String, String>{
-                for (final String value in _categoryValues)
-                  value: _categoryLabel(value),
-              },
-              onChanged: (String? value) {
-                if (value != null) {
-                  setState(() => _category = value);
-                }
-              },
-            ),
-            const SizedBox(height: 16),
-            AppFormField(
-              label: Strings.storeDescriptionLabel,
-              controller: _descriptionController,
-              maxLines: 3,
-            ),
-            const SizedBox(height: 16),
-            AppFormField(
-              label: Strings.contactNumberLabel,
-              controller: _contactController,
-              keyboardType: TextInputType.phone,
-            ),
-            const SizedBox(height: 16),
-            ProfileAddressField(
-              label: Strings.addressLabel,
-              address: _address,
-              onTap: () => showBrandSnackBar(
-                context,
-                Strings.mapPickerComingSoon,
-              ),
-            ),
-            Text(
-              Strings.theme,
-              style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-            const SizedBox(height: 12),
-            ThemeToggleRow(
-              theme: theme,
-              onChanged: (Themes value) =>
-                  context.read<ThemeCubit>().setTheme(value),
-            ),
-            const SizedBox(height: 24),
-            ActionCard(
-              title: Strings.language,
-              subtitle: languageCode == LanguageCode.ar ? 'العربية' : 'English',
-              actionLabel: 'تغيير',
-              onTap: () {
-                showModalBottomSheet<void>(
-                  context: context,
-                  builder: (BuildContext sheetContext) {
-                    return SafeArea(
-                      child: Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: <Widget>[
-                            Text(
-                              Strings.language,
-                              style: Theme.of(context).textTheme.titleLarge,
-                            ),
-                            const SizedBox(height: 20),
-                            ListTile(
-                              title: const Text(
-                                'العربية',
-                                style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              trailing: languageCode == LanguageCode.ar
-                                  ? Icon(Icons.check,
-                                      color: Theme.of(context).colorScheme.primary)
-                                  : null,
-                              onTap: () {
-                                context.read<LocaleCubit>().setLocale(LanguageCode.ar);
-                                Navigator.pop(sheetContext);
-                              },
-                            ),
-                            ListTile(
-                              title: const Text(
-                                'English',
-                                style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              trailing: languageCode == LanguageCode.en
-                                  ? Icon(Icons.check,
-                                      color: Theme.of(context).colorScheme.primary)
-                                  : null,
-                              onTap: () {
-                                context.read<LocaleCubit>().setLocale(LanguageCode.en);
-                                Navigator.pop(sheetContext);
-                              },
-                            ),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
+              const SizedBox(height: 20),
+              BlocBuilder<ProfileCubit, ProfileState>(
+                buildWhen: _contentChanged,
+                builder: (BuildContext context, ProfileState state) =>
+                    switch (state) {
+                      ProfileInitial() ||
+                      ProfileLoading() => const ProfileLoadingView(),
+                      ProfileLoadFailure(:final message) => ProfileErrorView(
+                        message: message,
+                        onRetry: context.read<ProfileCubit>().loadProfile,
                       ),
-                    );
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 20),
-            FreeTrialBanner(text: Strings.freeTrialBanner),
-            const SizedBox(height: 32),
-            OutlinedButton(
-              onPressed: () {
-                // Perform logout actions here (e.g. clear tokens)
-                context.go(AppRoutes.splash);
-              },
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                side: BorderSide(color: Theme.of(context).colorScheme.error),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                      ProfileReady(:final profile) => ProfileForm(
+                        formKey: _formKey,
+                        profile: profile,
+                        firstNameController: _firstNameController,
+                        lastNameController: _lastNameController,
+                        storeNameController: _storeNameController,
+                        storePhoneController: _storePhoneController,
+                        storeEmailController: _storeEmailController,
+                        storeAddressController: _storeAddressController,
+                      ),
+                    },
+              ),
+              const SizedBox(height: 16),
+              ProfileSectionCard(
+                title: Strings.theme,
+                icon: Icons.palette_outlined,
+                children: <Widget>[
+                  BlocBuilder<ThemeCubit, Themes>(
+                    builder: (BuildContext context, Themes theme) =>
+                        ThemeModeSelector(
+                          selected: theme,
+                          onChanged: context.read<ThemeCubit>().setTheme,
+                        ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              LanguageTile(
+                current: languageCode,
+                onTap: () => showLanguageBottomSheet(
+                  context,
+                  current: languageCode,
+                  onSelected: context.read<LocaleCubit>().setLocale,
                 ),
               ),
-              child: Text(
-                Strings.logout,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 14.5,
-                  fontWeight: FontWeight.w700,
-                  color: Theme.of(context).colorScheme.error,
-                ),
+              const SizedBox(height: 20),
+              FreeTrialBanner(text: Strings.freeTrialBanner),
+              const SizedBox(height: 28),
+              BlocSelector<LogoutCubit, LogoutState, bool>(
+                // Stay busy after success until the route changes.
+                selector: (LogoutState state) =>
+                    state is LogoutLoading || state is LogoutSuccess,
+                builder: (_, bool isLoading) =>
+                    LogoutButton(isLoading: isLoading, onPressed: _logout),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

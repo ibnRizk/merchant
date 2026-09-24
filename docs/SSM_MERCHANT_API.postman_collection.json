@@ -2,7 +2,7 @@
     "info": {
         "_postman_id": "2109f98f-1193-4809-9791-30286a148ecd",
         "name": "SSM Merchant API",
-        "description": "SSM mobile API for the **Merchant** app. Auth: opaque bearer token from `POST /auth/vendor/login` (`vendor_type: owner`). Approval gate: pending merchants can only use onboarding routes. Import together with `SSM_LOCAL.postman_environment.json`. See docs/SSM_MERCHANT_API_GUIDE.md.",
+        "description": "SSM mobile API for the **Merchant** app. Auth: opaque bearer token from `POST /auth/vendor/login` (`vendor_type: owner`). Approval gate: pending merchants can only use onboarding routes. Import together with `SSM_LOCAL.postman_environment.json`. See docs/SSM_MERCHANT_API_GUIDE.md. Merchant categories: `GET /auth/vendor/store-categories` (public) feeds the registration screen; send the chosen id as `store_category_id` when registering.",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
     },
     "auth": {
@@ -56,6 +56,11 @@
             "key": "merchant_item_id",
             "value": "",
             "type": "string"
+        },
+        {
+            "key": "store_category_id",
+            "value": "",
+            "type": "string"
         }
     ],
     "item": [
@@ -63,6 +68,62 @@
             "name": "01 Registration & Onboarding (pending account)",
             "description": "Self-registration creates a PENDING account (vendor + store, both inactive). A pending merchant can log in and use onboarding routes only; every operational route returns HTTP 403 `merchant-not-approved` until an admin approves the account in the SSM admin panel.",
             "item": [
+                {
+                    "name": "List merchant categories (registration screen)",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "X-localization",
+                                "value": "ar",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/vendor/store-categories",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "vendor",
+                                "store-categories"
+                            ],
+                            "query": []
+                        },
+                        "description": "Public, no token. Active merchant categories managed by the admin (Admin panel → Merchant categories), ordered for display. `name` follows `X-localization` (`ar`/`en`); `name_ar` and `name_en` are always included. Saves the first id as `store_category_id` for `Register merchant`. An empty list is valid (no categories defined yet).",
+                        "auth": {
+                            "type": "noauth"
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const EXPECTED = [200];",
+                                    "let json = null;",
+                                    "try { json = pm.response.json(); } catch (e) { json = null; }",
+                                    "pm.test('Status is ' + EXPECTED.join(' or '), function () { pm.expect(EXPECTED).to.include(pm.response.code); });",
+                                    "pm.test('No server error', function () { pm.expect(pm.response.code).to.be.below(500); });",
+                                    "pm.test('Response is JSON', function () { pm.expect(json).to.not.equal(null); });",
+                                    "if (EXPECTED.includes(pm.response.code)) {",
+                                    "  pm.test('categories is an array', function () { pm.expect(json.categories).to.be.an('array'); });",
+                                    "  json.categories.forEach(function (c) { pm.expect(c).to.have.all.keys('id', 'name', 'name_ar', 'name_en'); });",
+                                    "  if (json.categories.length) { pm.collectionVariables.set('store_category_id', String(json.categories[0].id)); } else { pm.collectionVariables.set('store_category_id', ''); }",
+                                    "}"
+                                ]
+                            }
+                        }
+                    ]
+                },
                 {
                     "name": "Register merchant",
                     "request": {
@@ -96,7 +157,7 @@
                             ],
                             "query": []
                         },
-                        "description": "Multipart form. `translations` is a JSON string: item 0 = store name, item 1 = store address (`locale`, `key`, `value`). Success is HTTP 200 with `store_id` (the response `type` is a legacy field). Fields `logo` (required) and `cover_photo` are image files.",
+                        "description": "Multipart form. `translations` is a JSON string: item 0 = store name, item 1 = store address (`locale`, `key`, `value`). Success is HTTP 200 with `store_id` (the response `type` is a legacy field). Fields `logo` (required) and `cover_photo` are image files. `store_category_id` (optional for now) is the merchant category chosen from `List merchant categories`; an unknown or inactive id returns 403 with error code `store_category_id`.",
                         "auth": {
                             "type": "noauth"
                         },
@@ -162,6 +223,12 @@
                                     "key": "module_id",
                                     "value": "{{module_id}}",
                                     "type": "text"
+                                },
+                                {
+                                    "key": "store_category_id",
+                                    "value": "{{store_category_id}}",
+                                    "type": "text",
+                                    "description": "Optional for now. Id from `List merchant categories`; must be an active category."
                                 },
                                 {
                                     "key": "tax",
@@ -529,6 +596,166 @@
                                     "pm.test('Status is ' + EXPECTED.join(' or '), function () { pm.expect(EXPECTED).to.include(pm.response.code); });",
                                     "pm.test('No server error', function () { pm.expect(pm.response.code).to.be.below(500); });",
                                     "pm.test('Response is JSON', function () { pm.expect(json).to.not.equal(null); });"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Register with an unknown category",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "X-localization",
+                                "value": "en",
+                                "type": "text"
+                            },
+                            {
+                                "key": "vendorType",
+                                "value": "owner",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/auth/vendor/register",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "vendor",
+                                "register"
+                            ],
+                            "query": []
+                        },
+                        "description": "Same as `Register merchant` but with a `store_category_id` that does not exist. Expected: HTTP 403 with error code `store_category_id`; no account is created.",
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "body": {
+                            "mode": "formdata",
+                            "formdata": [
+                                {
+                                    "key": "f_name",
+                                    "value": "Pending",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "l_name",
+                                    "value": "Merchant",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "email",
+                                    "value": "{{merchant_badcat_email}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "phone",
+                                    "value": "{{merchant_badcat_phone}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "password",
+                                    "value": "Ssm!Merchant#QA9x7V2k2026",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "latitude",
+                                    "value": "{{zone_latitude}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "longitude",
+                                    "value": "{{zone_longitude}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "minimum_delivery_time",
+                                    "value": "10",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "maximum_delivery_time",
+                                    "value": "30",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "delivery_time_type",
+                                    "value": "min",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "zone_id",
+                                    "value": "{{zone_id}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "module_id",
+                                    "value": "{{module_id}}",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "store_category_id",
+                                    "value": "999999",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "tax",
+                                    "value": "0",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "translations",
+                                    "value": "[{\"locale\":\"en\",\"key\":\"name\",\"value\":\"Postman Test Store\"},{\"locale\":\"en\",\"key\":\"address\",\"value\":\"Tahlia St, Riyadh\"}]",
+                                    "type": "text"
+                                },
+                                {
+                                    "key": "logo",
+                                    "type": "file",
+                                    "src": "docs/postman/fixtures/sample-image.png"
+                                },
+                                {
+                                    "key": "cover_photo",
+                                    "type": "file",
+                                    "src": "docs/postman/fixtures/sample-image.png"
+                                }
+                            ]
+                        }
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const n = Date.now().toString().slice(-8) + Math.floor(Math.random() * 90 + 10);",
+                                    "pm.collectionVariables.set('merchant_badcat_phone', '+9665' + n.slice(-8));",
+                                    "pm.collectionVariables.set('merchant_badcat_email', 'merchant_badcat.' + n + '@ssm.test');"
+                                ]
+                            }
+                        },
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const EXPECTED = [403];",
+                                    "let json = null;",
+                                    "try { json = pm.response.json(); } catch (e) { json = null; }",
+                                    "pm.test('Status is ' + EXPECTED.join(' or '), function () { pm.expect(EXPECTED).to.include(pm.response.code); });",
+                                    "pm.test('No server error', function () { pm.expect(pm.response.code).to.be.below(500); });",
+                                    "pm.test('Response is JSON', function () { pm.expect(json).to.not.equal(null); });",
+                                    "if (EXPECTED.includes(pm.response.code)) {",
+                                    "  pm.test('Category rule reported', function () { pm.expect(json.errors.map(e => e.code)).to.include('store_category_id'); });",
+                                    "}"
                                 ]
                             }
                         }
@@ -1942,7 +2169,11 @@
                                     "    if (v !== undefined && v !== null) { pm.collectionVariables.set('store_id', String(v)); } }",
                                     "  pm.test('Profile exposes no credentials or commission data', function () { pm.expect(JSON.stringify(json)).to.not.match(/password|auth_token|commission|withdraw|wallet|earning/i); });",
                                     "  pm.test('Store schedules returned', function () { pm.expect(json.stores[0].schedules).to.be.an('array'); });",
-                                    "}"
+                                    "}",
+                                    "{ const expectedCategory = pm.collectionVariables.get('store_category_id');",
+                                    "  if (pm.response.code === 200 && expectedCategory) {",
+                                    "    pm.test('Store category matches registration', function () { pm.expect(String(json.stores[0].category.id)).to.equal(expectedCategory); });",
+                                    "  } }"
                                 ]
                             }
                         }

@@ -19,6 +19,8 @@ import '../../features/menu/presentation/widgets/product_card.dart'
     show ProductEntry;
 import '../../features/orders/presentation/pages/active_orders_screen.dart';
 import '../../features/orders/presentation/pages/orders_screen.dart';
+import '../../features/profile/presentation/cubit/logout/logout_cubit.dart';
+import '../../features/profile/presentation/cubit/profile/profile_cubit.dart';
 import '../../injection_container.dart';
 import 'navigator_observer.dart';
 
@@ -65,7 +67,19 @@ abstract class AppRoutes {
       GoRoute(
         path: home,
         name: homeName,
-        builder: (_, __) => const MainScaffold(),
+        // Profile is a tab of MainScaffold, so its cubits live at this route.
+        builder: (_, __) => MultiBlocProvider(
+          providers: <BlocProvider<StateStreamableSource<Object?>>>[
+            BlocProvider<ProfileCubit>(
+              create: (_) => ServiceLocator.instance<ProfileCubit>()
+                ..loadProfile(),
+            ),
+            BlocProvider<LogoutCubit>(
+              create: (_) => ServiceLocator.instance<LogoutCubit>(),
+            ),
+          ],
+          child: const MainScaffold(),
+        ),
       ),
       // GoRoute(
       //   path: changeLanguage,

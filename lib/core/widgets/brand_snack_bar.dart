@@ -17,7 +17,7 @@ void showBrandSnackBar(
       SnackBar(
         content: Text(
           message,
-          textAlign: TextAlign.right,
+          textAlign: TextAlign.start,
           style: TextStyle(
             fontFamily: 'Cairo',
             fontSize: 13,

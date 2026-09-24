@@ -10,4 +10,8 @@ abstract class ApiEndpoints {
   static const String forgotPassword = '$authPrefix/forgot-password';
   static const String verifyToken = '$authPrefix/verify-token';
   static const String resetPassword = '$authPrefix/reset-password';
+
+  // --- Session and profile (token) ---
+  static const String vendorProfile = '/vendor/profile';
+  static const String vendorLogout = '/vendor/logout';
 }
