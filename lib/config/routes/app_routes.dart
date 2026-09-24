@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
 
 import '../../core/widgets/slider_photo.dart';
+import '../../features/auth/domain/entities/merchant_auth_result.dart';
+import '../../features/auth/presentation/cubit/forgot_password/forgot_password_cubit.dart';
+import '../../features/auth/presentation/cubit/login/login_cubit.dart';
+import '../../features/auth/presentation/cubit/register/register_cubit.dart';
 import '../../features/auth/presentation/pages/forgot_password_screen.dart';
+import '../../features/auth/presentation/pages/location_picker_screen.dart';
 import '../../features/auth/presentation/pages/login_screen.dart';
-import '../../features/auth/presentation/pages/otp_screen.dart';
-import '../../features/auth/presentation/pages/reset_password_screen.dart';
+import '../../features/auth/presentation/pages/pending_approval_screen.dart';
+import '../../features/auth/presentation/pages/register_screen.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
 import '../../features/menu/presentation/pages/add_product_screen.dart';
 import '../../features/menu/presentation/widgets/product_card.dart'
@@ -24,8 +31,9 @@ abstract class AppRoutes {
   static const String newOrders = '/orders/new';
   static const String activeOrders = '/orders/active';
   static const String forgotPassword = '/forgot-password';
-  static const String otp = '/forgot-password/otp';
-  static const String resetPassword = '/forgot-password/otp/reset';
+  static const String register = '/register';
+  static const String locationPicker = '/register/location';
+  static const String pendingApproval = '/pending-approval';
   static const String addProduct = '/menu/add-product';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
@@ -36,8 +44,9 @@ abstract class AppRoutes {
   static const String newOrdersName = 'newOrders';
   static const String activeOrdersName = 'activeOrders';
   static const String forgotPasswordName = 'forgotPassword';
-  static const String otpName = 'otp';
-  static const String resetPasswordName = 'resetPassword';
+  static const String registerName = 'register';
+  static const String locationPickerName = 'locationPicker';
+  static const String pendingApprovalName = 'pendingApproval';
   static const String addProductName = 'addProduct';
 
   static final GoRouter router = GoRouter(
@@ -48,7 +57,10 @@ abstract class AppRoutes {
       GoRoute(
         path: splash,
         name: splashName,
-        builder: (_, __) => const LoginScreen(),
+        builder: (_, __) => BlocProvider<LoginCubit>(
+          create: (_) => ServiceLocator.instance<LoginCubit>(),
+          child: const LoginScreen(),
+        ),
       ),
       GoRoute(
         path: home,
@@ -73,13 +85,33 @@ abstract class AppRoutes {
       GoRoute(
         path: forgotPassword,
         name: forgotPasswordName,
-        builder: (_, __) => const ForgotPasswordScreen(),
+        builder: (_, __) => BlocProvider<ForgotPasswordCubit>(
+          create: (_) => ServiceLocator.instance<ForgotPasswordCubit>(),
+          child: const ForgotPasswordScreen(),
+        ),
       ),
-      GoRoute(path: otp, name: otpName, builder: (_, __) => const OtpScreen()),
       GoRoute(
-        path: resetPassword,
-        name: resetPasswordName,
-        builder: (_, __) => const ResetPasswordScreen(),
+        path: register,
+        name: registerName,
+        builder: (_, __) => BlocProvider<RegisterCubit>(
+          create: (_) => ServiceLocator.instance<RegisterCubit>(),
+          child: const RegisterScreen(),
+        ),
+      ),
+      GoRoute(
+        path: locationPicker,
+        name: locationPickerName,
+        builder: (_, GoRouterState state) =>
+            LocationPickerScreen(initialLocation: state.extra as LatLng?),
+      ),
+      GoRoute(
+        path: pendingApproval,
+        name: pendingApprovalName,
+        builder: (_, GoRouterState state) => PendingApprovalScreen(
+          status:
+              state.extra as MerchantApprovalStatus? ??
+              MerchantApprovalStatus.pending,
+        ),
       ),
       GoRoute(
         path: addProduct,

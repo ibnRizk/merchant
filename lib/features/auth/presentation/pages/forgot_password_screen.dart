@@ -1,108 +1,90 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
-import '../../../../core/widgets/app_form_field.dart';
-import '../../../../core/widgets/brand_back_button.dart';
-import '../../../../core/widgets/primary_button.dart';
+import '../../../../core/widgets/brand_snack_bar.dart';
+import '../cubit/forgot_password/forgot_password_cubit.dart';
+import '../widgets/auth_app_bar.dart';
+import '../widgets/forgot_password/request_otp_step.dart';
+import '../widgets/forgot_password/reset_password_step.dart';
+import '../widgets/forgot_password/verify_otp_step.dart';
 
-/// Forgot-password screen: phone entry step for requesting an OTP.
-/// Self-contained, matching the login screen's visual language.
-class ForgotPasswordScreen extends StatefulWidget {
+/// Hosts the 3-step password reset. [ForgotPasswordCubit] owns the current
+/// step; back (app bar or system) goes to the previous step before leaving.
+class ForgotPasswordScreen extends StatelessWidget {
   const ForgotPasswordScreen({super.key});
 
-  @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
-}
-
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _phoneController = TextEditingController();
-
-  AppColors get colors => context.colors;
-
-  @override
-  void dispose() {
-    _phoneController.dispose();
-    super.dispose();
-  }
-
-  String? _validatePhone(String? value) {
-    if (value == null || value.isEmpty) {
-      return Strings.enterMobileNumber;
-    }
-    if (value.length < 9) {
-      return Strings.invalidPhone;
-    }
-    return null;
-  }
-
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      context.pushNamed(AppRoutes.otpName);
+  void _onStateChanged(BuildContext context, ForgotPasswordState state) {
+    switch (state.status) {
+      case ForgotPasswordStatus.failure:
+        showBrandSnackBar(
+          context,
+          state.errorMessage ?? Strings.somethingWentWrong,
+          isError: true,
+        );
+      case ForgotPasswordStatus.otpResent:
+        showBrandSnackBar(context, Strings.codeResent);
+      case ForgotPasswordStatus.completed:
+        showBrandSnackBar(context, Strings.passwordUpdatedSuccess);
+        context.go(AppRoutes.splash);
+      case ForgotPasswordStatus.idle || ForgotPasswordStatus.loading:
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: colors.background,
-      appBar: AppBar(
-        backgroundColor: colors.background,
-        elevation: 0,
-        scrolledUnderElevation: 0,
-        automaticallyImplyLeading: false,
-        leading: const Padding(
-          padding: EdgeInsetsDirectional.only(start: 16),
-          child: BrandBackButton(),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const SizedBox(height: 12),
-                Center(
-                  child: Text(
-                    Strings.forgotPassword,
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
-                      color: colors.textPrimary,
+    return BlocListener<ForgotPasswordCubit, ForgotPasswordState>(
+      listenWhen: (ForgotPasswordState previous, ForgotPasswordState current) =>
+          previous.status != current.status,
+      listener: _onStateChanged,
+      child: Scaffold(
+        backgroundColor: context.colors.background,
+        appBar: const AuthAppBar(),
+        body: SafeArea(
+          child:
+              BlocSelector<
+                ForgotPasswordCubit,
+                ForgotPasswordState,
+                ForgotPasswordStep
+              >(
+                selector: (ForgotPasswordState state) => state.step,
+                builder: (BuildContext context, ForgotPasswordStep step) {
+                  return PopScope(
+                    canPop: step == ForgotPasswordStep.requestOtp,
+                    onPopInvokedWithResult: (bool didPop, _) {
+                      if (!didPop) context.read<ForgotPasswordCubit>().back();
+                    },
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.fromLTRB(24, 12, 24, 32),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: switch (step) {
+                          ForgotPasswordStep.requestOtp => const RequestOtpStep(
+                            key: ValueKey<ForgotPasswordStep>(
+                              ForgotPasswordStep.requestOtp,
+                            ),
+                          ),
+                          ForgotPasswordStep.verifyOtp => const VerifyOtpStep(
+                            key: ValueKey<ForgotPasswordStep>(
+                              ForgotPasswordStep.verifyOtp,
+                            ),
+                          ),
+                          ForgotPasswordStep.resetPassword =>
+                            const ResetPasswordStep(
+                              key: ValueKey<ForgotPasswordStep>(
+                                ForgotPasswordStep.resetPassword,
+                              ),
+                            ),
+                        },
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  Strings.enterMobileToReset,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 13.5,
-                    height: 1.5,
-                    color: colors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 32),
-                AppFormField(
-                  controller: _phoneController,
-                  label: Strings.mobileNumber,
-                  hintText: '05X XXX XXXX',
-                  keyboardType: TextInputType.phone,
-                  validator: _validatePhone,
-                ),
-                const SizedBox(height: 24),
-                PrimaryButton(label: Strings.sendVerificationCode, onPressed: _submit),
-              ],
-            ),
-          ),
+                  );
+                },
+              ),
         ),
       ),
     );

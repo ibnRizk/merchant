@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/utils/validator.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_form_field.dart';
+import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/free_trial_banner.dart';
 import '../../../../core/widgets/primary_button.dart';
+import '../cubit/login/login_cubit.dart';
 import '../widgets/login_header_text.dart';
 import '../widgets/login_logo.dart';
-import '../widgets/login_method_switcher.dart';
+import '../widgets/password_form_field.dart';
 
-/// Merchant login screen — composed from small widgets under
-/// `presentation/widgets/`. RTL is applied once here and inherited by every
-/// child. `fontFamily: 'Cairo'` assumes the font is (or will be) registered
-/// under `flutter > fonts` in pubspec.yaml.
+/// Merchant login with e-mail and password (the API has no phone login).
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -24,128 +25,145 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  LoginMethod _method = LoginMethod.phone;
-  bool _obscurePassword = true;
-
-  final TextEditingController _identifierController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    _identifierController.dispose();
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
-  String? _validateIdentifier(String? value) {
-    if (value == null || value.trim().isEmpty) {
-      return _method == LoginMethod.phone
-          ? Strings.enterMobileNumber
-          : Strings.enterUsername;
-    }
-    if (_method == LoginMethod.phone &&
-        !RegExp(r'^0\d{9,14}$').hasMatch(value.trim())) {
-      return Strings.invalidPhone;
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return Strings.enterPassword;
-    }
-    if (value.length < 6) {
-      return Strings.passwordTooShort;
-    }
-    return null;
-  }
+  String? _validatePassword(String? value) =>
+      (value == null || value.isEmpty) ? Strings.enterPassword : null;
 
   void _submit() {
-    if (_formKey.currentState!.validate()) {
-      context.go(AppRoutes.home);
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) return;
+    context.read<LoginCubit>().login(
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+  }
+
+  void _onStateChanged(BuildContext context, LoginState state) {
+    switch (state) {
+      case LoginSuccess(:final result) when result.isApproved:
+        context.go(AppRoutes.home);
+      case LoginSuccess(:final result):
+        context.go(AppRoutes.pendingApproval, extra: result.approvalStatus);
+      case LoginFailure(:final message):
+        showBrandSnackBar(context, message, isError: true);
+      case LoginInitial() || LoginLoading():
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.colors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                const SizedBox(height: 16),
-                const LoginLogo(),
-                const SizedBox(height: 20),
-                const LoginHeaderText(),
-                const SizedBox(height: 28),
-                LoginMethodSwitcher(
-                  selected: _method,
-                  onChanged: (LoginMethod method) =>
-                      setState(() => _method = method),
-                ),
-                const SizedBox(height: 24),
-                AppFormField(
-                  controller: _identifierController,
-                  label: _method == LoginMethod.phone
-                      ? Strings.mobileNumber
-                      : Strings.username,
-                  hintText: _method == LoginMethod.phone
-                      ? '05X XXX XXXX'
-                      : Strings.username,
-                  keyboardType: _method == LoginMethod.phone
-                      ? TextInputType.phone
-                      : TextInputType.text,
-                  validator: _validateIdentifier,
-                ),
-                const SizedBox(height: 16),
-                AppFormField(
-                  controller: _passwordController,
-                  label: Strings.password,
-                  hintText: '••••••••',
-                  obscureText: _obscurePassword,
-                  validator: _validatePassword,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: context.colors.textSecondary,
-                      size: 20,
-                    ),
-                    onPressed: () =>
-                        setState(() => _obscurePassword = !_obscurePassword),
+    return BlocListener<LoginCubit, LoginState>(
+      listener: _onStateChanged,
+      child: Scaffold(
+        backgroundColor: context.colors.background,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  const SizedBox(height: 16),
+                  const LoginLogo(),
+                  const SizedBox(height: 20),
+                  const LoginHeaderText(),
+                  const SizedBox(height: 28),
+                  AppFormField(
+                    controller: _emailController,
+                    label: Strings.email,
+                    hintText: 'name@example.com',
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (String? value) =>
+                        Validator.call(value: value, type: ValidatorType.email),
                   ),
-                ),
-                const SizedBox(height: 24),
-                PrimaryButton(label: Strings.login, onPressed: _submit),
-                const SizedBox(height: 20),
-                Center(
-                  child: GestureDetector(
+                  const SizedBox(height: 16),
+                  PasswordFormField(
+                    controller: _passwordController,
+                    label: Strings.password,
+                    validator: _validatePassword,
+                  ),
+                  const SizedBox(height: 24),
+                  BlocSelector<LoginCubit, LoginState, bool>(
+                    selector: (LoginState state) => state is LoginLoading,
+                    builder: (BuildContext context, bool isLoading) =>
+                        PrimaryButton(
+                          label: Strings.login,
+                          isLoading: isLoading,
+                          onPressed: _submit,
+                        ),
+                  ),
+                  const SizedBox(height: 20),
+                  _TextLink(
+                    label: Strings.forgotPassword,
                     onTap: () =>
                         context.pushNamed(AppRoutes.forgotPasswordName),
-                    child: Text(
-                      Strings.forgotPassword,
-                      style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                        color: context.colors.primary,
-                      ),
-                    ),
                   ),
-                ),
-                const SizedBox(height: 20),
-                FreeTrialBanner(text: Strings.freeTrialBanner),
-              ],
+                  const SizedBox(height: 12),
+                  _TextLink(
+                    prefix: Strings.noAccount,
+                    label: Strings.createStoreAccount,
+                    onTap: () => context.pushNamed(AppRoutes.registerName),
+                  ),
+                  const SizedBox(height: 20),
+                  FreeTrialBanner(text: Strings.freeTrialBanner),
+                ],
+              ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _TextLink extends StatelessWidget {
+  const _TextLink({required this.label, required this.onTap, this.prefix});
+
+  final String label;
+  final VoidCallback onTap;
+  final String? prefix;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        if (prefix != null) ...<Widget>[
+          Text(
+            prefix!,
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 13,
+              color: colors.textSecondary,
+            ),
+          ),
+          const SizedBox(width: 4),
+        ],
+        GestureDetector(
+          onTap: onTap,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: colors.primary,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

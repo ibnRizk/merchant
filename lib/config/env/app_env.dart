@@ -25,6 +25,14 @@ abstract class AppEnv {
       dotenv.get('ENABLE_NETWORK_LOGS', fallback: 'false').toLowerCase() ==
       'true';
 
+  /// Prefilled on the registration form. There is no API to list zones or
+  /// modules, so these come from config.
+  static int? get defaultZoneId =>
+      int.tryParse(dotenv.get('DEFAULT_ZONE_ID', fallback: ''));
+
+  static int? get defaultModuleId =>
+      int.tryParse(dotenv.get('DEFAULT_MODULE_ID', fallback: ''));
+
   static Duration get connectTimeout => _duration('CONNECT_TIMEOUT_MS', 30000);
 
   static Duration get receiveTimeout => _duration('RECEIVE_TIMEOUT_MS', 30000);

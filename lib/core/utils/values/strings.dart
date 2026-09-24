@@ -347,9 +347,6 @@ abstract class Strings {
   static const String _mobileNumber = 'mobile_number';
   static String get mobileNumber => _mobileNumber.tr;
 
-  static const String _username = 'username';
-  static String get username => _username.tr;
-
   static const String _welcome = 'welcome';
   static String get welcome => _welcome.tr;
 
@@ -383,17 +380,8 @@ abstract class Strings {
   static const String _verificationCode = 'verification_code';
   static String get verificationCode => _verificationCode.tr;
 
-  static const String _enter4DigitCode = 'enter_4_digit_code';
-  static String get enter4DigitCode => _enter4DigitCode.tr;
-
   static const String _codeResent = 'code_resent';
   static String get codeResent => _codeResent.tr;
-
-  static const String _enterMobileNumber = 'enter_mobile_number';
-  static String get enterMobileNumber => _enterMobileNumber.tr;
-
-  static const String _enterUsername = 'enter_username';
-  static String get enterUsername => _enterUsername.tr;
 
   static const String _enterPassword = 'enter_password';
   static String get enterPassword => _enterPassword.tr;
@@ -407,12 +395,136 @@ abstract class Strings {
   static const String _forgotPassword = 'forgot_password';
   static String get forgotPassword => _forgotPassword.tr;
 
-  static const String _enterMobileToReset = 'enter_mobile_to_reset';
-  static String get enterMobileToReset => _enterMobileToReset.tr;
-
   static const String _sendVerificationCode = 'send_verification_code';
   static String get sendVerificationCode => _sendVerificationCode.tr;
 
   static const String _logout = 'logout';
   static String get logout => _logout.tr;
+
+  // --- Auth: email login, registration, approval ---
+  static const String _email = 'email';
+  static String get email => _email.tr;
+
+  static const String _enterEmail = 'enter_email';
+  static String get enterEmail => _enterEmail.tr;
+
+  static const String _enterEmailToReset = 'enter_email_to_reset';
+  static String get enterEmailToReset => _enterEmailToReset.tr;
+
+  static const String _enterCodeSentToEmail = 'enter_code_sent_to_email';
+  static String get enterCodeSentToEmail => _enterCodeSentToEmail.tr;
+
+  static const String _noAccount = 'no_account';
+  static String get noAccount => _noAccount.tr;
+
+  static const String _createStoreAccount = 'create_store_account';
+  static String get createStoreAccount => _createStoreAccount.tr;
+
+  static const String _registerTitle = 'register_title';
+  static String get registerTitle => _registerTitle.tr;
+
+  static const String _registerSubtitle = 'register_subtitle';
+  static String get registerSubtitle => _registerSubtitle.tr;
+
+  static const String _ownerInfoSection = 'owner_info_section';
+  static String get ownerInfoSection => _ownerInfoSection.tr;
+
+  static const String _firstName = 'first_name';
+  static String get firstName => _firstName.tr;
+
+  static const String _lastName = 'last_name';
+  static String get lastName => _lastName.tr;
+
+  static const String _storeInfoSection = 'store_info_section';
+  static String get storeInfoSection => _storeInfoSection.tr;
+
+  static const String _storeLocationSection = 'store_location_section';
+  static String get storeLocationSection => _storeLocationSection.tr;
+
+  static const String _locationZoneHint = 'location_zone_hint';
+  static String get locationZoneHint => _locationZoneHint.tr;
+
+  static const String _zoneId = 'zone_id';
+  static String get zoneId => _zoneId.tr;
+
+  static const String _moduleId = 'module_id';
+  static String get moduleId => _moduleId.tr;
+
+  static const String _deliveryTimeSection = 'delivery_time_section';
+  static String get deliveryTimeSection => _deliveryTimeSection.tr;
+
+  static const String _minDeliveryTime = 'min_delivery_time';
+  static String get minDeliveryTime => _minDeliveryTime.tr;
+
+  static const String _maxDeliveryTime = 'max_delivery_time';
+  static String get maxDeliveryTime => _maxDeliveryTime.tr;
+
+  static const String _deliveryTimeUnit = 'delivery_time_unit';
+  static String get deliveryTimeUnit => _deliveryTimeUnit.tr;
+
+  static const String _unitMinutes = 'unit_minutes';
+  static String get unitMinutes => _unitMinutes.tr;
+
+  static const String _unitHours = 'unit_hours';
+  static String get unitHours => _unitHours.tr;
+
+  static const String _unitDays = 'unit_days';
+  static String get unitDays => _unitDays.tr;
+
+  static const String _taxPercent = 'tax_percent';
+  static String get taxPercent => _taxPercent.tr;
+
+  static const String _storeLogo = 'store_logo';
+  static String get storeLogo => _storeLogo.tr;
+
+  static const String _coverPhotoOptional = 'cover_photo_optional';
+  static String get coverPhotoOptional => _coverPhotoOptional.tr;
+
+  static const String _tapToChooseImage = 'tap_to_choose_image';
+  static String get tapToChooseImage => _tapToChooseImage.tr;
+
+  static const String _logoRequired = 'logo_required';
+  static String get logoRequired => _logoRequired.tr;
+
+  static const String _maxDeliveryLessThanMin = 'max_delivery_less_than_min';
+  static String get maxDeliveryLessThanMin => _maxDeliveryLessThanMin.tr;
+
+  static const String _passwordRequirements = 'password_requirements';
+  static String get passwordRequirements => _passwordRequirements.tr;
+
+  static const String _invalidNumber = 'invalid_number';
+  static String get invalidNumber => _invalidNumber.tr;
+
+  static const String _submitApplication = 'submit_application';
+  static String get submitApplication => _submitApplication.tr;
+
+  static const String _registrationSubmitted = 'registration_submitted';
+  static String get registrationSubmitted => _registrationSubmitted.tr;
+
+  static const String _accountPendingTitle = 'account_pending_title';
+  static String get accountPendingTitle => _accountPendingTitle.tr;
+
+  static const String _accountPendingBody = 'account_pending_body';
+  static String get accountPendingBody => _accountPendingBody.tr;
+
+  static const String _accountRejectedTitle = 'account_rejected_title';
+  static String get accountRejectedTitle => _accountRejectedTitle.tr;
+
+  static const String _accountRejectedBody = 'account_rejected_body';
+  static String get accountRejectedBody => _accountRejectedBody.tr;
+
+  static const String _backToLogin = 'back_to_login';
+  static String get backToLogin => _backToLogin.tr;
+
+  static const String _pickStoreLocation = 'pick_store_location';
+  static String get pickStoreLocation => _pickStoreLocation.tr;
+
+  static const String _moveMapToPlacePin = 'move_map_to_place_pin';
+  static String get moveMapToPlacePin => _moveMapToPlacePin.tr;
+
+  static const String _confirmLocation = 'confirm_location';
+  static String get confirmLocation => _confirmLocation.tr;
+
+  static const String _locationRequired = 'location_required';
+  static String get locationRequired => _locationRequired.tr;
 }

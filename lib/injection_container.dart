@@ -9,9 +9,11 @@ import 'config/themes/theme_cubit.dart';
 import 'core/api/app_interceptors.dart';
 import 'core/api/auth_event_bus.dart';
 import 'core/api/dio_consumer.dart';
+import 'core/api/redacting_log_interceptor.dart';
 import 'core/services/local_storage/app_secure_storage.dart';
 import 'core/services/local_storage/app_shared_preferences.dart';
 import 'core/utils/values/app_colors.dart';
+import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
 
 /// Composition root.
@@ -42,6 +44,7 @@ abstract class ServiceLocator {
     // --- Features ---
     // await initLanguageFeatureInjection();
     await initHomeFeatureInjection();
+    await initAuthFeatureInjection();
     // Register new features here.
   }
 
@@ -73,17 +76,8 @@ abstract class ServiceLocator {
   static void _injectAppInterceptors() =>
       instance.registerLazySingleton<AppInterceptors>(() => AppInterceptors());
 
-  static void _injectLogInterceptor() =>
-      instance.registerLazySingleton<LogInterceptor>(
-        () => LogInterceptor(
-          request: true,
-          requestBody: true,
-          requestHeader: true,
-          responseBody: true,
-          responseHeader: false,
-          error: true,
-        ),
-      );
+  static void _injectLogInterceptor() => instance
+      .registerLazySingleton<LogInterceptor>(() => RedactingLogInterceptor());
 
   /// Seeded at init with [AppColors.light], then refreshed from
   /// `MaterialApp.builder` on every theme change so the context-free [colors]

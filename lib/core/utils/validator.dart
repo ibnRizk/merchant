@@ -86,6 +86,22 @@ abstract class Validator {
     return null;
   }
 
+  /// Server rule for merchant passwords: 8+ characters with upper and lower
+  /// case letters, a digit and a symbol.
+  static String? _strongPassword(String value) {
+    final bool isStrong =
+        value.length >= 8 &&
+        RegExp('[a-z]').hasMatch(value) &&
+        RegExp('[A-Z]').hasMatch(value) &&
+        RegExp(r'\d').hasMatch(value) &&
+        RegExp(r'[^A-Za-z\d]').hasMatch(value);
+    return isStrong ? null : Strings.passwordRequirements;
+  }
+
+  static String? _decimal(String value) {
+    return double.tryParse(value.trim()) == null ? Strings.invalidNumber : null;
+  }
+
   static String? _confirmPassword(String value, String? password) {
     final String? notEmptyPassword = _notEmpty(password);
     if (notEmptyPassword != null) {
@@ -104,6 +120,8 @@ enum ValidatorType {
   phone,
   numbersOnly,
   password,
+  strongPassword,
+  decimal,
   confirmPassword,
 }
 
@@ -122,6 +140,10 @@ extension ValidatorTypeExtension on ValidatorType {
         return Validator._numbersOnly;
       case ValidatorType.password:
         return Validator._password;
+      case ValidatorType.strongPassword:
+        return Validator._strongPassword;
+      case ValidatorType.decimal:
+        return Validator._decimal;
       case ValidatorType.confirmPassword:
         return Validator._confirmPassword;
     }

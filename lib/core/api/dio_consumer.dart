@@ -1,14 +1,15 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../config/env/app_env.dart';
 import '../../injection_container.dart';
-import '../base_classes/api_error.dart';
 import '../error/exceptions.dart';
 import '../utils/extension.dart';
 import '../utils/log_utils.dart';
 import '../utils/values/strings.dart';
+import 'api_endpoints.dart';
 import 'status_code.dart';
 
 /// Thin, typed wrapper over Dio. Data sources depend on this abstraction, not
@@ -66,10 +67,15 @@ class DioConsumerImpl implements DioConsumer {
             .name,
         'device-lang': sharedPreferences.getLanguageCode().name,
         'device-type': _devicePlatform,
+        // Required by every merchant route; anything else returns 401.
+        'vendorType': 'owner',
+        // The language the server localises its messages into.
+        'X-localization': sharedPreferences.getLanguageCode().name,
       };
 
     client.interceptors.add(appInterceptors);
-    if (AppEnv.enableNetworkLogs) {
+    // LogInterceptor prints with print(), which also runs in release builds.
+    if (kDebugMode && AppEnv.enableNetworkLogs) {
       client.interceptors.add(logInterceptor);
     }
   }
@@ -97,6 +103,7 @@ class DioConsumerImpl implements DioConsumer {
     final String code = sharedPreferences.getLanguageCode().name;
     client.options.headers[HttpHeaders.acceptLanguageHeader] = code;
     client.options.headers['device-lang'] = code;
+    client.options.headers['X-localization'] = code;
   }
 
   @override
@@ -191,11 +198,15 @@ class DioConsumerImpl implements DioConsumer {
     Future<Response<dynamic>> Function() send, {
     String details = '',
   }) async {
+    // Auth bodies carry passwords/OTPs and responses carry the token.
+    final bool redact = path.startsWith(ApiEndpoints.authPrefix);
     try {
-      Log.i('[$verb][$path] $details');
+      Log.i('[$verb][$path] ${redact ? '<redacted>' : details}');
       await _attachAccessToken();
       final Response<dynamic> response = await send();
-      Log.i('[$verb][$path] response: ${response.data}');
+      Log.i(
+        '[$verb][$path] response: ${redact ? '<redacted>' : response.data}',
+      );
       return response.data;
     } on SocketException {
       throw InternetConnectionException(message: Strings.noInternetConnection);
@@ -218,9 +229,6 @@ class DioConsumerImpl implements DioConsumer {
     }
 
     if (status == StatusCode.unProcessableContent) {
-      if (data is Map<String, dynamic>) {
-        throw ServerException(message: APIError.fromJson(data).getFirstError());
-      }
       throw ServerException(message: _messageOf(data));
     }
 
@@ -241,11 +249,39 @@ class DioConsumerImpl implements DioConsumer {
 
   /// Indexing `data['message']` directly throws whenever the server answers
   /// with an HTML error page or a bare string, masking the real failure.
+  ///
+  /// `errors` wins over `message` because it holds the specific reason:
+  /// the API sends `{"errors":[{"code","message"}]}`, and Laravel validation
+  /// sends `{"message":"... (and 1 more error)","errors":{"field":["..."]}}`.
   String _messageOf(dynamic data) {
+    if (data is Map) {
+      final List<String> errors = _errorMessagesOf(data['errors']);
+      if (errors.isNotEmpty) return errors.join('\n');
+    }
     if (data is Map && data['message'] != null) {
       return data['message'].toString();
     }
     if (data == null) return Strings.somethingWentWrong;
     return data.toString();
+  }
+
+  List<String> _errorMessagesOf(dynamic errors) {
+    if (errors is List) {
+      return <String>[
+        for (final dynamic error in errors)
+          if (error is Map && error['message'] != null)
+            error['message'].toString(),
+      ];
+    }
+    if (errors is Map) {
+      return <String>[
+        for (final dynamic messages in errors.values)
+          if (messages is List && messages.isNotEmpty)
+            messages.first.toString()
+          else if (messages is String)
+            messages,
+      ];
+    }
+    return const <String>[];
   }
 }

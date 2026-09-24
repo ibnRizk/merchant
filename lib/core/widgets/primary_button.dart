@@ -9,10 +9,14 @@ class PrimaryButton extends StatelessWidget {
     super.key,
     required this.label,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   final String label;
   final VoidCallback onPressed;
+
+  /// Shows a spinner and ignores taps, preventing duplicate submissions.
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -20,23 +24,35 @@ class PrimaryButton extends StatelessWidget {
     return SizedBox(
       height: 52,
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: context.colors.primary,
           foregroundColor: scheme.onPrimary,
+          disabledBackgroundColor: context.colors.primary.withValues(
+            alpha: 0.7,
+          ),
+          disabledForegroundColor: scheme.onPrimary,
           elevation: 0,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        child: Text(
-          label,
-          style: const TextStyle(
-            fontFamily: 'Cairo',
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
+        child: isLoading
+            ? SizedBox.square(
+                dimension: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.5,
+                  color: scheme.onPrimary,
+                ),
+              )
+            : Text(
+                label,
+                style: const TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
       ),
     );
   }
