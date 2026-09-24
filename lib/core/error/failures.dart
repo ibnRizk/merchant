@@ -23,6 +23,14 @@ class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure({this.message});
 }
 
+/// The server refused because of the resource's state (HTTP 409).
+class ConflictFailure extends Failure {
+  @override
+  final String? message;
+
+  const ConflictFailure({this.message});
+}
+
 class CacheFailure extends Failure {
   @override
   final String? message;

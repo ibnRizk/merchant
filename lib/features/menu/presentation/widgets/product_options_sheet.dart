@@ -1,40 +1,70 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 
 /// Options sheet opened from a [ProductCard]'s kebab menu.
 class ProductOptionsSheet extends StatelessWidget {
   const ProductOptionsSheet({
     super.key,
+    required this.productName,
     required this.onEdit,
     required this.onDelete,
   });
 
+  final String productName;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _OptionTile(
-            icon: Icons.edit_outlined,
-            label: 'تعديل المنتج',
-            color: context.colors.textPrimary,
-            onTap: onEdit,
-          ),
-          const SizedBox(height: 4),
-          _OptionTile(
-            icon: Icons.delete_outline,
-            label: 'حذف المنتج',
-            color: context.colors.error,
-            onTap: onDelete,
-          ),
-        ],
+    final AppColors colors = context.colors;
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Center(
+              child: Container(
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: colors.border,
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              productName,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.start,
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                color: colors.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            _OptionTile(
+              icon: Icons.edit_outlined,
+              label: Strings.editProduct,
+              color: colors.textPrimary,
+              onTap: onEdit,
+            ),
+            _OptionTile(
+              icon: Icons.delete_outline,
+              label: Strings.deleteProduct,
+              color: colors.error,
+              onTap: onDelete,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -66,13 +96,16 @@ class _OptionTile extends StatelessWidget {
             children: <Widget>[
               Icon(icon, size: 20, color: color),
               const SizedBox(width: 12),
-              Text(
-                label,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                  color: color,
+              Expanded(
+                child: Text(
+                  label,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: color,
+                  ),
                 ),
               ),
             ],

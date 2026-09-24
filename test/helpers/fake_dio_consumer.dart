@@ -6,24 +6,37 @@ class FakeDioConsumer implements DioConsumer {
   dynamic response;
   Object? error;
   final List<
-    ({String verb, String path, Map<String, dynamic>? body, FormData? formData})
+    ({
+      String verb,
+      String path,
+      Map<String, dynamic>? query,
+      Map<String, dynamic>? body,
+      FormData? formData,
+    })
   >
   calls = [];
 
   Future<dynamic> _answer(
     String verb,
     String path, {
+    Map<String, dynamic>? query,
     Map<String, dynamic>? body,
     FormData? formData,
   }) async {
-    calls.add((verb: verb, path: path, body: body, formData: formData));
+    calls.add((
+      verb: verb,
+      path: path,
+      query: query,
+      body: body,
+      formData: formData,
+    ));
     if (error != null) throw error!;
     return response;
   }
 
   @override
   Future<dynamic> get(String path, {Map<String, dynamic>? queryParameters}) =>
-      _answer('GET', path);
+      _answer('GET', path, query: queryParameters);
 
   @override
   Future<dynamic> post(

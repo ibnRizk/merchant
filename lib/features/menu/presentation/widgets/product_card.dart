@@ -1,131 +1,185 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/price_format.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
-import '../../../../core/widgets/status_pill.dart';
+import '../../../../core/widgets/brand_toggle.dart';
+import '../../domain/entities/product.dart';
 
-class ProductEntry {
-  const ProductEntry({
-    required this.name,
-    required this.subtitle,
-    required this.price,
-    required this.isAvailable,
-    required this.statusLabel,
-    this.addOns = const <String>[],
-  });
-
-  final String name;
-  final String subtitle;
-  final String price;
-  final bool isAvailable;
-  final String statusLabel;
-  final List<String> addOns;
-}
-
-/// One row in the menu list: name/add-ons/edit link on the right, price +
-/// availability pill in the middle, a kebab menu on the far left.
+/// One row in the menu list: photo, name/category/price, the availability
+/// switch and a kebab menu. Tapping the card opens the product for editing.
 class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
-    required this.entry,
-    required this.onEdit,
+    required this.product,
+    required this.isBusy,
+    required this.onTap,
+    required this.onAvailabilityChanged,
     required this.onMoreTap,
   });
 
-  final ProductEntry entry;
-  final VoidCallback onEdit;
+  final Product product;
+
+  /// A status change or delete is in flight: controls are locked.
+  final bool isBusy;
+  final VoidCallback onTap;
+  final ValueChanged<bool> onAvailabilityChanged;
   final VoidCallback onMoreTap;
 
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
+    final String? categoryName = product.category?.name;
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 200),
+      opacity: isBusy ? 0.6 : 1,
+      child: Material(
         color: colors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: colors.border),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        child: InkWell(
+          onTap: isBusy ? null : onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 4, 12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: colors.border),
+            ),
+            child: Row(
               children: <Widget>[
-                Text(
-                  entry.name,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    color: colors.textPrimary,
+                _ProductThumbnail(imageUrl: product.imageUrl),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        product.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.start,
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 14.5,
+                          fontWeight: FontWeight.w700,
+                          color: colors.textPrimary,
+                        ),
+                      ),
+                      if (categoryName != null && categoryName.isNotEmpty)
+                        Text(
+                          categoryName,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.start,
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 11.5,
+                            color: colors.textSecondary,
+                          ),
+                        ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${formatPrice(product.price)} ${Strings.currencySar}',
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontSize: 15,
+                          fontWeight: FontWeight.w800,
+                          color: colors.primary,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  entry.subtitle,
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w400,
+                const SizedBox(width: 8),
+                _AvailabilitySwitch(
+                  isActive: product.isActive,
+                  isBusy: isBusy,
+                  onChanged: onAvailabilityChanged,
+                ),
+                IconButton(
+                  onPressed: isBusy ? null : onMoreTap,
+                  visualDensity: VisualDensity.compact,
+                  icon: Icon(
+                    Icons.more_vert,
+                    size: 20,
                     color: colors.textSecondary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                GestureDetector(
-                  onTap: onEdit,
-                  child: Text(
-                    Strings.editProduct,
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      color: colors.primary,
-                    ),
                   ),
                 ),
               ],
             ),
           ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Text(
-                entry.price,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w800,
-                  color: colors.primary,
-                ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProductThumbnail extends StatelessWidget {
+  const _ProductThumbnail({required this.imageUrl});
+
+  final String? imageUrl;
+
+  static const double _size = 64;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    final Widget placeholder = ColoredBox(
+      color: colors.background,
+      child: Icon(
+        Icons.fastfood_outlined,
+        size: 26,
+        color: colors.textSecondary,
+      ),
+    );
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: SizedBox.square(
+        dimension: _size,
+        child: imageUrl == null
+            ? placeholder
+            : CachedNetworkImage(
+                imageUrl: imageUrl!,
+                fit: BoxFit.cover,
+                memCacheHeight: (_size * 3).round(),
+                placeholder: (_, __) => placeholder,
+                errorWidget: (_, __, ___) => placeholder,
               ),
-              const SizedBox(height: 8),
-              StatusPill(
-                label: entry.statusLabel,
-                background: entry.isAvailable
-                    ? colors.successContainer
-                    : colors.background,
-                textColor: entry.isAvailable
-                    ? colors.success
-                    : colors.textSecondary,
-              ),
-            ],
-          ),
-          SizedBox(
-            width: 28,
-            child: IconButton(
-              onPressed: onMoreTap,
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              icon: Icon(
-                Icons.more_vert,
-                size: 20,
-                color: colors.textSecondary,
-              ),
+      ),
+    );
+  }
+}
+
+/// "متوفر / غير متوفر" switch, wired straight to the status endpoint.
+class _AvailabilitySwitch extends StatelessWidget {
+  const _AvailabilitySwitch({
+    required this.isActive,
+    required this.isBusy,
+    required this.onChanged,
+  });
+
+  final bool isActive;
+  final bool isBusy;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final AppColors colors = context.colors;
+    return IgnorePointer(
+      ignoring: isBusy,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          BrandToggle(value: isActive, onChanged: onChanged),
+          const SizedBox(height: 4),
+          Text(
+            isActive ? Strings.available : Strings.unavailable,
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 11,
+              fontWeight: FontWeight.w700,
+              color: isActive ? colors.success : colors.textSecondary,
             ),
           ),
         ],

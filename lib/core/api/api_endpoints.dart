@@ -15,4 +15,10 @@ abstract class ApiEndpoints {
   // --- Session and profile (token) ---
   static const String vendorProfile = '/vendor/profile';
   static const String vendorLogout = '/vendor/logout';
+
+  // --- Catalog (approved) ---
+  static const String catalogMetadata = '/vendor/catalog/metadata';
+  static const String catalogItems = '/vendor/catalog/items';
+  static String catalogItem(int id) => '$catalogItems/$id';
+  static String catalogItemStatus(int id) => '$catalogItems/$id/status';
 }

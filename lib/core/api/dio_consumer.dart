@@ -228,6 +228,10 @@ class DioConsumerImpl implements DioConsumer {
       throw UnauthorizedException(message: _messageOf(data));
     }
 
+    if (status == StatusCode.conflict) {
+      throw ConflictException(message: _messageOf(data));
+    }
+
     if (status == StatusCode.unProcessableContent) {
       throw ServerException(message: _messageOf(data));
     }

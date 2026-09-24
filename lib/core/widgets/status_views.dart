@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/utils/values/app_colors.dart';
-import '../../../../core/utils/values/strings.dart';
+import '../utils/values/app_colors.dart';
+import '../utils/values/strings.dart';
 
-/// Placeholder shown while the profile loads.
-class ProfileLoadingView extends StatelessWidget {
-  const ProfileLoadingView({super.key});
+/// Centered spinner that holds a section's place while its data loads.
+class SectionLoadingView extends StatelessWidget {
+  const SectionLoadingView({super.key, this.height = 260});
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 260,
+      height: height,
       child: Center(
         child: CircularProgressIndicator(color: context.colors.primary),
       ),
@@ -18,9 +20,9 @@ class ProfileLoadingView extends StatelessWidget {
   }
 }
 
-/// Shown when the profile couldn't be loaded, with a retry action.
-class ProfileErrorView extends StatelessWidget {
-  const ProfileErrorView({
+/// Card shown when a section's data couldn't be loaded, with a retry action.
+class RetryErrorView extends StatelessWidget {
+  const RetryErrorView({
     super.key,
     required this.message,
     required this.onRetry,

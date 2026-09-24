@@ -15,9 +15,10 @@ import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/pending_approval_screen.dart';
 import '../../features/auth/presentation/pages/register_screen.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
-import '../../features/menu/presentation/pages/add_product_screen.dart';
-import '../../features/menu/presentation/widgets/product_card.dart'
-    show ProductEntry;
+import '../../features/menu/domain/entities/product.dart';
+import '../../features/menu/presentation/cubit/menu/menu_cubit.dart';
+import '../../features/menu/presentation/cubit/product_form/product_form_cubit.dart';
+import '../../features/menu/presentation/pages/product_form_screen.dart';
 import '../../features/orders/presentation/pages/active_orders_screen.dart';
 import '../../features/orders/presentation/pages/orders_screen.dart';
 import '../../features/profile/presentation/cubit/logout/logout_cubit.dart';
@@ -37,7 +38,7 @@ abstract class AppRoutes {
   static const String register = '/register';
   static const String locationPicker = '/register/location';
   static const String pendingApproval = '/pending-approval';
-  static const String addProduct = '/menu/add-product';
+  static const String productForm = '/menu/product';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -50,7 +51,7 @@ abstract class AppRoutes {
   static const String registerName = 'register';
   static const String locationPickerName = 'locationPicker';
   static const String pendingApprovalName = 'pendingApproval';
-  static const String addProductName = 'addProduct';
+  static const String productFormName = 'productForm';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -68,9 +69,13 @@ abstract class AppRoutes {
       GoRoute(
         path: home,
         name: homeName,
-        // Profile is a tab of MainScaffold, so its cubits live at this route.
+        // Menu and profile are tabs of MainScaffold, so their cubits live at
+        // this route.
         builder: (_, __) => MultiBlocProvider(
           providers: <BlocProvider<StateStreamableSource<Object?>>>[
+            BlocProvider<MenuCubit>(
+              create: (_) => ServiceLocator.instance<MenuCubit>()..load(),
+            ),
             BlocProvider<ProfileCubit>(
               create: (_) => ServiceLocator.instance<ProfileCubit>()
                 ..loadProfile(),
@@ -137,10 +142,18 @@ abstract class AppRoutes {
         ),
       ),
       GoRoute(
-        path: addProduct,
-        name: addProductName,
-        builder: (_, GoRouterState state) =>
-            AddProductScreen(existingProduct: state.extra as ProductEntry?),
+        path: productForm,
+        name: productFormName,
+        // `extra` is the product to edit; none means "add". Pops with the
+        // saved [Product].
+        builder: (_, GoRouterState state) {
+          final Product? product = state.extra as Product?;
+          return BlocProvider<ProductFormCubit>(
+            create: (_) => ServiceLocator.instance<ProductFormCubit>()
+              ..load(productId: product?.id),
+            child: ProductFormScreen(initialProduct: product),
+          );
+        },
       ),
       GoRoute(
         path: photoViewer,

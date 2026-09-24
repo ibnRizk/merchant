@@ -9,6 +9,7 @@ import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_form_field.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
+import '../../../../core/widgets/image_picker_field.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../domain/params/register_params.dart';
 import '../cubit/register/register_cubit.dart';
@@ -19,7 +20,6 @@ import '../widgets/delivery_time_unit_field.dart';
 import '../widgets/password_form_field.dart';
 import '../widgets/register_section_title.dart';
 import '../widgets/store_category_field.dart';
-import '../widgets/store_image_picker_field.dart';
 import '../widgets/store_location_field.dart';
 
 /// Self-registration for a new merchant and store. The account starts as
@@ -287,7 +287,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       validator: _required,
     ),
     const SizedBox(height: 16),
-    StoreImagePickerField(
+    ImagePickerField(
       label: Strings.storeLogo,
       path: _logoPath,
       errorText: _showLogoError ? Strings.logoRequired : null,
@@ -297,7 +297,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       }),
     ),
     const SizedBox(height: 16),
-    StoreImagePickerField(
+    ImagePickerField(
       label: Strings.coverPhotoOptional,
       path: _coverPhotoPath,
       height: 160,

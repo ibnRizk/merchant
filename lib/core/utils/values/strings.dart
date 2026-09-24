@@ -137,8 +137,8 @@ abstract class Strings {
   static const String _profileSavedSuccess = 'profile_saved_success';
   static String get profileSavedSuccess => _profileSavedSuccess.tr;
 
-  static const String _profileNoChanges = 'profile_no_changes';
-  static String get profileNoChanges => _profileNoChanges.tr;
+  static const String _noChangesToSave = 'no_changes_to_save';
+  static String get noChangesToSave => _noChangesToSave.tr;
 
   static const String _storePhoneLabel = 'store_phone_label';
   static String get storePhoneLabel => _storePhoneLabel.tr;
@@ -307,6 +307,73 @@ abstract class Strings {
 
   static const String _pauseProductTip = 'pause_product_tip';
   static String get pauseProductTip => _pauseProductTip.tr;
+
+  static const String _addProductTitle = 'add_product_title';
+  static String get addProductTitle => _addProductTitle.tr;
+
+  static const String _productImage = 'product_image';
+  static String get productImage => _productImage.tr;
+
+  static const String _productName = 'product_name';
+  static String get productName => _productName.tr;
+
+  static const String _productPrice = 'product_price';
+  static String get productPrice => _productPrice.tr;
+
+  static const String _productDescription = 'product_description';
+  static String get productDescription => _productDescription.tr;
+
+  static const String _productCategory = 'product_category';
+  static String get productCategory => _productCategory.tr;
+
+  static const String _selectProductCategory = 'select_product_category';
+  static String get selectProductCategory => _selectProductCategory.tr;
+
+  static const String _noProductCategories = 'no_product_categories';
+  static String get noProductCategories => _noProductCategories.tr;
+
+  static const String _invalidPrice = 'invalid_price';
+  static String get invalidPrice => _invalidPrice.tr;
+
+  static const String _saveProduct = 'save_product';
+  static String get saveProduct => _saveProduct.tr;
+
+  static const String _saveChanges = 'save_changes';
+  static String get saveChanges => _saveChanges.tr;
+
+  static const String _productCreated = 'product_created';
+  static String get productCreated => _productCreated.tr;
+
+  static const String _productUpdated = 'product_updated';
+  static String get productUpdated => _productUpdated.tr;
+
+  static const String _productSavedStatusFailed = 'product_saved_status_failed';
+  static String get productSavedStatusFailed => _productSavedStatusFailed.tr;
+
+  static const String _deleteProduct = 'delete_product';
+  static String get deleteProduct => _deleteProduct.tr;
+
+  static const String _deleteProductConfirmTitle =
+      'delete_product_confirm_title';
+  static String get deleteProductConfirmTitle =>
+      _deleteProductConfirmTitle.tr;
+
+  static const String _deleteProductConfirmMessage =
+      'delete_product_confirm_message';
+  static String get deleteProductConfirmMessage =>
+      _deleteProductConfirmMessage.tr;
+
+  static const String _productDeleted = 'product_deleted';
+  static String get productDeleted => _productDeleted.tr;
+
+  static const String _productLinkedToOrders = 'product_linked_to_orders';
+  static String get productLinkedToOrders => _productLinkedToOrders.tr;
+
+  static const String _noProductsYet = 'no_products_yet';
+  static String get noProductsYet => _noProductsYet.tr;
+
+  static const String _noProductsHint = 'no_products_hint';
+  static String get noProductsHint => _noProductsHint.tr;
 
   // --- Hours ---
   static const String _workingHours = 'working_hours';

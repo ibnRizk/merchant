@@ -9,6 +9,7 @@ import '../../../../core/utils/enums.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/free_trial_banner.dart';
+import '../../../../core/widgets/status_views.dart';
 import '../../../../core/widgets/title_action_header.dart';
 import '../../domain/entities/merchant_profile.dart';
 import '../cubit/logout/logout_cubit.dart';
@@ -18,7 +19,6 @@ import '../widgets/language_tile.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/profile_form.dart';
 import '../widgets/profile_section_card.dart';
-import '../widgets/profile_status_views.dart';
 import '../widgets/theme_mode_selector.dart';
 
 /// Profile tab body, rendered inside [MainScaffold]. [ProfileCubit] and
@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _fillFrom(profile);
         showBrandSnackBar(context, Strings.profileSavedSuccess);
       case ProfileUnchanged():
-        showBrandSnackBar(context, Strings.profileNoChanges);
+        showBrandSnackBar(context, Strings.noChangesToSave);
       case ProfileSaveFailure(:final message):
         showBrandSnackBar(context, message, isError: true);
       case ProfileInitial() ||
@@ -167,8 +167,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 builder: (BuildContext context, ProfileState state) =>
                     switch (state) {
                       ProfileInitial() ||
-                      ProfileLoading() => const ProfileLoadingView(),
-                      ProfileLoadFailure(:final message) => ProfileErrorView(
+                      ProfileLoading() => const SectionLoadingView(),
+                      ProfileLoadFailure(:final message) => RetryErrorView(
                         message: message,
                         onRetry: context.read<ProfileCubit>().loadProfile,
                       ),

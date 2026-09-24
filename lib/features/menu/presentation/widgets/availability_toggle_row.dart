@@ -31,7 +31,7 @@ class AvailabilityToggleRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.start,
               style: TextStyle(
                 fontFamily: 'Cairo',
                 fontSize: 14,

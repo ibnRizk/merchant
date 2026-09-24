@@ -1,19 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../config/locale/locale_cubit.dart';
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_search_field.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
-import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 import '../../../../core/widgets/show_modal_bottom_sheet.dart';
+import '../../../../core/widgets/status_views.dart';
 import '../../../../core/widgets/tip_banner.dart';
+import '../../domain/entities/product.dart';
+import '../cubit/menu/menu_cubit.dart';
+import '../widgets/menu_list_states.dart';
 import '../widgets/menu_screen_header.dart';
 import '../widgets/product_card.dart';
 import '../widgets/product_options_sheet.dart';
 
-/// Menu management tab body — composed from small widgets under
-/// `presentation/widgets/`. Rendered inside [MainScaffold]; the bottom nav
-/// bar and RTL directionality are provided by the parent scaffold.
+/// Menu management tab body, rendered inside [MainScaffold]. [MenuCubit] is
+/// provided by the home route.
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
 
@@ -22,103 +31,213 @@ class MenuScreen extends StatefulWidget {
 }
 
 class _MenuScreenState extends State<MenuScreen> {
+  static const Duration _searchDebounce = Duration(milliseconds: 400);
+
+  /// How close to the end of the list the next page starts loading.
+  static const double _loadMoreThreshold = 400;
+
+  static const EdgeInsets _gutter = EdgeInsets.symmetric(horizontal: 20);
+
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  Timer? _searchTimer;
+
+  MenuCubit get _cubit => context.read<MenuCubit>();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
 
   @override
   void dispose() {
+    _searchTimer?.cancel();
+    _scrollController.dispose();
     _searchController.dispose();
     super.dispose();
   }
 
-  Future<void> _showProductOptions(
-    BuildContext context,
-    ProductEntry entry,
-  ) async {
-    await showAppModalBottomSheet(
+  void _onScroll() {
+    if (_scrollController.position.extentAfter < _loadMoreThreshold) {
+      _cubit.loadMore();
+    }
+  }
+
+  /// Waits for a pause in typing so each keystroke isn't a request.
+  void _onSearchChanged(String text) {
+    _searchTimer?.cancel();
+    _searchTimer = Timer(_searchDebounce, () => _cubit.search(text));
+  }
+
+  Future<void> _openForm([Product? product]) async {
+    final Product? saved = await context.pushNamed<Product>(
+      AppRoutes.productFormName,
+      extra: product,
+    );
+    if (saved != null && mounted) _cubit.productSaved(saved);
+  }
+
+  Future<void> _confirmDelete(Product product) async {
+    final bool confirmed = await showConfirmDialog(
+      context,
+      icon: Icons.delete_outline_rounded,
+      title: Strings.deleteProductConfirmTitle,
+      message: Strings.deleteProductConfirmMessage,
+      confirmLabel: Strings.deleteProduct,
+    );
+    if (confirmed && mounted) _cubit.deleteProduct(product);
+  }
+
+  void _showOptions(Product product) {
+    showAppModalBottomSheet(
       context: context,
-      child: ProductOptionsSheet(
-        onEdit: () {
-          Navigator.of(context).pop();
-          context.pushNamed(AppRoutes.addProductName, extra: entry);
-        },
-        onDelete: () {
-          Navigator.of(context).pop();
-          showBrandSnackBar(context, 'تم حذف ${entry.name}', isError: true);
-        },
+      child: Builder(
+        builder: (BuildContext sheetContext) => ProductOptionsSheet(
+          productName: product.name,
+          onEdit: () {
+            Navigator.of(sheetContext).pop();
+            _openForm(product);
+          },
+          onDelete: () {
+            Navigator.of(sheetContext).pop();
+            _confirmDelete(product);
+          },
+        ),
       ),
     );
   }
 
+  static bool _hasNewNotice(MenuState previous, MenuState current) =>
+      current is MenuLoaded &&
+      current.notice != null &&
+      (previous is! MenuLoaded || !identical(previous.notice, current.notice));
+
+  void _onNotice(BuildContext context, MenuState state) {
+    final MenuNotice? notice = state is MenuLoaded ? state.notice : null;
+    switch (notice) {
+      case ProductDeletedNotice():
+        showBrandSnackBar(context, Strings.productDeleted);
+      case ProductDeleteBlockedNotice():
+        showBrandSnackBar(
+          context,
+          Strings.productLinkedToOrders,
+          isError: true,
+          duration: const Duration(seconds: 5),
+        );
+      case MenuActionFailedNotice(:final message):
+        showBrandSnackBar(context, message, isError: true);
+      case null:
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final List<ProductEntry> products = <ProductEntry>[
-      ProductEntry(
-        name: 'وجبة برجر SSM',
-        subtitle: '${Strings.additions}جبنة، صوص',
-        price: '28 ${Strings.currencySar}',
-        isAvailable: true,
-        statusLabel: Strings.available,
-        addOns: const <String>['جبنة', 'صوص'],
-      ),
-      ProductEntry(
-        name: 'بطاطس مقرمشة',
-        subtitle: '${Strings.additions}حار، جبنة',
-        price: '8 ${Strings.currencySar}',
-        isAvailable: true,
-        statusLabel: Strings.available,
-        addOns: const <String>['حار', 'جبنة'],
-      ),
-      ProductEntry(
-        name: 'مشروب غازي',
-        subtitle: '${Strings.size}صغير - كبير',
-        price: '5 ${Strings.currencySar}',
-        isAvailable: false,
-        statusLabel: Strings.unavailable,
-        addOns: const <String>['صغير', 'كبير'],
-      ),
-      ProductEntry(
-        name: 'وجبة عائلية',
-        subtitle: '4 برجر - بطاطس - مشروبات',
-        price: '52 ${Strings.currencySar}',
-        isAvailable: true,
-        statusLabel: Strings.available,
-      ),
-    ];
+    // Labels come from the global `Strings.*.tr`, so a language switch has
+    // to rebuild this screen for them to refresh.
+    context.watch<LocaleCubit>();
 
-    return SafeArea(
-      bottom: false,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            MenuScreenHeader(
-              title: Strings.menuManagement,
-              addLabel: Strings.addProduct,
-              onAddTap: () => context.pushNamed(AppRoutes.addProductName),
-            ),
-            const SizedBox(height: 16),
-            AppSearchField(
-              controller: _searchController,
-              hintText: Strings.searchProduct,
-            ),
-            const SizedBox(height: 16),
-            for (final ProductEntry entry in products) ...<Widget>[
-              ProductCard(
-                entry: entry,
-                onEdit: () =>
-                    context.pushNamed(AppRoutes.addProductName, extra: entry),
-                onMoreTap: () => _showProductOptions(context, entry),
+    return BlocListener<MenuCubit, MenuState>(
+      listenWhen: _hasNewNotice,
+      listener: _onNotice,
+      child: SafeArea(
+        bottom: false,
+        child: RefreshIndicator(
+          onRefresh: _cubit.refresh,
+          color: context.colors.primary,
+          child: CustomScrollView(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            slivers: <Widget>[
+              SliverPadding(
+                padding: _gutter.copyWith(top: 12),
+                sliver: SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      MenuScreenHeader(
+                        title: Strings.menuManagement,
+                        addLabel: Strings.addProduct,
+                        onAddTap: _openForm,
+                      ),
+                      const SizedBox(height: 16),
+                      AppSearchField(
+                        controller: _searchController,
+                        hintText: Strings.searchProduct,
+                        onChanged: _onSearchChanged,
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+                ),
               ),
-              const SizedBox(height: 12),
+              BlocBuilder<MenuCubit, MenuState>(builder: _buildBody),
             ],
-            TipBanner(
-              boldPrefix: Strings.tip,
-              text: Strings.pauseProductTip,
-            ),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  Widget _buildBody(BuildContext context, MenuState state) {
+    return switch (state) {
+      MenuLoading() => const SliverFillRemaining(
+        hasScrollBody: false,
+        child: SectionLoadingView(),
+      ),
+      MenuLoadFailure(:final message) => SliverPadding(
+        padding: _gutter,
+        sliver: SliverToBoxAdapter(
+          child: RetryErrorView(message: message, onRetry: _cubit.load),
+        ),
+      ),
+      MenuLoaded(:final products, :final query) when products.isEmpty =>
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: MenuEmptyView(
+            isSearching: query.isNotEmpty,
+            onAddTap: _openForm,
+          ),
+        ),
+      MenuLoaded() => SliverPadding(
+        padding: _gutter.copyWith(bottom: 24),
+        sliver: SliverList.separated(
+          // One extra slot for the footer (spinner/retry + tip).
+          itemCount: state.products.length + 1,
+          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          itemBuilder: (BuildContext context, int index) {
+            if (index == state.products.length) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  MenuListFooter(
+                    isLoadingMore: state.isLoadingMore,
+                    loadMoreFailed: state.loadMoreFailed,
+                    onRetry: () => _cubit.loadMore(retry: true),
+                  ),
+                  if (!state.hasMore)
+                    TipBanner(
+                      boldPrefix: Strings.tip,
+                      text: Strings.pauseProductTip,
+                    ),
+                ],
+              );
+            }
+            final Product product = state.products[index];
+            return ProductCard(
+              key: ValueKey<int>(product.id),
+              product: product,
+              isBusy: state.busyIds.contains(product.id),
+              onTap: () => _openForm(product),
+              onAvailabilityChanged: (bool isActive) =>
+                  _cubit.toggleStatus(product, isActive: isActive),
+              onMoreTap: () => _showOptions(product),
+            );
+          },
+        ),
+      ),
+    };
   }
 }

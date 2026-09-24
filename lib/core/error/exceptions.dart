@@ -54,6 +54,20 @@ class UnauthorizedException extends AppException {
   }
 }
 
+/// HTTP 409: the request clashes with the resource's current state, e.g.
+/// deleting a product that is used in orders.
+class ConflictException extends AppException {
+  @override
+  final String? message;
+
+  const ConflictException({this.message});
+
+  @override
+  Failure toFailure() {
+    return ConflictFailure(message: message);
+  }
+}
+
 class InternetConnectionException extends AppException {
   @override
   final String? message;

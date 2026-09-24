@@ -1,22 +1,27 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../../core/utils/values/app_colors.dart';
-import '../../../../core/utils/values/strings.dart';
-import '../../../../core/widgets/brand_snack_bar.dart';
-import '../../../../core/widgets/labeled_field.dart';
+import '../utils/values/app_colors.dart';
+import '../utils/values/strings.dart';
+import 'brand_snack_bar.dart';
+import 'labeled_field.dart';
 
 /// Labeled tile that picks an image from the gallery and previews it.
 /// Reports the picked file's local path through [onChanged].
-class StoreImagePickerField extends StatelessWidget {
-  const StoreImagePickerField({
+///
+/// Shows, in order of preference: the newly picked [path], the already
+/// uploaded [imageUrl], or a placeholder.
+class ImagePickerField extends StatelessWidget {
+  const ImagePickerField({
     super.key,
     required this.label,
     required this.path,
     required this.onChanged,
+    this.imageUrl,
     this.errorText,
     this.height = 132,
   });
@@ -26,6 +31,7 @@ class StoreImagePickerField extends StatelessWidget {
   final String label;
   final String? path;
   final ValueChanged<String> onChanged;
+  final String? imageUrl;
   final String? errorText;
   final double height;
 
@@ -50,6 +56,10 @@ class StoreImagePickerField extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
     final String? currentPath = path;
+    final String? currentUrl = imageUrl;
+    final Widget placeholder = _Placeholder(colors: colors);
+    final int cacheHeight = (height * 3).round();
+
     return LabeledField(
       label: label,
       child: Column(
@@ -69,13 +79,21 @@ class StoreImagePickerField extends StatelessWidget {
                     color: errorText == null ? colors.border : colors.error,
                   ),
                 ),
-                child: currentPath == null
-                    ? _Placeholder(colors: colors)
-                    : Image.file(
+                child: currentPath != null
+                    ? Image.file(
                         File(currentPath),
                         fit: BoxFit.cover,
-                        cacheHeight: (height * 3).round(),
-                      ),
+                        cacheHeight: cacheHeight,
+                      )
+                    : currentUrl != null
+                    ? CachedNetworkImage(
+                        imageUrl: currentUrl,
+                        fit: BoxFit.cover,
+                        memCacheHeight: cacheHeight,
+                        placeholder: (_, __) => placeholder,
+                        errorWidget: (_, __, ___) => placeholder,
+                      )
+                    : placeholder,
               ),
             ),
           ),

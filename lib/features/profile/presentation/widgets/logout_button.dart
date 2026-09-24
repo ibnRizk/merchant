@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/confirm_dialog.dart';
 
 /// Full-width destructive outline button that ends the session.
 class LogoutButton extends StatelessWidget {
@@ -52,72 +53,10 @@ class LogoutButton extends StatelessWidget {
 }
 
 /// Resolves to `true` only when the merchant confirms.
-Future<bool> showLogoutConfirmation(BuildContext context) async {
-  final AppColors colors = context.colors;
-  final bool? confirmed = await showDialog<bool>(
-    context: context,
-    builder: (BuildContext dialogContext) => AlertDialog(
-      backgroundColor: colors.surface,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
-      icon: Container(
-        width: 52,
-        height: 52,
-        decoration: BoxDecoration(
-          color: colors.errorContainer,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(Icons.logout_rounded, color: colors.error),
-      ),
-      title: Text(
-        Strings.logoutConfirmTitle,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontFamily: 'Cairo',
-          fontSize: 18,
-          fontWeight: FontWeight.w800,
-          color: colors.textPrimary,
-        ),
-      ),
-      content: Text(
-        Strings.logoutConfirmMessage,
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontFamily: 'Cairo',
-          fontSize: 13.5,
-          color: colors.textSecondary,
-        ),
-      ),
-      actionsAlignment: MainAxisAlignment.center,
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.of(dialogContext).pop(false),
-          child: Text(
-            Strings.cancel,
-            style: TextStyle(
-              fontFamily: 'Cairo',
-              fontWeight: FontWeight.w700,
-              color: colors.textSecondary,
-            ),
-          ),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(dialogContext).pop(true),
-          style: FilledButton.styleFrom(
-            backgroundColor: colors.error,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
-            ),
-          ),
-          child: Text(
-            Strings.logout,
-            style: const TextStyle(
-              fontFamily: 'Cairo',
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-  return confirmed ?? false;
-}
+Future<bool> showLogoutConfirmation(BuildContext context) => showConfirmDialog(
+  context,
+  icon: Icons.logout_rounded,
+  title: Strings.logoutConfirmTitle,
+  message: Strings.logoutConfirmMessage,
+  confirmLabel: Strings.logout,
+);

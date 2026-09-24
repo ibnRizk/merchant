@@ -8,6 +8,7 @@ void showBrandSnackBar(
   BuildContext context,
   String message, {
   bool isError = false,
+  Duration duration = const Duration(seconds: 2),
 }) {
   final AppColors colors = context.colors;
   final ColorScheme scheme = Theme.of(context).colorScheme;
@@ -29,7 +30,7 @@ void showBrandSnackBar(
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         margin: const EdgeInsets.all(16),
-        duration: const Duration(seconds: 2),
+        duration: duration,
       ),
     );
 }
