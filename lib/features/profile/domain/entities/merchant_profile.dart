@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/entities/store_category.dart';
+
 /// The signed-in merchant (owner) and their store, as `GET /vendor/profile`
 /// returns them.
 class MerchantProfile extends Equatable {
@@ -35,6 +37,10 @@ class StoreProfile extends Equatable {
   final String address;
   final String? logoUrl;
 
+  /// Picked at registration. Read-only here: `PATCH /vendor/profile` can't
+  /// change it. `null` for stores registered without one.
+  final StoreCategory? category;
+
   const StoreProfile({
     required this.id,
     required this.name,
@@ -42,8 +48,17 @@ class StoreProfile extends Equatable {
     required this.email,
     required this.address,
     this.logoUrl,
+    this.category,
   });
 
   @override
-  List<Object?> get props => [id, name, phone, email, address, logoUrl];
+  List<Object?> get props => [
+    id,
+    name,
+    phone,
+    email,
+    address,
+    logoUrl,
+    category,
+  ];
 }

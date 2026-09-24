@@ -31,6 +31,41 @@ void main() {
       expect(model.store?.logoUrl, 'https://cdn.example.com/logo.png');
     });
 
+    test('reads the store category', () {
+      final MerchantProfileModel model = MerchantProfileModel.fromJson(
+        <String, dynamic>{
+          'id': 1,
+          'stores': <dynamic>[
+            <String, dynamic>{
+              'id': 2,
+              'category': <String, dynamic>{
+                'id': 3,
+                'name': 'Restaurant',
+                'name_ar': 'مطعم',
+                'name_en': 'Restaurant',
+              },
+            },
+          ],
+        },
+      );
+
+      expect(model.store?.category?.id, 3);
+      expect(model.store?.category?.localizedName('ar'), 'مطعم');
+    });
+
+    test('has no category when the store has none', () {
+      final MerchantProfileModel model = MerchantProfileModel.fromJson(
+        <String, dynamic>{
+          'id': 1,
+          'stores': <dynamic>[
+            <String, dynamic>{'id': 2, 'category': null},
+          ],
+        },
+      );
+
+      expect(model.store?.category, isNull);
+    });
+
     test('has no store when stores[] is missing or empty', () {
       final MerchantProfileModel model = MerchantProfileModel.fromJson(
         <String, dynamic>{'id': 1, 'f_name': 'Sara', 'stores': <dynamic>[]},

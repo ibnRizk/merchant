@@ -8,6 +8,7 @@ import '../../features/auth/domain/entities/merchant_auth_result.dart';
 import '../../features/auth/presentation/cubit/forgot_password/forgot_password_cubit.dart';
 import '../../features/auth/presentation/cubit/login/login_cubit.dart';
 import '../../features/auth/presentation/cubit/register/register_cubit.dart';
+import '../../features/auth/presentation/cubit/store_categories/store_categories_cubit.dart';
 import '../../features/auth/presentation/pages/forgot_password_screen.dart';
 import '../../features/auth/presentation/pages/location_picker_screen.dart';
 import '../../features/auth/presentation/pages/login_screen.dart';
@@ -107,8 +108,16 @@ abstract class AppRoutes {
       GoRoute(
         path: register,
         name: registerName,
-        builder: (_, __) => BlocProvider<RegisterCubit>(
-          create: (_) => ServiceLocator.instance<RegisterCubit>(),
+        builder: (_, __) => MultiBlocProvider(
+          providers: <BlocProvider<StateStreamableSource<Object?>>>[
+            BlocProvider<RegisterCubit>(
+              create: (_) => ServiceLocator.instance<RegisterCubit>(),
+            ),
+            BlocProvider<StoreCategoriesCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<StoreCategoriesCubit>()..load(),
+            ),
+          ],
           child: const RegisterScreen(),
         ),
       ),

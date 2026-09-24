@@ -459,14 +459,20 @@ abstract class Strings {
   static const String _storeLocationSection = 'store_location_section';
   static String get storeLocationSection => _storeLocationSection.tr;
 
-  static const String _locationZoneHint = 'location_zone_hint';
-  static String get locationZoneHint => _locationZoneHint.tr;
+  static const String _selectCategory = 'select_category';
+  static String get selectCategory => _selectCategory.tr;
 
-  static const String _zoneId = 'zone_id';
-  static String get zoneId => _zoneId.tr;
+  static const String _categoryRequired = 'category_required';
+  static String get categoryRequired => _categoryRequired.tr;
 
-  static const String _moduleId = 'module_id';
-  static String get moduleId => _moduleId.tr;
+  static const String _noCategoriesAvailable = 'no_categories_available';
+  static String get noCategoriesAvailable => _noCategoriesAvailable.tr;
+
+  static const String _categoryManagedByAdmin = 'category_managed_by_admin';
+  static String get categoryManagedByAdmin => _categoryManagedByAdmin.tr;
+
+  static const String _categoryNotSet = 'category_not_set';
+  static String get categoryNotSet => _categoryNotSet.tr;
 
   static const String _deliveryTimeSection = 'delivery_time_section';
   static String get deliveryTimeSection => _deliveryTimeSection.tr;
@@ -488,9 +494,6 @@ abstract class Strings {
 
   static const String _unitDays = 'unit_days';
   static String get unitDays => _unitDays.tr;
-
-  static const String _taxPercent = 'tax_percent';
-  static String get taxPercent => _taxPercent.tr;
 
   static const String _storeLogo = 'store_logo';
   static String get storeLogo => _storeLogo.tr;

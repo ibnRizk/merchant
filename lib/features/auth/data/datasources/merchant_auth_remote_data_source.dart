@@ -1,6 +1,8 @@
 import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/error/exceptions.dart';
+import '../../../../core/models/store_category_model.dart';
+import '../../../../core/utils/log_utils.dart';
 import '../../domain/params/login_params.dart';
 import '../../domain/params/register_params.dart';
 import '../../domain/params/reset_password_params.dart';
@@ -12,6 +14,8 @@ import '../models/merchant_auth_result_model.dart';
 /// repository turns them into failures.
 abstract class MerchantAuthRemoteDataSource {
   Future<MerchantAuthResultModel> login(LoginParams params);
+
+  Future<List<StoreCategoryModel>> getStoreCategories();
 
   /// Returns the new store's id.
   Future<int> register(RegisterParams params);
@@ -26,8 +30,19 @@ abstract class MerchantAuthRemoteDataSource {
 class MerchantAuthRemoteDataSourceImpl implements MerchantAuthRemoteDataSource {
   final DioConsumer _client;
 
-  const MerchantAuthRemoteDataSourceImpl({required DioConsumer client})
-    : _client = client;
+  /// Every new store registers into this zone and module. There is no API
+  /// to list them, so they come from `.env` (`DEFAULT_ZONE_ID`,
+  /// `DEFAULT_MODULE_ID`).
+  final int? _zoneId;
+  final int? _moduleId;
+
+  const MerchantAuthRemoteDataSourceImpl({
+    required DioConsumer client,
+    required int? zoneId,
+    required int? moduleId,
+  }) : _client = client,
+       _zoneId = zoneId,
+       _moduleId = moduleId;
 
   @override
   Future<MerchantAuthResultModel> login(LoginParams params) async {
@@ -39,10 +54,33 @@ class MerchantAuthRemoteDataSourceImpl implements MerchantAuthRemoteDataSource {
   }
 
   @override
+  Future<List<StoreCategoryModel>> getStoreCategories() async {
+    final dynamic categories = _asMap(
+      await _client.get(ApiEndpoints.storeCategories),
+    )['categories'];
+    if (categories is! List) {
+      throw const ServerException(message: 'Categories response has no list.');
+    }
+    return <StoreCategoryModel>[
+      for (final dynamic json in categories)
+        if (StoreCategoryModel.tryParse(json) case final StoreCategoryModel c)
+          c,
+    ];
+  }
+
+  @override
   Future<int> register(RegisterParams params) async {
+    final int? zoneId = _zoneId;
+    final int? moduleId = _moduleId;
+    if (zoneId == null || moduleId == null) {
+      // A build misconfiguration, not something the merchant can fix: log the
+      // cause, show the generic error.
+      Log.e('Registration needs DEFAULT_ZONE_ID and DEFAULT_MODULE_ID in .env');
+      throw const ServerException();
+    }
     final dynamic response = await _client.post(
       ApiEndpoints.register,
-      formData: await params.toFormData(),
+      formData: await params.toFormData(zoneId: zoneId, moduleId: moduleId),
     );
     final int? storeId = int.tryParse('${_asMap(response)['store_id']}');
     if (storeId == null) {

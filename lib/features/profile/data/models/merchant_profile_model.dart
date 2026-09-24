@@ -1,3 +1,4 @@
+import '../../../../core/models/store_category_model.dart';
 import '../../domain/entities/merchant_profile.dart';
 
 /// Parses `GET/PATCH /vendor/profile`: merchant fields at the top level and
@@ -38,6 +39,7 @@ class StoreProfileModel extends StoreProfile {
     required super.email,
     required super.address,
     super.logoUrl,
+    super.category,
   });
 
   factory StoreProfileModel.fromJson(Map<String, dynamic> json) {
@@ -49,6 +51,7 @@ class StoreProfileModel extends StoreProfile {
       address: _string(json['address']),
       // `logo_full_url` is the absolute URL; `logo` may be a bare file name.
       logoUrl: _url(json['logo_full_url']) ?? _url(json['logo']),
+      category: StoreCategoryModel.tryParse(json['category']),
     );
   }
 }

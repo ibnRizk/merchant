@@ -5,6 +5,7 @@ import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_form_field.dart';
 import '../../domain/entities/merchant_profile.dart';
 import 'profile_avatar_block.dart';
+import 'profile_read_only_field.dart';
 import 'profile_section_card.dart';
 
 /// Editable owner and store fields. The controllers belong to the screen,
@@ -46,6 +47,9 @@ class ProfileForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final StoreProfile? store = profile.store;
+    final String? categoryName = store?.category?.localizedName(
+      Localizations.localeOf(context).languageCode,
+    );
     return Form(
       key: formKey,
       child: Column(
@@ -53,7 +57,9 @@ class ProfileForm extends StatelessWidget {
         children: <Widget>[
           ProfileAvatarBlock(
             storeName: store?.name ?? profile.fullName,
-            subtitle: store == null ? profile.email : profile.fullName,
+            subtitle: store == null
+                ? profile.email
+                : <String>[?categoryName, profile.fullName].join(' · '),
             logoUrl: store?.logoUrl,
           ),
           const SizedBox(height: 24),
@@ -66,6 +72,13 @@ class ProfileForm extends StatelessWidget {
                   label: Strings.storeNameLabel,
                   controller: storeNameController,
                   validator: _required,
+                ),
+                const SizedBox(height: 16),
+                ProfileReadOnlyField(
+                  label: Strings.categoryLabel,
+                  value: categoryName ?? Strings.categoryNotSet,
+                  icon: Icons.category_outlined,
+                  helperText: Strings.categoryManagedByAdmin,
                 ),
                 const SizedBox(height: 16),
                 AppFormField(

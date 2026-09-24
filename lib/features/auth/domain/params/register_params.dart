@@ -27,7 +27,8 @@ class StoreTranslation extends Equatable {
 /// Body of `POST /auth/vendor/register` (multipart).
 ///
 /// Creates a pending merchant and store; an admin must approve the account
-/// before operational routes work.
+/// before operational routes work. The zone, module and tax the API also
+/// needs are not merchant choices; the data layer fills them in.
 class RegisterParams extends Equatable {
   final String fName;
   final String lName;
@@ -38,13 +39,14 @@ class RegisterParams extends Equatable {
   /// symbol.
   final String password;
 
-  /// Store location. Must be inside [zoneId], otherwise the API returns 403.
+  /// Store location. Must be inside the configured zone, otherwise the API
+  /// returns 403.
   final double latitude;
   final double longitude;
 
-  final int zoneId;
-  final int moduleId;
-  final double tax;
+  /// From `GET /auth/vendor/store-categories`. `null` only when the admin
+  /// has defined no categories yet.
+  final int? storeCategoryId;
 
   final int minimumDeliveryTime;
   final int maximumDeliveryTime;
@@ -67,9 +69,7 @@ class RegisterParams extends Equatable {
     required this.password,
     required this.latitude,
     required this.longitude,
-    required this.zoneId,
-    required this.moduleId,
-    required this.tax,
+    required this.storeCategoryId,
     required this.minimumDeliveryTime,
     required this.maximumDeliveryTime,
     required this.deliveryTimeType,
@@ -87,9 +87,7 @@ class RegisterParams extends Equatable {
     password,
     latitude,
     longitude,
-    zoneId,
-    moduleId,
-    tax,
+    storeCategoryId,
     minimumDeliveryTime,
     maximumDeliveryTime,
     deliveryTimeType,
@@ -99,5 +97,6 @@ class RegisterParams extends Equatable {
   ];
 
   @override
-  String toString() => 'RegisterParams(email: $email, zoneId: $zoneId)';
+  String toString() =>
+      'RegisterParams(email: $email, storeCategoryId: $storeCategoryId)';
 }

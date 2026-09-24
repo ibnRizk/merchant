@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 
+import '../../../../core/entities/store_category.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/guard_failure.dart';
 import '../../../../core/services/local_storage/app_secure_storage.dart';
@@ -31,6 +32,10 @@ class MerchantAuthRepositoryImpl implements MerchantAuthRepository {
       return result;
     });
   }
+
+  @override
+  Future<Either<Failure, List<StoreCategory>>> getStoreCategories() =>
+      _guard(_remote.getStoreCategories);
 
   @override
   Future<Either<Failure, int>> register(RegisterParams params) =>

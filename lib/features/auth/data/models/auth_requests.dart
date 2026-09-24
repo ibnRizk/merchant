@@ -37,9 +37,16 @@ extension ResetPasswordRequest on ResetPasswordParams {
 }
 
 extension RegisterRequest on RegisterParams {
-  /// Multipart body. Throws a `FileSystemException` if an image path no longer
+  /// Stores register tax-free for now, but the API still requires the field.
+  static const String defaultTax = '0';
+
+  /// Multipart body. [zoneId] and [moduleId] come from app config, not the
+  /// merchant. Throws a `FileSystemException` if an image path no longer
   /// exists; the repository maps that to a failure.
-  Future<FormData> toFormData() async {
+  Future<FormData> toFormData({
+    required int zoneId,
+    required int moduleId,
+  }) async {
     return FormData.fromMap(<String, dynamic>{
       'f_name': fName.trim(),
       'l_name': lName.trim(),
@@ -50,7 +57,9 @@ extension RegisterRequest on RegisterParams {
       'longitude': longitude.toString(),
       'zone_id': zoneId.toString(),
       'module_id': moduleId.toString(),
-      'tax': tax.toString(),
+      'tax': defaultTax,
+      if (storeCategoryId != null)
+        'store_category_id': storeCategoryId.toString(),
       'minimum_delivery_time': minimumDeliveryTime.toString(),
       'maximum_delivery_time': maximumDeliveryTime.toString(),
       'delivery_time_type': switch (deliveryTimeType) {
