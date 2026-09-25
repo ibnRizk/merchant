@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/values/app_colors.dart';
 
 /// Single stat tile used in the dashboard's 2x2 grid (white/navy or
-/// peach/orange, depending on [background] and [valueColor]).
+/// peach/orange, depending on [background] and [valueColor]). The value
+/// scales down rather than overflow a narrow tile (e.g. a large revenue).
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,
@@ -34,6 +35,8 @@ class StatCard extends StatelessWidget {
         children: <Widget>[
           Text(
             label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.start,
             style: TextStyle(
               fontFamily: 'Cairo',
@@ -43,33 +46,39 @@ class StatCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: <Widget>[
-              Text(
-                value,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 26,
-                  fontWeight: FontWeight.w800,
-                  color: valueColor,
-                ),
-              ),
-              if (suffix != null) ...<Widget>[
-                const SizedBox(width: 6),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: AlignmentDirectional.centerStart,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: <Widget>[
                 Text(
-                  suffix!,
+                  value,
+                  maxLines: 1,
                   style: TextStyle(
                     fontFamily: 'Cairo',
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
+                    fontSize: 26,
+                    fontWeight: FontWeight.w800,
                     color: valueColor,
                   ),
                 ),
+                if (suffix != null) ...<Widget>[
+                  const SizedBox(width: 6),
+                  Text(
+                    suffix!,
+                    maxLines: 1,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: valueColor,
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ],
       ),

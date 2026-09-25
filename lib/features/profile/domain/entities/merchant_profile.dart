@@ -41,6 +41,10 @@ class StoreProfile extends Equatable {
   /// change it. `null` for stores registered without one.
   final StoreCategory? category;
 
+  /// Open to receive orders (`active` on the API); the merchant toggles it
+  /// from the dashboard.
+  final bool isOpen;
+
   const StoreProfile({
     required this.id,
     required this.name,
@@ -49,6 +53,7 @@ class StoreProfile extends Equatable {
     required this.address,
     this.logoUrl,
     this.category,
+    this.isOpen = false,
   });
 
   @override
@@ -60,5 +65,6 @@ class StoreProfile extends Equatable {
     address,
     logoUrl,
     category,
+    isOpen,
   ];
 }

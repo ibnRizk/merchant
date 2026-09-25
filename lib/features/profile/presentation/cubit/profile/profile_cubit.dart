@@ -61,7 +61,8 @@ class ProfileCubit extends Cubit<ProfileState> {
 
     emit(
       result.fold(
-        (failure) => ProfileSaveFailure(current.profile, failure.displayMessage),
+        (failure) =>
+            ProfileSaveFailure(current.profile, failure.displayMessage),
         ProfileSaved.new,
       ),
     );

@@ -95,5 +95,31 @@ void main() {
 
       expect(model.store?.logoUrl, isNull);
     });
+
+    test('reads the store as open from active = 1', () {
+      final MerchantProfileModel model = MerchantProfileModel.fromJson(
+        <String, dynamic>{
+          'id': 1,
+          'stores': <dynamic>[
+            <String, dynamic>{'id': 2, 'active': 1},
+          ],
+        },
+      );
+
+      expect(model.store?.isOpen, isTrue);
+    });
+
+    test('reads the store as closed when active is missing', () {
+      final MerchantProfileModel model = MerchantProfileModel.fromJson(
+        <String, dynamic>{
+          'id': 1,
+          'stores': <dynamic>[
+            <String, dynamic>{'id': 2},
+          ],
+        },
+      );
+
+      expect(model.store?.isOpen, isFalse);
+    });
   });
 }

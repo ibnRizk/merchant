@@ -159,6 +159,9 @@ abstract class Strings {
   static const String _goodMorning = 'good_morning';
   static String get goodMorning => _goodMorning.tr;
 
+  static const String _goodEvening = 'good_evening';
+  static String get goodEvening => _goodEvening.tr;
+
   static const String _storeOpen = 'store_open';
   static String get storeOpen => _storeOpen.tr;
 
@@ -200,6 +203,9 @@ abstract class Strings {
 
   static const String _view = 'view';
   static String get view => _view.tr;
+
+  static const String _nothingNeedsAttention = 'nothing_needs_attention';
+  static String get nothingNeedsAttention => _nothingNeedsAttention.tr;
 
   // --- Orders ---
   static const String _orderHistory = 'order_history';

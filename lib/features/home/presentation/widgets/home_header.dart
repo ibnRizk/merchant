@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/bidi_text.dart';
 import '../../../../core/utils/values/app_colors.dart';
 
-/// Navy avatar + greeting/store-name pair shown at the top of the dashboard.
+/// Greeting + store name at the start, a navy initial avatar at the end.
+/// The name ellipsizes and keeps its own direction (e.g. an English store
+/// name in the Arabic layout).
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
     super.key,
     required this.greeting,
     required this.storeName,
-    required this.avatarLetter,
   });
 
   final String greeting;
+
+  /// Empty while the profile is loading.
   final String storeName;
-  final String avatarLetter;
 
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
     final ColorScheme scheme = Theme.of(context).colorScheme;
+    final String name = storeName.trim();
     return Row(
       children: <Widget>[
         Expanded(
@@ -27,6 +31,9 @@ class HomeHeader extends StatelessWidget {
             children: <Widget>[
               Text(
                 greeting,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
                 style: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 13,
@@ -36,7 +43,9 @@ class HomeHeader extends StatelessWidget {
               ),
               const SizedBox(height: 2),
               Text(
-                storeName,
+                name.isEmpty ? '…' : name.bidiIsolated,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
                 style: TextStyle(
                   fontFamily: 'Cairo',
@@ -57,15 +66,18 @@ class HomeHeader extends StatelessWidget {
             color: colors.secondary,
             borderRadius: BorderRadius.circular(14),
           ),
-          child: Text(
-            avatarLetter,
-            style: TextStyle(
-              fontFamily: 'Cairo',
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-              color: scheme.onSecondary,
-            ),
-          ),
+          child: name.isEmpty
+              ? Icon(Icons.storefront_rounded, color: scheme.onSecondary)
+              : Text(
+                  // First character, not code unit: safe for any script.
+                  String.fromCharCode(name.runes.first).toUpperCase(),
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: scheme.onSecondary,
+                  ),
+                ),
         ),
       ],
     );

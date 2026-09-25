@@ -67,15 +67,11 @@ class _MainScaffoldState extends State<MainScaffold> {
 
     return Scaffold(
       backgroundColor: context.colors.background,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _tabs,
-      ),
+      body: IndexedStack(index: _selectedIndex, children: _tabs),
       bottomNavigationBar: AppBottomNavBar(
         items: items,
         selectedIndex: _selectedIndex,
-        onTap: (int index) =>
-            setState(() => _selectedIndex = index),
+        onTap: (int index) => setState(() => _selectedIndex = index),
       ),
     );
   }

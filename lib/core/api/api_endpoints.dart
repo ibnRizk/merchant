@@ -15,6 +15,7 @@ abstract class ApiEndpoints {
   // --- Session and profile (token) ---
   static const String vendorProfile = '/vendor/profile';
   static const String vendorLogout = '/vendor/logout';
+  static const String updateActiveStatus = '/vendor/update-active-status';
 
   // --- Catalog (approved) ---
   static const String catalogMetadata = '/vendor/catalog/metadata';

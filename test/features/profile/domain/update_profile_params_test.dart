@@ -34,10 +34,7 @@ void main() {
     test('keeps only the changed fields, trimmed', () {
       final UpdateProfileParams params = _diff(storeName: ' New Name ');
 
-      expect(
-        params,
-        const UpdateProfileParams(storeName: 'New Name'),
-      );
+      expect(params, const UpdateProfileParams(storeName: 'New Name'));
     });
   });
 

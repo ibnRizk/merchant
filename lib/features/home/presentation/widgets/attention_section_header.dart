@@ -18,17 +18,22 @@ class AttentionSectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Text(
-          title,
-          style: TextStyle(
-            fontFamily: 'Cairo',
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            color: context.colors.textPrimary,
+        Expanded(
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: context.colors.textPrimary,
+            ),
           ),
         ),
+        const SizedBox(width: 8),
         TextButton(
           onPressed: onActionTap,
           style: TextButton.styleFrom(
@@ -38,6 +43,7 @@ class AttentionSectionHeader extends StatelessWidget {
           ),
           child: Text(
             actionLabel,
+            maxLines: 1,
             style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 13,

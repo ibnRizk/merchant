@@ -37,6 +37,8 @@ class ActionCard extends StatelessWidget {
               children: <Widget>[
                 Text(
                   title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'Cairo',
@@ -48,6 +50,8 @@ class ActionCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     fontFamily: 'Cairo',
@@ -78,6 +82,7 @@ class ActionCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
           child: Text(
             actionLabel,
+            maxLines: 1,
             style: TextStyle(
               fontFamily: 'Cairo',
               fontSize: 12.5,

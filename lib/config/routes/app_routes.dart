@@ -14,6 +14,8 @@ import '../../features/auth/presentation/pages/location_picker_screen.dart';
 import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/pending_approval_screen.dart';
 import '../../features/auth/presentation/pages/register_screen.dart';
+import '../../features/home/presentation/cubit/dashboard/dashboard_cubit.dart';
+import '../../features/home/presentation/cubit/store_status/store_status_cubit.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
 import '../../features/menu/domain/entities/product.dart';
 import '../../features/menu/presentation/cubit/menu/menu_cubit.dart';
@@ -75,10 +77,16 @@ abstract class AppRoutes {
       GoRoute(
         path: home,
         name: homeName,
-        // Order history, menu and profile are tabs of MainScaffold, so their
-        // cubits live at this route.
+        // Dashboard, order history, menu and profile are tabs of
+        // MainScaffold, so their cubits live at this route.
         builder: (_, __) => MultiBlocProvider(
           providers: <BlocProvider<StateStreamableSource<Object?>>>[
+            BlocProvider<DashboardCubit>(
+              create: (_) => ServiceLocator.instance<DashboardCubit>()..load(),
+            ),
+            BlocProvider<StoreStatusCubit>(
+              create: (_) => ServiceLocator.instance<StoreStatusCubit>(),
+            ),
             BlocProvider<OrdersHistoryCubit>(
               create: (_) =>
                   ServiceLocator.instance<OrdersHistoryCubit>()..load(),

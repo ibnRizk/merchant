@@ -28,9 +28,7 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
   }
 
   @override
-  Future<MerchantProfileModel> updateProfile(
-    UpdateProfileParams params,
-  ) async {
+  Future<MerchantProfileModel> updateProfile(UpdateProfileParams params) async {
     final dynamic response = await _client.patch(
       ApiEndpoints.vendorProfile,
       body: params.toJson(),

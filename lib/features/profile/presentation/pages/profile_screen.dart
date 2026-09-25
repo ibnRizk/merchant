@@ -37,8 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _storeNameController = TextEditingController();
   final TextEditingController _storePhoneController = TextEditingController();
   final TextEditingController _storeEmailController = TextEditingController();
-  final TextEditingController _storeAddressController =
-      TextEditingController();
+  final TextEditingController _storeAddressController = TextEditingController();
 
   @override
   void initState() {

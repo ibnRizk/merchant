@@ -47,8 +47,10 @@ void main() {
 
       final result = await repository.getProfile();
 
-      expect(result.swap().getOrElse(() => throw 'no failure'),
-          const NetworkFailure(message: 'offline'));
+      expect(
+        result.swap().getOrElse(() => throw 'no failure'),
+        const NetworkFailure(message: 'offline'),
+      );
     });
 
     test('fails when the response is not a JSON object', () async {
