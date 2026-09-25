@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:flutter_base/core/api/api_endpoints.dart';
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/core/models/store_category_model.dart';
-import 'package:flutter_base/features/auth/data/datasources/merchant_auth_remote_data_source.dart';
+import 'package:ssm_merchant/core/api/api_endpoints.dart';
+import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/core/models/store_category_model.dart';
+import 'package:ssm_merchant/features/auth/data/datasources/merchant_auth_remote_data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../auth_fakes.dart';

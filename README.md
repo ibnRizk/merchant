@@ -1,6 +1,6 @@
-# Flutter Base
+# SSM Merchant
 
-Team base architecture boilerplate. Clean Architecture + Cubit + GetIt + Dio + go_router, with JSON-file i18n and a light/dark design-token theme.
+Store owner app for SSM: orders, menu, working hours and store status. Built on the team base architecture: Clean Architecture + Cubit + GetIt + Dio + go_router, with JSON-file i18n and a light/dark design-token theme.
 
 ## Getting started
 
@@ -8,15 +8,6 @@ Team base architecture boilerplate. Clean Architecture + Cubit + GetIt + Dio + g
 cp .env.example .env      # then fill in BASE_URL
 flutter pub get
 flutter run
-```
-
-Rename the package for a new project:
-
-```bash
-dart pub global activate rename
-rename setAppName --targets ios,android --value "My App"
-rename setBundleId --targets ios,android --value com.mycompany.myapp
-# then find/replace `package:flutter_base/` and `name: flutter_base` in pubspec.yaml
 ```
 
 ## Layers

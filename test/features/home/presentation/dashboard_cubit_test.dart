@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/home/domain/entities/dashboard_stats.dart';
-import 'package:flutter_base/features/home/domain/repos/dashboard_repository.dart';
-import 'package:flutter_base/features/home/presentation/cubit/dashboard/dashboard_cubit.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/home/domain/entities/dashboard_stats.dart';
+import 'package:ssm_merchant/features/home/domain/repos/dashboard_repository.dart';
+import 'package:ssm_merchant/features/home/presentation/cubit/dashboard/dashboard_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const DashboardStats figures = DashboardStats(

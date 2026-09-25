@@ -1,9 +1,9 @@
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/orders/data/datasources/orders_remote_data_source.dart';
-import 'package:flutter_base/features/orders/data/repos/orders_repository_impl.dart';
-import 'package:flutter_base/features/orders/domain/entities/order_status.dart';
-import 'package:flutter_base/features/orders/domain/params/order_command.dart';
+import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/orders/data/datasources/orders_remote_data_source.dart';
+import 'package:ssm_merchant/features/orders/data/repos/orders_repository_impl.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/domain/params/order_command.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../orders_fakes.dart';

@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/entities/store_category.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/core/services/local_storage/app_secure_storage.dart';
-import 'package:flutter_base/features/profile/domain/entities/merchant_profile.dart';
-import 'package:flutter_base/features/profile/domain/params/update_profile_params.dart';
-import 'package:flutter_base/features/profile/domain/repos/profile_repository.dart';
+import 'package:ssm_merchant/core/entities/store_category.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/core/services/local_storage/app_secure_storage.dart';
+import 'package:ssm_merchant/features/profile/domain/entities/merchant_profile.dart';
+import 'package:ssm_merchant/features/profile/domain/params/update_profile_params.dart';
+import 'package:ssm_merchant/features/profile/domain/repos/profile_repository.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 export '../../helpers/fake_dio_consumer.dart';

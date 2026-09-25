@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/home/domain/repos/store_status_repository.dart';
-import 'package:flutter_base/features/home/presentation/cubit/store_status/store_status_cubit.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/home/domain/repos/store_status_repository.dart';
+import 'package:ssm_merchant/features/home/presentation/cubit/store_status/store_status_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class FakeStoreStatusRepository implements StoreStatusRepository {

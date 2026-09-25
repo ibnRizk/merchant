@@ -1,10 +1,10 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/orders/domain/entities/merchant_order.dart';
-import 'package:flutter_base/features/orders/domain/entities/order_line.dart';
-import 'package:flutter_base/features/orders/domain/entities/order_status.dart';
-import 'package:flutter_base/features/orders/domain/params/order_command.dart';
-import 'package:flutter_base/features/orders/domain/repos/orders_repository.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/merchant_order.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/order_line.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/domain/params/order_command.dart';
+import 'package:ssm_merchant/features/orders/domain/repos/orders_repository.dart';
 
 export '../../helpers/fake_dio_consumer.dart';
 

@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/profile/domain/entities/merchant_profile.dart';
-import 'package:flutter_base/features/profile/domain/params/update_profile_params.dart';
-import 'package:flutter_base/features/profile/presentation/cubit/profile/profile_cubit.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/profile/domain/entities/merchant_profile.dart';
+import 'package:ssm_merchant/features/profile/domain/params/update_profile_params.dart';
+import 'package:ssm_merchant/features/profile/presentation/cubit/profile/profile_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../profile_fakes.dart';

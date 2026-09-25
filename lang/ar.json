@@ -1,5 +1,5 @@
 {
-  "app_name": "فلاتر بيس",
+  "app_name": "SSM للتجار",
   "ok": "حسناً",
   "cancel": "إلغاء",
   "confirm": "تأكيد",
@@ -240,5 +240,15 @@
   "pick_store_location": "اختر الموقع على الخريطة",
   "move_map_to_place_pin": "حرّك الخريطة لوضع الدبوس على متجرك",
   "confirm_location": "تأكيد الموقع",
-  "location_required": "الرجاء اختيار موقع المتجر"
+  "location_required": "الرجاء اختيار موقع المتجر",
+  "splash_tagline": "أدِر متجرك في أي وقت",
+  "onboarding_skip": "تخطي",
+  "onboarding_next": "التالي",
+  "onboarding_get_started": "ابدأ الآن",
+  "onboarding_orders_title": "لا تفوّت أي طلب",
+  "onboarding_orders_body": "تصلك الطلبات الجديدة فوراً. اقبلها أو ارفضها بلمسة واحدة وتابع كل طلب حتى الاستلام.",
+  "onboarding_menu_title": "أدِر قائمة منتجاتك",
+  "onboarding_menu_body": "أضف المنتجات، وحدّث الأسعار والمخزون، وأخفِ المنتجات غير المتوفرة.",
+  "onboarding_store_title": "متجرك بطريقتك",
+  "onboarding_store_body": "افتح متجرك أو أغلقه وحدّد مواعيد العمل متى شئت."
 }

@@ -2,7 +2,7 @@
     <!-- API calls and map tiles. Only debug/profile manifests had this. -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
-        android:label="flutter_base"
+        android:label="SSM Merchant"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

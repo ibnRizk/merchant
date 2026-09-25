@@ -108,7 +108,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _onLogoutState(BuildContext context, LogoutState state) {
     switch (state) {
       case LogoutSuccess():
-        context.go(AppRoutes.splash);
+        context.go(AppRoutes.login);
       case LogoutFailure(:final message):
         showBrandSnackBar(context, message, isError: true);
       case LogoutInitial() || LogoutLoading():

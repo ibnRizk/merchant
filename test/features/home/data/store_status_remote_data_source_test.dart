@@ -1,5 +1,5 @@
-import 'package:flutter_base/core/api/api_endpoints.dart';
-import 'package:flutter_base/features/home/data/datasources/store_status_remote_data_source.dart';
+import 'package:ssm_merchant/core/api/api_endpoints.dart';
+import 'package:ssm_merchant/features/home/data/datasources/store_status_remote_data_source.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/fake_dio_consumer.dart';

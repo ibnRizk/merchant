@@ -29,7 +29,7 @@ class ForgotPasswordScreen extends StatelessWidget {
         showBrandSnackBar(context, Strings.codeResent);
       case ForgotPasswordStatus.completed:
         showBrandSnackBar(context, Strings.passwordUpdatedSuccess);
-        context.go(AppRoutes.splash);
+        context.go(AppRoutes.login);
       case ForgotPasswordStatus.idle || ForgotPasswordStatus.loading:
         break;
     }

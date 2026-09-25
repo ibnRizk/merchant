@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/entities/store_category.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/auth/presentation/cubit/store_categories/store_categories_cubit.dart';
+import 'package:ssm_merchant/core/entities/store_category.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/auth/presentation/cubit/store_categories/store_categories_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../auth_fakes.dart';

@@ -34,7 +34,7 @@ class _AppState extends State<App> {
     // back to login.
     _unauthorizedSub = eventBus.unauthorizedStream.listen((_) async {
       await secureStorage.clearAll();
-      AppRoutes.router.go(AppRoutes.splash);
+      AppRoutes.router.go(AppRoutes.login);
     });
   }
 

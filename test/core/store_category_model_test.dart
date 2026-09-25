@@ -1,5 +1,5 @@
-import 'package:flutter_base/core/entities/store_category.dart';
-import 'package:flutter_base/core/models/store_category_model.dart';
+import 'package:ssm_merchant/core/entities/store_category.dart';
+import 'package:ssm_merchant/core/models/store_category_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -12,6 +12,7 @@ abstract class _Keys {
   static const String languageCode = 'languageCode';
   static const String userType = 'userType';
   static const String userCycle = 'userCycle';
+  static const String onboardingSeen = 'onboardingSeen';
 }
 
 /// Non-sensitive key/value storage. Anything secret (tokens, refresh tokens)
@@ -66,6 +67,11 @@ abstract class AppSharedPreferences {
   Future<bool> saveUserCycle(UserCycle value);
 
   Future<bool> removeUserCycle();
+
+  // --- Onboarding ---
+  bool getOnboardingSeen();
+
+  Future<bool> saveOnboardingSeen();
 
   Future<bool> clearAll();
 }
@@ -152,6 +158,14 @@ class AppSharedPreferencesImpl extends AppSharedPreferences {
 
   @override
   Future<bool> removeUserCycle() => instance.remove(_Keys.userCycle);
+
+  // --- Onboarding ---
+  @override
+  bool getOnboardingSeen() => instance.getBool(_Keys.onboardingSeen) ?? false;
+
+  @override
+  Future<bool> saveOnboardingSeen() =>
+      instance.setBool(_Keys.onboardingSeen, true);
 
   @override
   Future<bool> clearAll() => instance.clear();

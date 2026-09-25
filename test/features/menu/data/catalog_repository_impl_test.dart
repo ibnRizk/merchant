@@ -1,9 +1,9 @@
-import 'package:flutter_base/core/api/api_endpoints.dart';
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/menu/data/datasources/catalog_remote_data_source.dart';
-import 'package:flutter_base/features/menu/data/repos/catalog_repository_impl.dart';
-import 'package:flutter_base/features/menu/domain/params/product_params.dart';
+import 'package:ssm_merchant/core/api/api_endpoints.dart';
+import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/menu/data/datasources/catalog_remote_data_source.dart';
+import 'package:ssm_merchant/features/menu/data/repos/catalog_repository_impl.dart';
+import 'package:ssm_merchant/features/menu/domain/params/product_params.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../menu_fakes.dart';

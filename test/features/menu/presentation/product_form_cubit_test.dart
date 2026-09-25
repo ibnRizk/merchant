@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/menu/domain/entities/product.dart';
-import 'package:flutter_base/features/menu/domain/params/product_params.dart';
-import 'package:flutter_base/features/menu/presentation/cubit/product_form/product_form_cubit.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/menu/domain/entities/product.dart';
+import 'package:ssm_merchant/features/menu/domain/params/product_params.dart';
+import 'package:ssm_merchant/features/menu/presentation/cubit/product_form/product_form_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../menu_fakes.dart';

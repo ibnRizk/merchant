@@ -1,4 +1,4 @@
-import 'package:flutter_base/features/profile/data/models/merchant_profile_model.dart';
+import 'package:ssm_merchant/features/profile/data/models/merchant_profile_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

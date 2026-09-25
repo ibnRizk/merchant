@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/orders/domain/entities/merchant_order.dart';
-import 'package:flutter_base/features/orders/domain/entities/order_status.dart';
-import 'package:flutter_base/features/orders/presentation/cubit/orders_history/orders_history_cubit.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/merchant_order.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/presentation/cubit/orders_history/orders_history_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../orders_fakes.dart';

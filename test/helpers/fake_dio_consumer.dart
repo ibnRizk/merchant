@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_base/core/api/dio_consumer.dart';
+import 'package:ssm_merchant/core/api/dio_consumer.dart';
 
 /// Records calls and answers with a canned [response] or throws [error].
 class FakeDioConsumer implements DioConsumer {

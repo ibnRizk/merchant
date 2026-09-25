@@ -1,4 +1,4 @@
-import 'package:flutter_base/features/home/domain/entities/greeting_period.dart';
+import 'package:ssm_merchant/features/home/domain/entities/greeting_period.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 GreetingPeriod at(int hour, [int minute = 0]) =>

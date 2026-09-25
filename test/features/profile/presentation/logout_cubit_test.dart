@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/profile/presentation/cubit/logout/logout_cubit.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/profile/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../profile_fakes.dart';

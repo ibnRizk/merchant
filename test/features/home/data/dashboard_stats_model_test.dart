@@ -1,6 +1,6 @@
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/features/home/data/models/dashboard_stats_model.dart';
-import 'package:flutter_base/features/home/domain/entities/dashboard_stats.dart';
+import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/features/home/data/models/dashboard_stats_model.dart';
+import 'package:ssm_merchant/features/home/domain/entities/dashboard_stats.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// The documented `/vendor/dashboard-stats` response.

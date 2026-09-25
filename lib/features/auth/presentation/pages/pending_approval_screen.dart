@@ -47,7 +47,7 @@ class PendingApprovalScreen extends StatelessWidget {
               const SizedBox(height: 32),
               PrimaryButton(
                 label: Strings.backToLogin,
-                onPressed: () => context.go(AppRoutes.splash),
+                onPressed: () => context.go(AppRoutes.login),
               ),
             ],
           ),

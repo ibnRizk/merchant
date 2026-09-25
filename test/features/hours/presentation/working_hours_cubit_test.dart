@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/hours/domain/entities/clock_time.dart';
-import 'package:flutter_base/features/hours/domain/entities/day_schedule.dart';
-import 'package:flutter_base/features/hours/domain/repos/working_hours_repository.dart';
-import 'package:flutter_base/features/hours/presentation/cubit/working_hours/working_hours_cubit.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/hours/domain/entities/clock_time.dart';
+import 'package:ssm_merchant/features/hours/domain/entities/day_schedule.dart';
+import 'package:ssm_merchant/features/hours/domain/repos/working_hours_repository.dart';
+import 'package:ssm_merchant/features/hours/presentation/cubit/working_hours/working_hours_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const List<DaySchedule> week = <DaySchedule>[

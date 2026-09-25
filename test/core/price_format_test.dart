@@ -1,4 +1,4 @@
-import 'package:flutter_base/core/utils/price_format.dart';
+import 'package:ssm_merchant/core/utils/price_format.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

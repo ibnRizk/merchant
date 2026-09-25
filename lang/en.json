@@ -1,5 +1,5 @@
 {
-  "app_name": "Flutter Base",
+  "app_name": "SSM Merchant",
   "ok": "OK",
   "cancel": "Cancel",
   "confirm": "Confirm",
@@ -240,5 +240,15 @@
   "pick_store_location": "Choose location on map",
   "move_map_to_place_pin": "Move the map to place the pin on your store",
   "confirm_location": "Confirm location",
-  "location_required": "Please choose the store location"
+  "location_required": "Please choose the store location",
+  "splash_tagline": "Manage your store, anytime",
+  "onboarding_skip": "Skip",
+  "onboarding_next": "Next",
+  "onboarding_get_started": "Get started",
+  "onboarding_orders_title": "Never miss an order",
+  "onboarding_orders_body": "New orders reach you instantly. Accept or reject them in one tap and follow each one until pickup.",
+  "onboarding_menu_title": "Manage your menu",
+  "onboarding_menu_body": "Add products, update prices and stock, and hide items that are out of stock.",
+  "onboarding_store_title": "Run your store your way",
+  "onboarding_store_body": "Open or close your store and set your working hours whenever you need."
 }

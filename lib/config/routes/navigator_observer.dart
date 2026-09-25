@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/config/routes/app_routes.dart';
-import 'package:flutter_base/core/utils/log_utils.dart';
-import 'package:flutter_base/injection_container.dart';
+import 'package:ssm_merchant/config/routes/app_routes.dart';
+import 'package:ssm_merchant/core/utils/log_utils.dart';
+import 'package:ssm_merchant/injection_container.dart';
 
 class AppNavigatorObserver extends NavigatorObserver {
   String? currentRoute;

@@ -1,7 +1,7 @@
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/home/data/datasources/store_status_remote_data_source.dart';
-import 'package:flutter_base/features/home/data/repos/store_status_repository_impl.dart';
+import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/home/data/datasources/store_status_remote_data_source.dart';
+import 'package:ssm_merchant/features/home/data/repos/store_status_repository_impl.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/fake_dio_consumer.dart';

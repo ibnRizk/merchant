@@ -1,4 +1,4 @@
-import 'package:flutter_base/features/home/domain/entities/dashboard_stats.dart';
+import 'package:ssm_merchant/features/home/domain/entities/dashboard_stats.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 DashboardStats stats({int newOrders = 0, int processingOrders = 0}) =>

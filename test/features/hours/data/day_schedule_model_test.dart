@@ -1,7 +1,7 @@
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/features/hours/data/models/day_schedule_model.dart';
-import 'package:flutter_base/features/hours/domain/entities/clock_time.dart';
-import 'package:flutter_base/features/hours/domain/entities/day_schedule.dart';
+import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/features/hours/data/models/day_schedule_model.dart';
+import 'package:ssm_merchant/features/hours/domain/entities/clock_time.dart';
+import 'package:ssm_merchant/features/hours/domain/entities/day_schedule.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Map<String, dynamic> openDay(int day) => <String, dynamic>{

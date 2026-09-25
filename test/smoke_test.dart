@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/config/themes/app_theme.dart';
-import 'package:flutter_base/core/utils/values/app_colors.dart';
+import 'package:ssm_merchant/config/themes/app_theme.dart';
+import 'package:ssm_merchant/core/utils/values/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 

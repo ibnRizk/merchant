@@ -1,11 +1,11 @@
 {
-    "name": "flutter_base",
-    "short_name": "flutter_base",
+    "name": "SSM Merchant",
+    "short_name": "SSM Merchant",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#FFFFFF",
+    "theme_color": "#173C66",
+    "description": "SSM Merchant store owner app.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

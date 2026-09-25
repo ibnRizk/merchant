@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
-import 'package:flutter_base/core/entities/store_category.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/auth/domain/entities/merchant_auth_result.dart';
-import 'package:flutter_base/features/auth/domain/params/login_params.dart';
-import 'package:flutter_base/features/auth/domain/params/register_params.dart';
-import 'package:flutter_base/features/auth/domain/params/reset_password_params.dart';
-import 'package:flutter_base/features/auth/domain/params/verify_token_params.dart';
-import 'package:flutter_base/features/auth/domain/repos/merchant_auth_repository.dart';
+import 'package:ssm_merchant/core/entities/store_category.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/auth/domain/entities/merchant_auth_result.dart';
+import 'package:ssm_merchant/features/auth/domain/params/login_params.dart';
+import 'package:ssm_merchant/features/auth/domain/params/register_params.dart';
+import 'package:ssm_merchant/features/auth/domain/params/reset_password_params.dart';
+import 'package:ssm_merchant/features/auth/domain/params/verify_token_params.dart';
+import 'package:ssm_merchant/features/auth/domain/repos/merchant_auth_repository.dart';
 
 export '../../helpers/fake_dio_consumer.dart';
 

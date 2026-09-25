@@ -1,4 +1,4 @@
-import 'package:flutter_base/features/hours/domain/entities/clock_time.dart';
+import 'package:ssm_merchant/features/hours/domain/entities/clock_time.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

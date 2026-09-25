@@ -18,6 +18,10 @@ import '../../features/home/presentation/cubit/dashboard/dashboard_cubit.dart';
 import '../../features/home/presentation/cubit/store_status/store_status_cubit.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
 import '../../features/hours/presentation/cubit/working_hours/working_hours_cubit.dart';
+import '../../features/launch/presentation/cubit/onboarding/onboarding_cubit.dart';
+import '../../features/launch/presentation/cubit/splash/splash_cubit.dart';
+import '../../features/launch/presentation/pages/onboarding_screen.dart';
+import '../../features/launch/presentation/pages/splash_screen.dart';
 import '../../features/menu/domain/entities/product.dart';
 import '../../features/menu/presentation/cubit/menu/menu_cubit.dart';
 import '../../features/menu/presentation/cubit/product_form/product_form_cubit.dart';
@@ -36,6 +40,8 @@ import 'navigator_observer.dart';
 abstract class AppRoutes {
   // --- Paths (for context.go / context.push) ---
   static const String splash = '/';
+  static const String onboarding = '/onboarding';
+  static const String login = '/login';
   static const String home = '/home';
   static const String changeLanguage = '/change-language';
   static const String photoViewer = '/photo-viewer';
@@ -50,6 +56,8 @@ abstract class AppRoutes {
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
+  static const String onboardingName = 'onboarding';
+  static const String loginName = 'login';
   static const String homeName = 'home';
   static const String changeLanguageName = 'changeLanguage';
   static const String photoViewerName = 'photoViewer';
@@ -70,6 +78,22 @@ abstract class AppRoutes {
       GoRoute(
         path: splash,
         name: splashName,
+        builder: (_, __) => BlocProvider<SplashCubit>(
+          create: (_) => ServiceLocator.instance<SplashCubit>()..start(),
+          child: const SplashScreen(),
+        ),
+      ),
+      GoRoute(
+        path: onboarding,
+        name: onboardingName,
+        builder: (_, __) => BlocProvider<OnboardingCubit>(
+          create: (_) => ServiceLocator.instance<OnboardingCubit>(),
+          child: const OnboardingScreen(),
+        ),
+      ),
+      GoRoute(
+        path: login,
+        name: loginName,
         builder: (_, __) => BlocProvider<LoginCubit>(
           create: (_) => ServiceLocator.instance<LoginCubit>(),
           child: const LoginScreen(),

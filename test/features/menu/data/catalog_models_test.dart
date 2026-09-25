@@ -1,4 +1,4 @@
-import 'package:flutter_base/features/menu/data/models/catalog_models.dart';
+import 'package:ssm_merchant/features/menu/data/models/catalog_models.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

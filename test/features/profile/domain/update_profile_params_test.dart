@@ -1,5 +1,5 @@
-import 'package:flutter_base/features/profile/data/models/profile_requests.dart';
-import 'package:flutter_base/features/profile/domain/params/update_profile_params.dart';
+import 'package:ssm_merchant/features/profile/data/models/profile_requests.dart';
+import 'package:ssm_merchant/features/profile/domain/params/update_profile_params.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../profile_fakes.dart';

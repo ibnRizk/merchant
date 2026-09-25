@@ -1,9 +1,9 @@
-import 'package:flutter_base/core/api/api_endpoints.dart';
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/home/data/datasources/dashboard_remote_data_source.dart';
-import 'package:flutter_base/features/home/data/repos/dashboard_repository_impl.dart';
-import 'package:flutter_base/features/home/domain/entities/dashboard_stats.dart';
+import 'package:ssm_merchant/core/api/api_endpoints.dart';
+import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/home/data/datasources/dashboard_remote_data_source.dart';
+import 'package:ssm_merchant/features/home/data/repos/dashboard_repository_impl.dart';
+import 'package:ssm_merchant/features/home/domain/entities/dashboard_stats.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/fake_dio_consumer.dart';

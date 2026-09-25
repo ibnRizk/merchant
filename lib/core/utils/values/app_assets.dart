@@ -9,5 +9,6 @@ abstract class AppAssets {
   static const String images = 'assets/images';
   static const String icons = 'assets/icons';
 
-  // Add your assets here.
+  /// SSM brand logo (also the source of the launcher icon).
+  static const String logo = '$images/icon.png';
 }

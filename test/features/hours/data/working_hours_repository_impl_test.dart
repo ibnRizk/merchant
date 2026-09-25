@@ -1,10 +1,10 @@
-import 'package:flutter_base/core/api/api_endpoints.dart';
-import 'package:flutter_base/core/error/exceptions.dart';
-import 'package:flutter_base/core/error/failures.dart';
-import 'package:flutter_base/features/hours/data/datasources/working_hours_remote_data_source.dart';
-import 'package:flutter_base/features/hours/data/repos/working_hours_repository_impl.dart';
-import 'package:flutter_base/features/hours/domain/entities/clock_time.dart';
-import 'package:flutter_base/features/hours/domain/entities/day_schedule.dart';
+import 'package:ssm_merchant/core/api/api_endpoints.dart';
+import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/core/error/failures.dart';
+import 'package:ssm_merchant/features/hours/data/datasources/working_hours_remote_data_source.dart';
+import 'package:ssm_merchant/features/hours/data/repos/working_hours_repository_impl.dart';
+import 'package:ssm_merchant/features/hours/domain/entities/clock_time.dart';
+import 'package:ssm_merchant/features/hours/domain/entities/day_schedule.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../../helpers/fake_dio_consumer.dart';

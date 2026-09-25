@@ -1,5 +1,5 @@
-name: flutter_base
-description: "Team base architecture boilerplate — Clean Architecture + Cubit + GetIt + Dio."
+name: ssm_merchant
+description: "SSM Merchant — store owner app for managing orders, menu and working hours."
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -53,7 +53,9 @@ dependencies:
   google_maps_flutter: ^2.18.1
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   flutter_lints: ^5.0.0
+  flutter_native_splash: ^2.4.8
   flutter_test:
     sdk: flutter
 
@@ -78,3 +80,42 @@ flutter:
   #         weight: 600
   #       - asset: assets/fonts/AppFont-Bold.ttf
   #         weight: 700
+
+# Launcher icons. Regenerate after changing the logo:
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: assets/images/icon.png
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  # Adaptive icon: the logo is inset so launcher masks (circle, squircle)
+  # don't clip its outer ring.
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: assets/images/icon.png
+  adaptive_icon_foreground_inset: 16
+  web:
+    generate: true
+    image_path: assets/images/icon.png
+    background_color: "#FFFFFF"
+    theme_color: "#173C66"
+
+# Native launch screen shown before Flutter draws its first frame. Regenerate:
+#   dart run flutter_native_splash:create
+# `assets/launcher/` is a source folder for generators and is not bundled.
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/launcher/icon_padded.png
+  color_dark: "#121212"
+  image_dark: assets/launcher/icon_padded.png
+  android_12:
+    # Android 12+ masks the splash icon to a circle, so it uses the padded logo.
+    image: assets/launcher/icon_padded.png
+    icon_background_color: "#FFFFFF"
+    color: "#FFFFFF"
+    image_dark: assets/launcher/icon_padded.png
+    icon_background_color_dark: "#FFFFFF"
+    color_dark: "#121212"
+  android: true
+  ios: true
+  web: false

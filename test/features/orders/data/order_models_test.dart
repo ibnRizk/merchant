@@ -1,7 +1,7 @@
-import 'package:flutter_base/features/orders/data/models/order_models.dart';
-import 'package:flutter_base/features/orders/domain/entities/merchant_order.dart';
-import 'package:flutter_base/features/orders/domain/entities/order_line.dart';
-import 'package:flutter_base/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/data/models/order_models.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/merchant_order.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/order_line.dart';
+import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

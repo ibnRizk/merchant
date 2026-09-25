@@ -1,5 +1,5 @@
-import 'package:flutter_base/core/utils/bidi_text.dart';
-import 'package:flutter_base/core/utils/idempotency_key.dart';
+import 'package:ssm_merchant/core/utils/bidi_text.dart';
+import 'package:ssm_merchant/core/utils/idempotency_key.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

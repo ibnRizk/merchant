@@ -750,4 +750,35 @@ abstract class Strings {
 
   static const String _locationRequired = 'location_required';
   static String get locationRequired => _locationRequired.tr;
+
+  // --- Splash / onboarding ---
+  static const String _splashTagline = 'splash_tagline';
+  static String get splashTagline => _splashTagline.tr;
+
+  static const String _onboardingSkip = 'onboarding_skip';
+  static String get onboardingSkip => _onboardingSkip.tr;
+
+  static const String _onboardingNext = 'onboarding_next';
+  static String get onboardingNext => _onboardingNext.tr;
+
+  static const String _onboardingGetStarted = 'onboarding_get_started';
+  static String get onboardingGetStarted => _onboardingGetStarted.tr;
+
+  static const String _onboardingOrdersTitle = 'onboarding_orders_title';
+  static String get onboardingOrdersTitle => _onboardingOrdersTitle.tr;
+
+  static const String _onboardingOrdersBody = 'onboarding_orders_body';
+  static String get onboardingOrdersBody => _onboardingOrdersBody.tr;
+
+  static const String _onboardingMenuTitle = 'onboarding_menu_title';
+  static String get onboardingMenuTitle => _onboardingMenuTitle.tr;
+
+  static const String _onboardingMenuBody = 'onboarding_menu_body';
+  static String get onboardingMenuBody => _onboardingMenuBody.tr;
+
+  static const String _onboardingStoreTitle = 'onboarding_store_title';
+  static String get onboardingStoreTitle => _onboardingStoreTitle.tr;
+
+  static const String _onboardingStoreBody = 'onboarding_store_body';
+  static String get onboardingStoreBody => _onboardingStoreBody.tr;
 }

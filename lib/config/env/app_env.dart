@@ -17,7 +17,7 @@ abstract class AppEnv {
     await dotenv.load(fileName: fileName);
   }
 
-  static String get appName => dotenv.get('APP_NAME', fallback: 'Flutter Base');
+  static String get appName => dotenv.get('APP_NAME', fallback: 'SSM Merchant');
 
   static String get baseUrl => dotenv.get('BASE_URL', fallback: '');
 
