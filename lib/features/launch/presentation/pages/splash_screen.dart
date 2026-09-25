@@ -60,39 +60,44 @@ class _SplashScreenState extends State<SplashScreen>
         // Matches the native launch screen color, so there is no flash.
         backgroundColor: isDark ? colors.background : colors.surface,
         body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              const Spacer(),
-              ScaleTransition(
-                scale: _logoScale,
-                child: const AppLogo(size: 180),
-              ),
-              const SizedBox(height: 24),
-              FadeTransition(
-                opacity: _taglineOpacity,
-                child: Text(
-                  Strings.splashTagline,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: colors.textSecondary,
+          // Full width: otherwise the column is only as wide as the logo and
+          // sits at the left edge of the body.
+          child: SizedBox(
+            width: double.infinity,
+            child: Column(
+              children: <Widget>[
+                const Spacer(),
+                ScaleTransition(
+                  scale: _logoScale,
+                  child: const AppLogo(size: 180),
+                ),
+                const SizedBox(height: 24),
+                FadeTransition(
+                  opacity: _taglineOpacity,
+                  child: Text(
+                    Strings.splashTagline,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: colors.textSecondary,
+                    ),
                   ),
                 ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 40),
-                child: SizedBox.square(
-                  dimension: 24,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
-                    color: colors.primary,
+                const Spacer(),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 40),
+                  child: SizedBox.square(
+                    dimension: 24,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: colors.primary,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -6,6 +6,10 @@
 	<string>$(GOOGLE_MAPS_API_KEY)</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Choose your store logo and cover photo.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location to find your store on the map.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This app needs access to location to find your store on the map.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

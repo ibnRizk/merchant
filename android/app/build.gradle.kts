@@ -33,8 +33,12 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["mapsApiKey"] =
-            localProperties.getProperty("MAPS_API_KEY") ?: ""
+        val mapsApiKey = localProperties.getProperty("MAPS_API_KEY").orEmpty()
+        if (mapsApiKey.isBlank()) {
+            // Without a key Google Maps renders an empty grey map.
+            logger.warn("w: MAPS_API_KEY is missing from android/local.properties; the store location map will be blank.")
+        }
+        manifestPlaceholders["mapsApiKey"] = mapsApiKey
     }
 
     buildTypes {

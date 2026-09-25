@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
@@ -25,6 +26,9 @@ class LocationPickerScreen extends StatefulWidget {
 class _LocationPickerScreenState extends State<LocationPickerScreen> {
   static const double _initialZoom = 15;
 
+  GoogleMapController? _mapController;
+  bool _isGettingLocation = false;
+
   // Notifier rather than setState: onCameraMove fires every frame while
   // dragging, and only the coordinates label needs to rebuild.
   late final ValueNotifier<LatLng> _target = ValueNotifier<LatLng>(
@@ -34,7 +38,36 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
   @override
   void dispose() {
     _target.dispose();
+    _mapController?.dispose();
     super.dispose();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    setState(() => _isGettingLocation = true);
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) return;
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) return;
+      }
+
+      if (permission == LocationPermission.deniedForever) return;
+
+      final Position position = await Geolocator.getCurrentPosition();
+      final LatLng newTarget = LatLng(position.latitude, position.longitude);
+      
+      _target.value = newTarget;
+      _mapController?.animateCamera(CameraUpdate.newLatLng(newTarget));
+    } catch (e) {
+      // Ignore errors silently for now
+    } finally {
+      if (mounted) {
+        setState(() => _isGettingLocation = false);
+      }
+    }
   }
 
   @override
@@ -54,6 +87,8 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                     target: _target.value,
                     zoom: _initialZoom,
                   ),
+                  onMapCreated: (GoogleMapController controller) =>
+                      _mapController = controller,
                   onCameraMove: (CameraPosition position) =>
                       _target.value = position.target,
                   myLocationButtonEnabled: false,
@@ -69,6 +104,22 @@ class _LocationPickerScreenState extends State<LocationPickerScreen> {
                       size: 44,
                       color: colors.primary,
                     ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 16,
+                  right: 16,
+                  child: FloatingActionButton(
+                    heroTag: 'myLocation',
+                    onPressed: _isGettingLocation ? null : _getCurrentLocation,
+                    backgroundColor: colors.surface,
+                    foregroundColor: colors.primary,
+                    child: _isGettingLocation
+                        ? const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: CircularProgressIndicator(strokeWidth: 2.5),
+                          )
+                        : const Icon(Icons.my_location),
                   ),
                 ),
               ],
