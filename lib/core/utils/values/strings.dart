@@ -517,6 +517,9 @@ abstract class Strings {
   static const String _saveWorkingHours = 'save_working_hours';
   static String get saveWorkingHours => _saveWorkingHours.tr;
 
+  static const String _workingHoursSaved = 'working_hours_saved';
+  static String get workingHoursSaved => _workingHoursSaved.tr;
+
   static const String _saturday = 'saturday';
   static String get saturday => _saturday.tr;
 

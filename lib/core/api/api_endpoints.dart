@@ -16,6 +16,8 @@ abstract class ApiEndpoints {
   static const String vendorProfile = '/vendor/profile';
   static const String vendorLogout = '/vendor/logout';
   static const String updateActiveStatus = '/vendor/update-active-status';
+  static const String workingHours = '/vendor/working-hours';
+  static const String dashboardStats = '/vendor/dashboard-stats';
 
   // --- Catalog (approved) ---
   static const String catalogMetadata = '/vendor/catalog/metadata';

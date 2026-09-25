@@ -17,9 +17,11 @@ extension BidiText on String {
 
   /// Direction detected from the text's first strong character.
   /// Use for user or server content: names, notes, addresses.
-  String get bidiIsolated => isEmpty ? this : '$_fsi$this$_pdi';
+  String get bidiIsolated =>
+      isEmpty ? this : '$_fsi$this$_pdi';
 
   /// Always left-to-right. Use for codes and numbers such as order ids,
   /// phone numbers and prices.
-  String get ltrIsolated => isEmpty ? this : '$_lri$this$_pdi';
+  String get ltrIsolated =>
+      isEmpty ? this : '$_lri$this$_pdi';
 }

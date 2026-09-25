@@ -26,65 +26,77 @@ class OrderCardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                title,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 15.5,
-                  fontWeight: FontWeight.w800,
-                  color: colors.textPrimary,
-                ),
-              ),
-              if (subtitle.isNotEmpty) ...<Widget>[
-                const SizedBox(height: 4),
+    final TextDirection textDirection = Directionality.of(context);
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
                 Text(
-                  subtitle,
-                  maxLines: 2,
+                  title,
+                  textDirection: textDirection,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.start,
+                  textAlign: TextAlign.left,
                   style: TextStyle(
                     fontFamily: 'Cairo',
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w400,
-                    color: colors.textSecondary,
+                    fontSize: 15.5,
+                    fontWeight: FontWeight.w800,
+                    color: colors.textPrimary,
                   ),
                 ),
+                if (subtitle.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    textDirection: textDirection,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w400,
+                      color: colors.textSecondary,
+                    ),
+                  ),
+                ],
               ],
-            ],
-          ),
-        ),
-        if (trailing != null) ...<Widget>[
-          const SizedBox(width: 12),
-          Flexible(
-            child: Text(
-              trailing!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: TextStyle(
-                fontFamily: 'Cairo',
-                fontSize: 18,
-                fontWeight: FontWeight.w800,
-                color: colors.primary,
-              ),
             ),
           ),
+          if (trailing != null) ...<Widget>[
+            const SizedBox(width: 12),
+            Flexible(
+              child: Text(
+                trailing!,
+                textDirection: textDirection,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  fontFamily: 'Cairo',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w800,
+                  color: colors.primary,
+                ),
+              ),
+            ),
+          ],
+          if (trailingWidget != null) ...<Widget>[
+            const SizedBox(width: 12),
+            Flexible(
+              child: Directionality(
+                textDirection: textDirection,
+                child: trailingWidget!,
+              ),
+            ),
+          ],
         ],
-        if (trailingWidget != null) ...<Widget>[
-          const SizedBox(width: 12),
-          Flexible(child: trailingWidget!),
-        ],
-      ],
+      ),
     );
   }
 }

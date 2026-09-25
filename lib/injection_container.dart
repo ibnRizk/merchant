@@ -15,6 +15,7 @@ import 'core/services/local_storage/app_shared_preferences.dart';
 import 'core/utils/values/app_colors.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
+import 'features/hours/hours_injection.dart';
 import 'features/menu/menu_injection.dart';
 import 'features/orders/orders_injection.dart';
 import 'features/profile/profile_injection.dart';
@@ -51,6 +52,7 @@ abstract class ServiceLocator {
     await initProfileFeatureInjection();
     await initMenuFeatureInjection();
     await initOrdersFeatureInjection();
+    await initHoursFeatureInjection();
     // Register new features here.
   }
 

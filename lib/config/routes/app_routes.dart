@@ -17,6 +17,7 @@ import '../../features/auth/presentation/pages/register_screen.dart';
 import '../../features/home/presentation/cubit/dashboard/dashboard_cubit.dart';
 import '../../features/home/presentation/cubit/store_status/store_status_cubit.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
+import '../../features/hours/presentation/cubit/working_hours/working_hours_cubit.dart';
 import '../../features/menu/domain/entities/product.dart';
 import '../../features/menu/presentation/cubit/menu/menu_cubit.dart';
 import '../../features/menu/presentation/cubit/product_form/product_form_cubit.dart';
@@ -77,7 +78,7 @@ abstract class AppRoutes {
       GoRoute(
         path: home,
         name: homeName,
-        // Dashboard, order history, menu and profile are tabs of
+        // Dashboard, order history, menu, hours and profile are tabs of
         // MainScaffold, so their cubits live at this route.
         builder: (_, __) => MultiBlocProvider(
           providers: <BlocProvider<StateStreamableSource<Object?>>>[
@@ -100,6 +101,10 @@ abstract class AppRoutes {
             ),
             BlocProvider<LogoutCubit>(
               create: (_) => ServiceLocator.instance<LogoutCubit>(),
+            ),
+            BlocProvider<WorkingHoursCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<WorkingHoursCubit>()..load(),
             ),
           ],
           child: const MainScaffold(),

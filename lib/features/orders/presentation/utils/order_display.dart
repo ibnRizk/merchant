@@ -16,26 +16,37 @@ extension OrderStatusDisplay on OrderStatus {
     OrderStatus.pendingMerchant => Strings.newStatus,
     OrderStatus.accepted => Strings.statusAccepted,
     OrderStatus.preparing => Strings.statusPreparing,
-    OrderStatus.readyForPickup => Strings.statusReadyForPickup,
+    OrderStatus.readyForPickup =>
+      Strings.statusReadyForPickup,
     OrderStatus.dispatching => Strings.statusDispatching,
     OrderStatus.driverAssigned ||
-    OrderStatus.driverAccepted => Strings.statusDriverAssigned,
+    OrderStatus.driverAccepted =>
+      Strings.statusDriverAssigned,
     OrderStatus.pickedUp => Strings.statusPickedUp,
-    OrderStatus.outForDelivery => Strings.statusOutForDelivery,
+    OrderStatus.outForDelivery =>
+      Strings.statusOutForDelivery,
     OrderStatus.delivered => Strings.delivered,
     OrderStatus.rejected => Strings.statusRejected,
-    OrderStatus.cancelled || OrderStatus.failed => Strings.cancelledStatus,
-    OrderStatus.assignmentFailed => Strings.statusAssignmentFailed,
+    OrderStatus.cancelled ||
+    OrderStatus.failed => Strings.cancelledStatus,
+    OrderStatus.assignmentFailed =>
+      Strings.statusAssignmentFailed,
     OrderStatus.refunded => Strings.statusRefunded,
     OrderStatus.unknown => Strings.statusUnknown,
   };
 
   /// Pill colors: (background, text).
   (Color, Color) pillColors(AppColors colors) {
-    if (isCompleted) return (colors.successContainer, colors.success);
-    if (isCancelled) return (colors.errorContainer, colors.error);
+    if (isCompleted)
+      return (colors.successContainer, colors.success);
+    if (isCancelled)
+      return (colors.errorContainer, colors.error);
     if (isNew) return (colors.primaryLight, colors.primary);
-    if (isActive) return (colors.info.withValues(alpha: 0.12), colors.info);
+    if (isActive)
+      return (
+        colors.info.withValues(alpha: 0.12),
+        colors.info,
+      );
     return (colors.border, colors.textSecondary);
   }
 }
@@ -58,15 +69,18 @@ extension OrderDisplay on MerchantOrder {
   };
 
   /// `Today - 12:18 · Khalid`, skipping the parts that are missing.
-  String metaLine(String locale, {DateTime? now}) => <String>[
-    if (createdAt != null) formatOrderTime(createdAt!, locale, now: now),
-    if (customerName.isNotEmpty) customerLabel,
-  ].join(' · ');
+  String metaLine(String locale, {DateTime? now}) =>
+      <String>[
+        if (createdAt != null)
+          formatOrderTime(createdAt!, locale, now: now),
+        if (customerName.isNotEmpty) customerLabel,
+      ].join(' · ');
 }
 
 extension OrderLineDisplay on OrderLine {
   /// `Burger × 2`; the name keeps its own direction.
-  String get titleLabel => '${name.bidiIsolated} × ${'$quantity'.ltrIsolated}';
+  String get titleLabel =>
+      '${name.bidiIsolated} × ${'$quantity'.ltrIsolated}';
 
   String get extrasLabel =>
       extras.map((String e) => e.bidiIsolated).join(' · ');
@@ -78,10 +92,18 @@ String formatOrderAmount(double amount) =>
     '${formatPrice(amount).ltrIsolated} ${Strings.currencySar}';
 
 /// `Today - 12:18`, `Yesterday - 19:42`, or `12 Sep - 14:20`.
-String formatOrderTime(DateTime time, String locale, {DateTime? now}) {
-  final DateTime today = DateUtils.dateOnly(now ?? DateTime.now());
+String formatOrderTime(
+  DateTime time,
+  String locale, {
+  DateTime? now,
+}) {
+  final DateTime today = DateUtils.dateOnly(
+    now ?? DateTime.now(),
+  );
   final DateTime day = DateUtils.dateOnly(time);
-  final String dayLabel = switch (today.difference(day).inDays) {
+  final String dayLabel = switch (today
+      .difference(day)
+      .inDays) {
     0 => Strings.today,
     1 => Strings.yesterday,
     _ => DateFormat.MMMd(locale).format(time),

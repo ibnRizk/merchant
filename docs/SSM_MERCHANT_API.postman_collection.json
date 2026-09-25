@@ -2701,6 +2701,140 @@
                             }
                         }
                     ]
+                },
+                {
+                    "name": "Get weekly working hours",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "vendorType",
+                                "value": "owner",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/vendor/working-hours",
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "description": "Returns all seven days. Day numbering: 0=Sunday through 6=Saturday."
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const json = pm.response.json();",
+                                    "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                                    "pm.test(\"Seven days returned\", () => pm.expect(json.days).to.have.length(7));",
+                                    "pm.test(\"No server error\", () => pm.expect(pm.response.code).to.be.below(500));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Save weekly working hours",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "vendorType",
+                                "value": "owner",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"days\": [\n        {\n            \"day\": 0,\n            \"is_open\": true,\n            \"opening_time\": \"10:00\",\n            \"closing_time\": \"22:00\"\n        },\n        {\n            \"day\": 1,\n            \"is_open\": true,\n            \"opening_time\": \"10:00\",\n            \"closing_time\": \"22:00\"\n        },\n        {\n            \"day\": 2,\n            \"is_open\": true,\n            \"opening_time\": \"10:00\",\n            \"closing_time\": \"22:00\"\n        },\n        {\n            \"day\": 3,\n            \"is_open\": true,\n            \"opening_time\": \"10:00\",\n            \"closing_time\": \"22:00\"\n        },\n        {\n            \"day\": 4,\n            \"is_open\": true,\n            \"opening_time\": \"10:00\",\n            \"closing_time\": \"22:00\"\n        },\n        {\n            \"day\": 5,\n            \"is_open\": false,\n            \"opening_time\": null,\n            \"closing_time\": null\n        },\n        {\n            \"day\": 6,\n            \"is_open\": true,\n            \"opening_time\": \"10:00\",\n            \"closing_time\": \"02:00\"\n        }\n    ]\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/vendor/working-hours",
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "description": "Atomically replaces the authenticated merchant store schedule. Friday is closed in this ready example; Saturday closes next day at 02:00."
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const json = pm.response.json();",
+                                    "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                                    "pm.test(\"Seven days returned\", () => pm.expect(json.days).to.have.length(7));",
+                                    "pm.test(\"No server error\", () => pm.expect(pm.response.code).to.be.below(500));"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Dashboard statistics",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "vendorType",
+                                "value": "owner",
+                                "type": "text"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/vendor/dashboard-stats",
+                            "host": [
+                                "{{base_url}}"
+                            ]
+                        },
+                        "description": "Authoritative non-paginated dashboard counters and delivered-order gross revenue for the authenticated merchant store."
+                    },
+                    "response": [],
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "type": "text/javascript",
+                                "exec": [
+                                    "const json = pm.response.json();",
+                                    "pm.test(\"Status is 200\", () => pm.response.to.have.status(200));",
+                                    "pm.test(\"Dashboard sections exist\", () => { pm.expect(json).to.have.property(\"today\"); pm.expect(json).to.have.property(\"current\"); pm.expect(json).to.have.property(\"all_time\"); });",
+                                    "pm.test(\"Revenue is explicit\", () => pm.expect(json.today.gross_revenue).to.be.a(\"string\"));"
+                                ]
+                            }
+                        }
+                    ]
                 }
             ]
         },
