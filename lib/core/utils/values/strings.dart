@@ -208,6 +208,9 @@ abstract class Strings {
   static const String _export = 'export';
   static String get export => _export.tr;
 
+  static const String _exportComingSoon = 'export_coming_soon';
+  static String get exportComingSoon => _exportComingSoon.tr;
+
   static const String _searchOrderNumber = 'search_order_number';
   static String get searchOrderNumber => _searchOrderNumber.tr;
 
@@ -276,6 +279,129 @@ abstract class Strings {
 
   static const String _customerPrefix = 'customer_prefix';
   static String get customerPrefix => _customerPrefix.tr;
+
+  static const String _activeOrdersTitle = 'active_orders_title';
+  static String get activeOrdersTitle => _activeOrdersTitle.tr;
+
+  static const String _ordersCount = 'orders_count';
+  static String get ordersCount => _ordersCount.tr;
+
+  static const String _acceptOrder = 'accept_order';
+  static String get acceptOrder => _acceptOrder.tr;
+
+  static const String _startPreparing = 'start_preparing';
+  static String get startPreparing => _startPreparing.tr;
+
+  static const String _viewDetails = 'view_details';
+  static String get viewDetails => _viewDetails.tr;
+
+  static const String _loadMore = 'load_more';
+  static String get loadMore => _loadMore.tr;
+
+  static const String _noNewOrders = 'no_new_orders';
+  static String get noNewOrders => _noNewOrders.tr;
+
+  static const String _noActiveOrders = 'no_active_orders';
+  static String get noActiveOrders => _noActiveOrders.tr;
+
+  static const String _noOrdersYet = 'no_orders_yet';
+  static String get noOrdersYet => _noOrdersYet.tr;
+
+  static const String _orderAccepted = 'order_accepted';
+  static String get orderAccepted => _orderAccepted.tr;
+
+  static const String _orderRejected = 'order_rejected';
+  static String get orderRejected => _orderRejected.tr;
+
+  static const String _orderUpdated = 'order_updated';
+  static String get orderUpdated => _orderUpdated.tr;
+
+  static const String _orderConflict = 'order_conflict';
+  static String get orderConflict => _orderConflict.tr;
+
+  static const String _orderDetailsTitle = 'order_details_title';
+  static String get orderDetailsTitle => _orderDetailsTitle.tr;
+
+  static const String _orderItems = 'order_items';
+  static String get orderItems => _orderItems.tr;
+
+  static const String _deliveryFee = 'delivery_fee';
+  static String get deliveryFee => _deliveryFee.tr;
+
+  static const String _orderTotal = 'order_total';
+  static String get orderTotal => _orderTotal.tr;
+
+  static const String _customerLabel = 'customer_label';
+  static String get customerLabel => _customerLabel.tr;
+
+  static const String _deliveryAddressLabel = 'delivery_address_label';
+  static String get deliveryAddressLabel => _deliveryAddressLabel.tr;
+
+  static const String _paymentMethodLabel = 'payment_method_label';
+  static String get paymentMethodLabel => _paymentMethodLabel.tr;
+
+  static const String _paymentCash = 'payment_cash';
+  static String get paymentCash => _paymentCash.tr;
+
+  static const String _paymentOnline = 'payment_online';
+  static String get paymentOnline => _paymentOnline.tr;
+
+  static const String _rejectOrderTitle = 'reject_order_title';
+  static String get rejectOrderTitle => _rejectOrderTitle.tr;
+
+  static const String _rejectReasonLabel = 'reject_reason_label';
+  static String get rejectReasonLabel => _rejectReasonLabel.tr;
+
+  static const String _rejectReasonItemUnavailable =
+      'reject_reason_item_unavailable';
+  static String get rejectReasonItemUnavailable =>
+      _rejectReasonItemUnavailable.tr;
+
+  static const String _rejectReasonStoreBusy = 'reject_reason_store_busy';
+  static String get rejectReasonStoreBusy => _rejectReasonStoreBusy.tr;
+
+  static const String _rejectReasonStoreClosing = 'reject_reason_store_closing';
+  static String get rejectReasonStoreClosing => _rejectReasonStoreClosing.tr;
+
+  static const String _rejectReasonOther = 'reject_reason_other';
+  static String get rejectReasonOther => _rejectReasonOther.tr;
+
+  static const String _rejectNoteHint = 'reject_note_hint';
+  static String get rejectNoteHint => _rejectNoteHint.tr;
+
+  // --- Order statuses ---
+  static const String _statusAccepted = 'status_accepted';
+  static String get statusAccepted => _statusAccepted.tr;
+
+  static const String _statusPreparing = 'status_preparing';
+  static String get statusPreparing => _statusPreparing.tr;
+
+  static const String _statusReadyForPickup = 'status_ready_for_pickup';
+  static String get statusReadyForPickup => _statusReadyForPickup.tr;
+
+  static const String _statusDispatching = 'status_dispatching';
+  static String get statusDispatching => _statusDispatching.tr;
+
+  static const String _statusDriverAssigned = 'status_driver_assigned';
+  static String get statusDriverAssigned => _statusDriverAssigned.tr;
+
+  static const String _statusPickedUp = 'status_picked_up';
+  static String get statusPickedUp => _statusPickedUp.tr;
+
+  static const String _statusOutForDelivery = 'status_out_for_delivery';
+  static String get statusOutForDelivery => _statusOutForDelivery.tr;
+
+  static const String _statusRejected = 'status_rejected';
+  static String get statusRejected => _statusRejected.tr;
+
+  static const String _statusAssignmentFailed = 'status_assignment_failed';
+  static String get statusAssignmentFailed => _statusAssignmentFailed.tr;
+
+  static const String _statusRefunded = 'status_refunded';
+  static String get statusRefunded => _statusRefunded.tr;
+
+  static const String _statusUnknown = 'status_unknown';
+  static String get statusUnknown => _statusUnknown.tr;
 
   // --- Menu ---
   static const String _menuManagement = 'menu_management';

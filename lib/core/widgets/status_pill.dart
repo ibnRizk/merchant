@@ -33,6 +33,9 @@ class StatusPill extends StatelessWidget {
       ),
       child: Text(
         label,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        softWrap: false,
         style: TextStyle(
           fontFamily: 'Cairo',
           fontSize: 11.5,

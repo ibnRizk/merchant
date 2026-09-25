@@ -43,6 +43,8 @@ class OrderProgressStepper extends StatelessWidget {
               Expanded(
                 child: Text(
                   step.label,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Cairo',

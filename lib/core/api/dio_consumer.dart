@@ -17,11 +17,13 @@ import 'status_code.dart';
 abstract class DioConsumer {
   Future<dynamic> get(String path, {Map<String, dynamic>? queryParameters});
 
+  /// [headers] are added to this request only (e.g. `Idempotency-Key`).
   Future<dynamic> post(
     String path, {
     FormData? formData,
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
   });
 
   Future<dynamic> put(
@@ -129,6 +131,7 @@ class DioConsumerImpl implements DioConsumer {
     FormData? formData,
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
   }) => _request(
     'POST',
     path,
@@ -136,6 +139,7 @@ class DioConsumerImpl implements DioConsumer {
       path,
       queryParameters: queryParameters,
       data: formData ?? body,
+      options: headers == null ? null : Options(headers: headers),
     ),
     details: 'formData: ${formData?.toPrint}, body: $body',
   );

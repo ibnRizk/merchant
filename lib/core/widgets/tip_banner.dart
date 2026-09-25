@@ -21,7 +21,8 @@ class TipBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: RichText(
-        textAlign: TextAlign.right,
+        // `start` follows the layout direction; `right` misaligned English.
+        textAlign: TextAlign.start,
         text: TextSpan(
           style: TextStyle(
             fontFamily: 'Cairo',

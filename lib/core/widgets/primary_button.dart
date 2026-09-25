@@ -47,6 +47,8 @@ class PrimaryButton extends StatelessWidget {
               )
             : Text(
                 label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: 16,

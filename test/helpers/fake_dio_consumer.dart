@@ -12,6 +12,7 @@ class FakeDioConsumer implements DioConsumer {
       Map<String, dynamic>? query,
       Map<String, dynamic>? body,
       FormData? formData,
+      Map<String, String>? headers,
     })
   >
   calls = [];
@@ -22,6 +23,7 @@ class FakeDioConsumer implements DioConsumer {
     Map<String, dynamic>? query,
     Map<String, dynamic>? body,
     FormData? formData,
+    Map<String, String>? headers,
   }) async {
     calls.add((
       verb: verb,
@@ -29,6 +31,7 @@ class FakeDioConsumer implements DioConsumer {
       query: query,
       body: body,
       formData: formData,
+      headers: headers,
     ));
     if (error != null) throw error!;
     return response;
@@ -44,7 +47,8 @@ class FakeDioConsumer implements DioConsumer {
     FormData? formData,
     Map<String, dynamic>? body,
     Map<String, dynamic>? queryParameters,
-  }) => _answer('POST', path, body: body, formData: formData);
+    Map<String, String>? headers,
+  }) => _answer('POST', path, body: body, formData: formData, headers: headers);
 
   @override
   Future<dynamic> put(

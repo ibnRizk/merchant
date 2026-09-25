@@ -16,6 +16,7 @@ import 'core/utils/values/app_colors.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
 import 'features/menu/menu_injection.dart';
+import 'features/orders/orders_injection.dart';
 import 'features/profile/profile_injection.dart';
 
 /// Composition root.
@@ -49,6 +50,7 @@ abstract class ServiceLocator {
     await initAuthFeatureInjection();
     await initProfileFeatureInjection();
     await initMenuFeatureInjection();
+    await initOrdersFeatureInjection();
     // Register new features here.
   }
 

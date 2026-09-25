@@ -1,27 +1,23 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../domain/entities/merchant_order.dart';
+import '../utils/order_display.dart';
 
-/// Compact active-order row: order id + plain status label on top, a
-/// store/time subtitle underneath. Used for active orders that don't need
-/// the full detail card on screen.
+/// Compact row for an order the merchant has handed over (dispatch and
+/// delivery stages): number + status on top, time/customer underneath.
 class CollapsedActiveOrderCard extends StatelessWidget {
-  const CollapsedActiveOrderCard({
-    super.key,
-    required this.orderId,
-    required this.statusLabel,
-    required this.subtitle,
-    this.onTap,
-  });
+  const CollapsedActiveOrderCard({super.key, required this.order, this.onTap});
 
-  final String orderId;
-  final String statusLabel;
-  final String subtitle;
+  final MerchantOrder order;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
+    final String subtitle = order.metaLine(
+      Localizations.localeOf(context).languageCode,
+    );
     return Material(
       color: colors.surface,
       borderRadius: BorderRadius.circular(16),
@@ -41,8 +37,10 @@ class CollapsedActiveOrderCard extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      orderId,
-                      textAlign: TextAlign.right,
+                      order.number,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 15.5,
@@ -51,28 +49,38 @@ class CollapsedActiveOrderCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Text(
-                    statusLabel,
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
-                      color: colors.textPrimary,
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      order.status.label,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        color: colors.textPrimary,
+                      ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(height: 6),
-              Text(
-                subtitle,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: colors.textSecondary,
+              if (subtitle.isNotEmpty) ...<Widget>[
+                const SizedBox(height: 6),
+                Text(
+                  subtitle,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: colors.textSecondary,
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),

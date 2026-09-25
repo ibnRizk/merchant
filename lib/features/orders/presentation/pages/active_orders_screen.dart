@@ -1,77 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../config/locale/locale_cubit.dart';
 import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_back_button.dart';
-import '../../../../core/widgets/brand_snack_bar.dart';
+import '../../../../core/widgets/status_views.dart';
+import '../../domain/entities/merchant_order.dart';
+import '../cubit/current_orders/current_orders_cubit.dart';
+import '../utils/order_notice_messages.dart';
 import '../widgets/active_order_detail_card.dart';
 import '../widgets/collapsed_active_order_card.dart';
-import '../widgets/new_order_detail_card.dart' show OrderLineItem;
-import '../widgets/order_progress_stepper.dart';
+import '../widgets/orders_list_states.dart';
 import '../widgets/orders_screen_header.dart';
 
-/// Active-orders screen, reached by pushing `AppRoutes.activeOrdersName`
-/// (e.g. from the home dashboard's "عرض" action). Self-contained: owns its
-/// own [Scaffold] and RTL [Directionality] since it's no longer hosted
-/// inside [MainScaffold]'s tab bar.
+/// Accepted orders still in progress, reached by pushing
+/// `AppRoutes.activeOrdersName`. Orders the merchant can still move get the
+/// full card; handed-over ones (dispatch/delivery) a compact row.
+/// [CurrentOrdersCubit] is provided by the route.
 class ActiveOrdersScreen extends StatelessWidget {
   const ActiveOrdersScreen({super.key});
 
+  static const EdgeInsets _gutter = EdgeInsets.symmetric(horizontal: 20);
+
+  Future<void> _openDetails(BuildContext context, MerchantOrder order) async {
+    final CurrentOrdersCubit cubit = context.read<CurrentOrdersCubit>();
+    await context.pushNamed(
+      AppRoutes.orderDetailsName,
+      pathParameters: <String, String>{'id': '${order.id}'},
+    );
+    if (!cubit.isClosed) cubit.refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final AppColors colors = context.colors;
+    context.watch<LocaleCubit>();
+    final CurrentOrdersCubit cubit = context.read<CurrentOrdersCubit>();
+
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              const OrdersScreenHeader(
-                title: 'الطلبات النشطة',
-                badgeText: '2 طلبات',
-                leading: BrandBackButton(),
-              ),
-              const SizedBox(height: 16),
-              ActiveOrderDetailCard(
-                orderId: 'SSM-1048#',
-                customerName: 'عبدالعزيز محمد',
-                statusLabel: 'قيد التجهيز',
-                steps: <ProgressStep>[
-                  ProgressStep(label: 'مقبول', color: colors.primary),
-                  ProgressStep(label: 'قيد التجهيز', color: colors.secondary),
-                  ProgressStep(label: 'جاهز للاستلام', color: colors.border),
-                ],
-                items: const <OrderLineItem>[
-                  OrderLineItem(name: 'برجر SSM × 1', price: '56 ر.س'),
-                  OrderLineItem(name: 'بطاطس مقرمشة × 1', price: '8 ر.س'),
-                ],
-                ctaLabel: 'جاهز للاستلام',
-                onCtaPressed: () {
-                  showBrandSnackBar(
-                    context,
-                    'تم تحديث الطلب SSM-1048# إلى جاهز للاستلام',
-                  );
-                  if (context.canPop()) {
-                    context.pop();
-                  } else {
-                    context.go(AppRoutes.home);
-                  }
-                },
-                noticeText: 'سيتم إرسال النظام تلقائياً لأقرب مندوب متصل',
-              ),
-              const SizedBox(height: 16),
-              CollapsedActiveOrderCard(
-                orderId: 'SSM-1047#',
-                statusLabel: 'قيد التحضير',
-                subtitle: 'كافيه سحابة - منوع 12:55',
-                onTap: () => showBrandSnackBar(
-                  context,
-                  'تفاصيل الطلب SSM-1047# ستتوفر قريباً',
+      backgroundColor: context.colors.background,
+      body: BlocListener<CurrentOrdersCubit, CurrentOrdersState>(
+        listenWhen: (CurrentOrdersState previous, CurrentOrdersState current) =>
+            current is CurrentOrdersLoaded &&
+            isNewNotice(
+              previous is CurrentOrdersLoaded ? previous.notice : null,
+              current.notice,
+            ),
+        listener: (BuildContext context, CurrentOrdersState state) =>
+            showOrderNotice(
+              context,
+              state is CurrentOrdersLoaded ? state.notice : null,
+            ),
+        child: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: cubit.refresh,
+            color: context.colors.primary,
+            child: CustomScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+                  sliver: SliverToBoxAdapter(
+                    child:
+                        BlocSelector<
+                          CurrentOrdersCubit,
+                          CurrentOrdersState,
+                          int?
+                        >(
+                          selector: (CurrentOrdersState state) =>
+                              state is CurrentOrdersLoaded
+                              ? state.activeOrders.length
+                              : null,
+                          builder: (BuildContext context, int? count) =>
+                              OrdersScreenHeader(
+                                title: Strings.activeOrdersTitle,
+                                badgeText: count == null
+                                    ? null
+                                    : '$count ${Strings.ordersCount}',
+                                leading: const BrandBackButton(),
+                              ),
+                        ),
+                  ),
                 ),
-              ),
-            ],
+                BlocBuilder<CurrentOrdersCubit, CurrentOrdersState>(
+                  builder: (BuildContext context, CurrentOrdersState state) =>
+                      switch (state) {
+                        CurrentOrdersLoading() => const SliverFillRemaining(
+                          hasScrollBody: false,
+                          child: SectionLoadingView(),
+                        ),
+                        CurrentOrdersLoadFailure(:final message) =>
+                          SliverPadding(
+                            padding: _gutter,
+                            sliver: SliverToBoxAdapter(
+                              child: RetryErrorView(
+                                message: message,
+                                onRetry: cubit.load,
+                              ),
+                            ),
+                          ),
+                        CurrentOrdersLoaded(:final activeOrders)
+                            when activeOrders.isEmpty =>
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: OrdersEmptyView(
+                              message: Strings.noActiveOrders,
+                            ),
+                          ),
+                        CurrentOrdersLoaded(
+                          :final activeOrders,
+                          :final busyIds,
+                        ) =>
+                          SliverPadding(
+                            padding: _gutter.copyWith(bottom: 24),
+                            sliver: SliverList.separated(
+                              itemCount: activeOrders.length,
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 16),
+                              itemBuilder: (BuildContext context, int index) {
+                                final MerchantOrder order = activeOrders[index];
+                                if (order.status.nextAction == null) {
+                                  return CollapsedActiveOrderCard(
+                                    key: ValueKey<int>(order.id),
+                                    order: order,
+                                    onTap: () => _openDetails(context, order),
+                                  );
+                                }
+                                return ActiveOrderDetailCard(
+                                  key: ValueKey<int>(order.id),
+                                  order: order,
+                                  isBusy: busyIds.contains(order.id),
+                                  onAdvance: () => cubit.advance(order),
+                                  onTap: () => _openDetails(context, order),
+                                );
+                              },
+                            ),
+                          ),
+                      },
+                ),
+              ],
+            ),
           ),
         ),
       ),

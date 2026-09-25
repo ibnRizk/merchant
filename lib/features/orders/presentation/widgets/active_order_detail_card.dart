@@ -4,95 +4,107 @@ import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/status_pill.dart';
-import 'new_order_detail_card.dart' show OrderLineItem;
+import '../../domain/entities/merchant_order.dart';
+import '../../domain/entities/order_status.dart';
+import '../utils/order_display.dart';
+import 'order_card_header.dart';
 import 'order_item_row.dart';
 import 'order_progress_stepper.dart';
 import 'system_notice_banner.dart';
 
-/// Full detail card for the currently in-progress order: id/customer/status
-/// header, the 3-step progress bar, item list, a single primary action and
-/// a system notice — composed from the smaller order widgets.
+/// An accepted order the merchant still has to move: header, the 3-step
+/// progress bar, lines and the next action ("start preparing" or "ready
+/// for pickup").
 class ActiveOrderDetailCard extends StatelessWidget {
   const ActiveOrderDetailCard({
     super.key,
-    required this.orderId,
-    required this.customerName,
-    required this.statusLabel,
-    required this.steps,
-    required this.items,
-    required this.ctaLabel,
-    required this.onCtaPressed,
-    required this.noticeText,
+    required this.order,
+    required this.onAdvance,
+    required this.onTap,
+    this.isBusy = false,
   });
 
-  final String orderId;
-  final String customerName;
-  final String statusLabel;
-  final List<ProgressStep> steps;
-  final List<OrderLineItem> items;
-  final String ctaLabel;
-  final VoidCallback onCtaPressed;
-  final String noticeText;
+  final MerchantOrder order;
+  final VoidCallback onAdvance;
+  final VoidCallback onTap;
+  final bool isBusy;
 
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: colors.surface,
+    final (Color pillBackground, Color pillText) = order.status.pillColors(
+      colors,
+    );
+    final OrderAction? next = order.status.nextAction;
+
+    return Material(
+      color: colors.surface,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell(
+        onTap: onTap,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: colors.border),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: colors.border),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      orderId,
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.w800,
-                        color: colors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${Strings.customerPrefix}$customerName',
-                      textAlign: TextAlign.start,
-                      style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w400,
-                        color: colors.textSecondary,
-                      ),
-                    ),
-                  ],
+              OrderCardHeader(
+                title: order.number,
+                subtitle: order.customerName.isEmpty
+                    ? order.amountLabel
+                    : '${Strings.customerPrefix}${order.customerLabel}',
+                trailingWidget: StatusPill(
+                  label: order.status.label,
+                  background: pillBackground,
+                  textColor: pillText,
                 ),
               ),
-              const SizedBox(width: 12),
-              StatusPill(label: statusLabel),
+              const SizedBox(height: 16),
+              OrderProgressStepper(steps: progressSteps(order.status, colors)),
+              const SizedBox(height: 12),
+              for (final line in order.lines) OrderItemRow(line: line),
+              if (next != null) ...<Widget>[
+                const SizedBox(height: 12),
+                PrimaryButton(
+                  label: next == OrderAction.startPreparing
+                      ? Strings.startPreparing
+                      : Strings.statusReadyForPickup,
+                  isLoading: isBusy,
+                  onPressed: onAdvance,
+                ),
+              ],
+              if (next == OrderAction.readyForPickup) ...<Widget>[
+                const SizedBox(height: 12),
+                SystemNoticeBanner(text: Strings.systemWillNotifyDriver),
+              ],
             ],
           ),
-          const SizedBox(height: 16),
-          OrderProgressStepper(steps: steps),
-          const SizedBox(height: 16),
-          for (final OrderLineItem item in items)
-            OrderItemRow(name: item.name, price: item.price),
-          const SizedBox(height: 16),
-          PrimaryButton(label: ctaLabel, onPressed: onCtaPressed),
-          const SizedBox(height: 12),
-          SystemNoticeBanner(text: noticeText),
-        ],
+        ),
       ),
     );
   }
+}
+
+/// accepted → preparing → ready: reached steps in brand colors.
+List<ProgressStep> progressSteps(OrderStatus status, AppColors colors) {
+  final int reached = switch (status) {
+    OrderStatus.accepted => 1,
+    OrderStatus.preparing => 2,
+    _ => 3,
+  };
+  return <ProgressStep>[
+    ProgressStep(label: Strings.statusAccepted, color: colors.primary),
+    ProgressStep(
+      label: Strings.statusPreparing,
+      color: reached >= 2 ? colors.secondary : colors.border,
+    ),
+    ProgressStep(
+      label: Strings.statusReadyForPickup,
+      color: reached >= 3 ? colors.success : colors.border,
+    ),
+  ];
 }

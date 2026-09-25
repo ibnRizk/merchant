@@ -2,39 +2,29 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/status_pill.dart';
+import '../../domain/entities/merchant_order.dart';
+import '../utils/order_display.dart';
 
-class OrderHistoryEntry {
-  const OrderHistoryEntry({
-    required this.orderId,
-    required this.statusLabel,
-    required this.isCancelled,
-    required this.meta,
-    required this.price,
-    required this.itemsLabel,
-  });
-
-  final String orderId;
-  final String statusLabel;
-  final bool isCancelled;
-  final String meta;
-  final String price;
-  final String itemsLabel;
-}
-
-/// One row in the order history list: status pill + order id on top,
+/// One row in the order history list: order number + status pill on top,
 /// date/time and customer underneath, items count and price on the bottom.
+///
+/// Every text is width-bounded (inside [Expanded]/[Flexible]) with
+/// `maxLines` + ellipsis, so long English or Arabic content can't overflow.
 class OrderHistoryCard extends StatelessWidget {
-  const OrderHistoryCard({super.key, required this.entry, this.onTap});
+  const OrderHistoryCard({super.key, required this.order, this.onTap});
 
-  final OrderHistoryEntry entry;
+  final MerchantOrder order;
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
-    final Color itemsColor = entry.isCancelled
-        ? colors.error
-        : colors.textSecondary;
+    final (Color pillBackground, Color pillText) = order.status.pillColors(
+      colors,
+    );
+    final String meta = order.metaLine(
+      Localizations.localeOf(context).languageCode,
+    );
 
     return Material(
       color: colors.surface,
@@ -55,8 +45,10 @@ class OrderHistoryCard extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Text(
-                      entry.orderId,
-                      textAlign: TextAlign.right,
+                      order.number,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.start,
                       style: TextStyle(
                         fontFamily: 'Cairo',
                         fontSize: 15.5,
@@ -66,46 +58,64 @@ class OrderHistoryCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  StatusPill(
-                    label: entry.statusLabel,
-                    background: entry.isCancelled
-                        ? colors.errorContainer
-                        : colors.successContainer,
-                    textColor: entry.isCancelled ? colors.error : colors.success,
+                  // Bounded so a long translated status can't push the
+                  // number off screen.
+                  Flexible(
+                    child: StatusPill(
+                      label: order.status.label,
+                      background: pillBackground,
+                      textColor: pillText,
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                entry.meta,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: colors.textSecondary,
+              if (meta.isNotEmpty) ...<Widget>[
+                const SizedBox(height: 8),
+                Text(
+                  meta,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  style: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontSize: 12,
+                    fontWeight: FontWeight.w400,
+                    color: colors.textSecondary,
+                  ),
                 ),
-              ),
+              ],
               const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
-                    entry.itemsLabel,
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 12.5,
-                      fontWeight: FontWeight.w600,
-                      color: itemsColor,
+                  Expanded(
+                    child: Text(
+                      order.itemsLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.start,
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w600,
+                        color: order.status.isCancelled
+                            ? colors.error
+                            : colors.textSecondary,
+                      ),
                     ),
                   ),
-                  Text(
-                    entry.price,
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 15,
-                      fontWeight: FontWeight.w800,
-                      color: colors.primary,
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      order.amountLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                        color: colors.primary,
+                      ),
                     ),
                   ),
                 ],

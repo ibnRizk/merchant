@@ -21,4 +21,15 @@ abstract class ApiEndpoints {
   static const String catalogItems = '/vendor/catalog/items';
   static String catalogItem(int id) => '$catalogItems/$id';
   static String catalogItemStatus(int id) => '$catalogItems/$id/status';
+
+  // --- Orders (approved) ---
+  static const String currentOrders = '/vendor/current-orders';
+  static const String completedOrders = '/vendor/completed-orders';
+  static const String orderSummary = '/vendor/order';
+  static const String orderLines = '/vendor/order-details';
+
+  /// [command] is `accept`, `reject`, `start-preparing` or
+  /// `ready-for-pickup`.
+  static String orderCommand(int id, String command) =>
+      '/vendor/orders/$id/$command';
 }

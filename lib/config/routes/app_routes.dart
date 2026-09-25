@@ -19,7 +19,11 @@ import '../../features/menu/domain/entities/product.dart';
 import '../../features/menu/presentation/cubit/menu/menu_cubit.dart';
 import '../../features/menu/presentation/cubit/product_form/product_form_cubit.dart';
 import '../../features/menu/presentation/pages/product_form_screen.dart';
+import '../../features/orders/presentation/cubit/current_orders/current_orders_cubit.dart';
+import '../../features/orders/presentation/cubit/order_details/order_details_cubit.dart';
+import '../../features/orders/presentation/cubit/orders_history/orders_history_cubit.dart';
 import '../../features/orders/presentation/pages/active_orders_screen.dart';
+import '../../features/orders/presentation/pages/order_details_screen.dart';
 import '../../features/orders/presentation/pages/orders_screen.dart';
 import '../../features/profile/presentation/cubit/logout/logout_cubit.dart';
 import '../../features/profile/presentation/cubit/profile/profile_cubit.dart';
@@ -34,6 +38,7 @@ abstract class AppRoutes {
   static const String photoViewer = '/photo-viewer';
   static const String newOrders = '/orders/new';
   static const String activeOrders = '/orders/active';
+  static const String orderDetails = '/orders/:id';
   static const String forgotPassword = '/forgot-password';
   static const String register = '/register';
   static const String locationPicker = '/register/location';
@@ -47,6 +52,7 @@ abstract class AppRoutes {
   static const String photoViewerName = 'photoViewer';
   static const String newOrdersName = 'newOrders';
   static const String activeOrdersName = 'activeOrders';
+  static const String orderDetailsName = 'orderDetails';
   static const String forgotPasswordName = 'forgotPassword';
   static const String registerName = 'register';
   static const String locationPickerName = 'locationPicker';
@@ -69,16 +75,20 @@ abstract class AppRoutes {
       GoRoute(
         path: home,
         name: homeName,
-        // Menu and profile are tabs of MainScaffold, so their cubits live at
-        // this route.
+        // Order history, menu and profile are tabs of MainScaffold, so their
+        // cubits live at this route.
         builder: (_, __) => MultiBlocProvider(
           providers: <BlocProvider<StateStreamableSource<Object?>>>[
+            BlocProvider<OrdersHistoryCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<OrdersHistoryCubit>()..load(),
+            ),
             BlocProvider<MenuCubit>(
               create: (_) => ServiceLocator.instance<MenuCubit>()..load(),
             ),
             BlocProvider<ProfileCubit>(
-              create: (_) => ServiceLocator.instance<ProfileCubit>()
-                ..loadProfile(),
+              create: (_) =>
+                  ServiceLocator.instance<ProfileCubit>()..loadProfile(),
             ),
             BlocProvider<LogoutCubit>(
               create: (_) => ServiceLocator.instance<LogoutCubit>(),
@@ -95,12 +105,34 @@ abstract class AppRoutes {
       GoRoute(
         path: newOrders,
         name: newOrdersName,
-        builder: (_, __) => const OrdersScreen(),
+        builder: (_, __) => BlocProvider<CurrentOrdersCubit>(
+          create: (_) => ServiceLocator.instance<CurrentOrdersCubit>()..load(),
+          child: const OrdersScreen(),
+        ),
       ),
       GoRoute(
         path: activeOrders,
         name: activeOrdersName,
-        builder: (_, __) => const ActiveOrdersScreen(),
+        builder: (_, __) => BlocProvider<CurrentOrdersCubit>(
+          create: (_) => ServiceLocator.instance<CurrentOrdersCubit>()..load(),
+          child: const ActiveOrdersScreen(),
+        ),
+      ),
+      // Declared after the literal `/orders/new` and `/orders/active` paths.
+      GoRoute(
+        path: orderDetails,
+        name: orderDetailsName,
+        builder: (_, GoRouterState state) {
+          final int? id = int.tryParse(state.pathParameters['id'] ?? '');
+          if (id == null) {
+            return const Scaffold(body: Center(child: Text('Order not found')));
+          }
+          return BlocProvider<OrderDetailsCubit>(
+            create: (_) =>
+                ServiceLocator.instance<OrderDetailsCubit>()..load(id),
+            child: const OrderDetailsScreen(),
+          );
+        },
       ),
       GoRoute(
         path: forgotPassword,
@@ -149,8 +181,9 @@ abstract class AppRoutes {
         builder: (_, GoRouterState state) {
           final Product? product = state.extra as Product?;
           return BlocProvider<ProductFormCubit>(
-            create: (_) => ServiceLocator.instance<ProductFormCubit>()
-              ..load(productId: product?.id),
+            create: (_) =>
+                ServiceLocator.instance<ProductFormCubit>()
+                  ..load(productId: product?.id),
             child: ProductFormScreen(initialProduct: product),
           );
         },

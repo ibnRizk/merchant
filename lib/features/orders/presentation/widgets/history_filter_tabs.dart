@@ -54,13 +54,15 @@ class _FilterChip extends StatelessWidget {
       onTap: onTap,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 150),
-        padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           color: isSelected ? colors.secondary : colors.background,
           borderRadius: BorderRadius.circular(20),
         ),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
         child: Text(
           label,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           textAlign: TextAlign.center,
           style: TextStyle(
             fontFamily: 'Cairo',
