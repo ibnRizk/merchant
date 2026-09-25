@@ -74,6 +74,22 @@ void main() {
     expect(sentKeys(), <String>['key-1', 'key-2']);
   });
 
+  test('a success drops other pending keys for the same order', () async {
+    const OrderCommand reject = OrderCommand(
+      orderId: 5,
+      action: OrderAction.reject,
+      reason: 'other',
+    );
+    client.error = const InternetConnectionException();
+    await repository.sendCommand(reject);
+    client.error = null;
+    await repository.sendCommand(accept);
+
+    await repository.sendCommand(reject);
+
+    expect(sentKeys(), <String>['key-1', 'key-2', 'key-3']);
+  });
+
   test('a stale version fails with a ConflictFailure', () async {
     client.error = const ConflictException(message: 'order-conflict');
 

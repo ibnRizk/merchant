@@ -54,11 +54,15 @@ class OrdersRepositoryImpl implements OrdersRepository {
     final Either<Failure, OrderStatusChange> result = await guardFailure(
       () => _remote.sendCommand(command, idempotencyKey: key),
     );
-    if (result.fold((Failure f) => f is NetworkFailure, (_) => false)) {
-      _unconfirmedKeys[command] = key;
-    } else {
-      _unconfirmedKeys.remove(command);
-    }
+    result.fold(
+      (Failure failure) => failure is NetworkFailure
+          ? _unconfirmedKeys[command] = key
+          : _unconfirmedKeys.remove(command),
+      // The order moved on: any other pending command for it is stale.
+      (_) => _unconfirmedKeys.removeWhere(
+        (OrderCommand pending, _) => pending.orderId == command.orderId,
+      ),
+    );
     return result;
   }
 }

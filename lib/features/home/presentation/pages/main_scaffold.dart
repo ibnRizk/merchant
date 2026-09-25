@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_base/core/utils/enums.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../config/locale/locale_cubit.dart';
@@ -36,7 +35,7 @@ class _MainScaffoldState extends State<MainScaffold> {
   @override
   Widget build(BuildContext context) {
     // Watch LocaleCubit so the scaffold rebuilds when the language changes.
-    final LanguageCode lang = context.watch<LocaleCubit>().state;
+    context.watch<LocaleCubit>().state;
 
     final List<NavItemData> items = <NavItemData>[
       NavItemData(

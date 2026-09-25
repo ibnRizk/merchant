@@ -94,6 +94,44 @@ void main() {
       expect(loaded().hasMore, isFalse);
     });
 
+    test(
+      'requests the next page even when the offset echo is missing',
+      () async {
+        // The fake always echoes page 1, like a response without `offset`.
+        repository.onGetCompleted = (int page) async => Right(
+          historyPage(
+            <MerchantOrder>[anOrder(100 + page, status: OrderStatus.delivered)],
+            limit: 1,
+            total: 3,
+          ),
+        );
+        await cubit.load();
+
+        await cubit.loadMore();
+        await cubit.loadMore();
+
+        expect(repository.completedRequests, <int>[1, 2, 3]);
+      },
+    );
+
+    test('an empty page ends pagination', () async {
+      repository.onGetCompleted = (int page) async => Right(
+        historyPage(
+          page == 1
+              ? <MerchantOrder>[anOrder(101, status: OrderStatus.delivered)]
+              : <MerchantOrder>[],
+          page: page,
+          limit: 1,
+          total: 10,
+        ),
+      );
+      await cubit.load();
+
+      await cubit.loadMore();
+
+      expect(loaded().hasMore, isFalse);
+    });
+
     test('stops after a failure until retried', () async {
       repository.onGetCompleted = (int page) async => page == 1
           ? Right(historyPage(<MerchantOrder>[], limit: 1, total: 5))

@@ -47,7 +47,7 @@ class OrdersHistoryCubit extends Cubit<OrdersHistoryState> {
           query: state.query,
           current: data.current,
           history: data.history.orders,
-          page: data.history.page,
+          page: 1,
           hasMore: data.history.hasMore,
         ),
       ),
@@ -77,7 +77,7 @@ class OrdersHistoryCubit extends Cubit<OrdersHistoryState> {
         (data) => latest.copyWith(
           current: data.current,
           history: data.history.orders,
-          page: data.history.page,
+          page: 1,
           hasMore: data.history.hasMore,
           isLoadingMore: false,
           loadMoreFailed: false,
@@ -98,8 +98,9 @@ class OrdersHistoryCubit extends Cubit<OrdersHistoryState> {
     }
 
     final int generation = _generation;
+    final int nextPage = current.page + 1;
     emit(current.copyWith(isLoadingMore: true, loadMoreFailed: false));
-    final result = await _repository.getCompletedOrders(page: current.page + 1);
+    final result = await _repository.getCompletedOrders(page: nextPage);
     final OrdersHistoryState latest = state;
     if (isClosed ||
         generation != _generation ||
@@ -120,8 +121,11 @@ class OrdersHistoryCubit extends Cubit<OrdersHistoryState> {
               ...latest.history,
               ...page.orders.where((MerchantOrder o) => !shown.contains(o.id)),
             ],
-            page: page.page,
-            hasMore: page.hasMore,
+            // The requested page, not the echoed `offset`: a missing echo
+            // would otherwise refetch the same page forever.
+            page: nextPage,
+            // An empty page means the end, whatever the totals claim.
+            hasMore: page.hasMore && page.orders.isNotEmpty,
             isLoadingMore: false,
           );
         },
