@@ -5,14 +5,17 @@ import '../../domain/params/update_profile_params.dart';
 import '../models/merchant_profile_model.dart';
 import '../models/profile_requests.dart';
 
-/// Talks to the token-protected `/vendor/profile` and `/vendor/logout`
-/// routes. Throws [AppException]s; the repository turns them into failures.
+/// Talks to the token-protected `/vendor/profile`, `/vendor/logout` and
+/// `/vendor/account` routes. Throws [AppException]s; the repository turns
+/// them into failures.
 abstract class ProfileRemoteDataSource {
   Future<MerchantProfileModel> getProfile();
 
   Future<MerchantProfileModel> updateProfile(UpdateProfileParams params);
 
   Future<void> logout();
+
+  Future<void> requestAccountDeletion({String? reason});
 }
 
 class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
@@ -38,6 +41,18 @@ class ProfileRemoteDataSourceImpl implements ProfileRemoteDataSource {
 
   @override
   Future<void> logout() => _client.post(ApiEndpoints.vendorLogout);
+
+  /// Answers 202 `{status: "pending"}`; there is nothing else to read.
+  @override
+  Future<void> requestAccountDeletion({String? reason}) {
+    final String? trimmed = reason?.trim();
+    return _client.delete(
+      ApiEndpoints.vendorAccount,
+      data: (trimmed == null || trimmed.isEmpty)
+          ? null
+          : <String, dynamic>{'reason': trimmed},
+    );
+  }
 
   Map<String, dynamic> _asMap(dynamic response) {
     if (response is Map<String, dynamic>) return response;

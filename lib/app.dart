@@ -10,8 +10,10 @@ import 'config/locale/locale_cubit.dart';
 import 'config/routes/app_routes.dart';
 import 'config/themes/app_theme.dart';
 import 'config/themes/theme_cubit.dart';
+import 'core/entities/merchant_approval_status.dart';
 import 'core/utils/enums.dart';
 import 'core/utils/values/app_colors.dart';
+import 'features/app_config/presentation/cubit/app_config_cubit.dart';
 import 'injection_container.dart';
 
 /// Set this to your Figma frame size. Every `.w/.h/.sp/.r` is relative to it.
@@ -26,21 +28,32 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   StreamSubscription<void>? _unauthorizedSub;
+  StreamSubscription<MerchantApprovalStatus>? _restrictedSub;
 
   @override
   void initState() {
     super.initState();
-    // Any 401/403 from any request lands here. Clear the session and bounce
-    // back to login.
+    // Any 401 from a token-protected request lands here. Clear the session
+    // and bounce back to login.
     _unauthorizedSub = eventBus.unauthorizedStream.listen((_) async {
       await secureStorage.clearAll();
       AppRoutes.router.go(AppRoutes.login);
+    });
+    // A 403 `merchant-not-approved` / `merchant-suspended`. The token stays:
+    // the pending screen still needs it to check the status again.
+    _restrictedSub = eventBus.accountRestrictedStream.listen((
+      MerchantApprovalStatus status,
+    ) {
+      // The home screen fires several requests at once; route only once.
+      if (AppRoutes.currentPath == AppRoutes.pendingApproval) return;
+      AppRoutes.router.go(AppRoutes.pendingApproval, extra: status);
     });
   }
 
   @override
   void dispose() {
     _unauthorizedSub?.cancel();
+    _restrictedSub?.cancel();
     super.dispose();
   }
 
@@ -53,6 +66,9 @@ class _AppState extends State<App> {
         ),
         BlocProvider<LocaleCubit>(
           create: (_) => ServiceLocator.instance<LocaleCubit>(),
+        ),
+        BlocProvider<AppConfigCubit>(
+          create: (_) => ServiceLocator.instance<AppConfigCubit>(),
         ),
       ],
       child: ScreenUtilInit(

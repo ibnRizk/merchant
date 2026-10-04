@@ -10,6 +10,7 @@ import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/status_pill.dart';
 import '../../../../core/widgets/status_views.dart';
 import '../../../../core/widgets/tip_banner.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../domain/entities/merchant_order.dart';
 import '../../domain/entities/order_line.dart';
 import '../../domain/entities/order_status.dart';
@@ -100,6 +101,7 @@ class _OrderDetailsBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
     final OrderDetailsCubit cubit = context.read<OrderDetailsCubit>();
+    final String currency = context.currency;
     final MerchantOrder order = state.order;
     final (Color pillBackground, Color pillText) = order.status.pillColors(
       colors,
@@ -167,11 +169,11 @@ class _OrderDetailsBody extends StatelessWidget {
             if (order.deliveryCharge > 0)
               OrderAmountRow(
                 label: Strings.deliveryFee,
-                amount: formatOrderAmount(order.deliveryCharge),
+                amount: formatOrderAmount(order.deliveryCharge, currency),
               ),
             OrderAmountRow(
               label: Strings.orderTotal,
-              amount: order.amountLabel,
+              amount: order.amountLabel(currency),
               isEmphasized: true,
             ),
           ],

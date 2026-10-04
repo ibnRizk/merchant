@@ -55,7 +55,7 @@ extension OrderDisplay on MerchantOrder {
   /// `#1048`, kept left-to-right so `#` never jumps to the end in RTL.
   String get number => '#$id'.ltrIsolated;
 
-  String get amountLabel => formatOrderAmount(amount);
+  String amountLabel(String currency) => formatOrderAmount(amount, currency);
 
   String get itemsLabel =>
       '$itemsCount ${itemsCount == 1 ? Strings.itemSingular : Strings.itemsPlural}';
@@ -85,11 +85,14 @@ extension OrderLineDisplay on OrderLine {
   String get extrasLabel =>
       extras.map((String e) => e.bidiIsolated).join(' · ');
 
-  String get totalLabel => formatOrderAmount(total);
+  String totalLabel(String currency) => formatOrderAmount(total, currency);
 }
 
-String formatOrderAmount(double amount) =>
-    '${formatPrice(amount).ltrIsolated} ${Strings.currencySar}';
+/// `28.50 EGP`, with the number kept left-to-right inside Arabic text.
+String formatOrderAmount(double amount, String currency) {
+  final String price = formatPrice(amount).ltrIsolated;
+  return currency.isEmpty ? price : '$price $currency';
+}
 
 /// `Today - 12:18`, `Yesterday - 19:42`, or `12 Sep - 14:20`.
 String formatOrderTime(

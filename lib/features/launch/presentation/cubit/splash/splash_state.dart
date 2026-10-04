@@ -1,3 +1,4 @@
+import '../../../../../core/entities/merchant_approval_status.dart';
 import '../../../domain/entities/launch_destination.dart';
 
 sealed class SplashState {
@@ -11,5 +12,8 @@ final class SplashLoading extends SplashState {
 final class SplashResolved extends SplashState {
   final LaunchDestination destination;
 
-  const SplashResolved(this.destination);
+  /// Set when [destination] is [LaunchDestination.pendingApproval].
+  final MerchantApprovalStatus? approvalStatus;
+
+  const SplashResolved(this.destination, {this.approvalStatus});
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/widgets/status_pill.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../domain/entities/merchant_order.dart';
 import '../utils/order_display.dart';
 
@@ -123,7 +124,7 @@ class OrderHistoryCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(
-                        order.amountLabel,
+                        order.amountLabel(context.currency),
                         textDirection: textDirection,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,

@@ -9,7 +9,10 @@ Future<void> initLaunchFeatureInjection() async {
   /// Cubits
   ServiceLocator.instance
     ..registerFactory<SplashCubit>(
-      () => SplashCubit(repository: ServiceLocator.instance()),
+      () => SplashCubit(
+        repository: ServiceLocator.instance(),
+        authRepository: ServiceLocator.instance(),
+      ),
     )
     ..registerFactory<OnboardingCubit>(
       () => OnboardingCubit(repository: ServiceLocator.instance()),

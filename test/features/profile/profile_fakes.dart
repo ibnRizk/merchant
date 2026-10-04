@@ -63,9 +63,17 @@ class FakeProfileRepository implements ProfileRepository {
   Either<Failure, MerchantProfile> getResult = const Right(sampleProfile);
   Either<Failure, MerchantProfile> updateResult = const Right(sampleProfile);
   Either<Failure, Unit> logoutResult = const Right(unit);
+  Either<Failure, Unit> deletionResult = const Right(unit);
 
   final List<UpdateProfileParams> updateCalls = <UpdateProfileParams>[];
   int logoutCalls = 0;
+  final List<String?> deletionReasons = <String?>[];
+
+  @override
+  Future<Either<Failure, Unit>> requestAccountDeletion({String? reason}) async {
+    deletionReasons.add(reason);
+    return deletionResult;
+  }
 
   @override
   Future<Either<Failure, MerchantProfile>> getProfile() async => getResult;

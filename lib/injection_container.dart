@@ -13,6 +13,7 @@ import 'core/api/redacting_log_interceptor.dart';
 import 'core/services/local_storage/app_secure_storage.dart';
 import 'core/services/local_storage/app_shared_preferences.dart';
 import 'core/utils/values/app_colors.dart';
+import 'features/app_config/app_config_injection.dart';
 import 'features/auth/auth_injection.dart';
 import 'features/home/home_injection.dart';
 import 'features/hours/hours_injection.dart';
@@ -48,6 +49,7 @@ abstract class ServiceLocator {
 
     // --- Features ---
     // await initLanguageFeatureInjection();
+    await initAppConfigFeatureInjection();
     await initHomeFeatureInjection();
     await initAuthFeatureInjection();
     await initProfileFeatureInjection();

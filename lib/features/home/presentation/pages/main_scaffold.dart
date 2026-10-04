@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/locale/locale_cubit.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../../hours/presentation/pages/hours_screen.dart';
 import '../../../menu/presentation/pages/menu_screen.dart';
 import '../../../orders/presentation/pages/order_history_screen.dart';
@@ -23,6 +24,13 @@ class MainScaffold extends StatefulWidget {
 
 class _MainScaffoldState extends State<MainScaffold> {
   int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // `/vendor/config` needs a token, and reaching home means there is one.
+    context.read<AppConfigCubit>().refresh();
+  }
 
   static const List<Widget> _tabs = <Widget>[
     HomeScreen(),

@@ -15,4 +15,9 @@ abstract class ProfileRepository {
   /// Ends the session: revokes the token server-side (best effort) and always
   /// clears it locally.
   Future<Either<Failure, Unit>> logout();
+
+  /// `DELETE /vendor/account`. Success (202) means the request is queued for
+  /// an admin; the account still exists until then. Fails with
+  /// [AccountDeletionBlockedFailure] while orders or wallet are open.
+  Future<Either<Failure, Unit>> requestAccountDeletion({String? reason});
 }

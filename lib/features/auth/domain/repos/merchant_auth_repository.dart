@@ -3,13 +3,15 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/entities/store_category.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/merchant_auth_result.dart';
+import '../entities/onboarding_status.dart';
 import '../params/login_params.dart';
 import '../params/register_params.dart';
 import '../params/reset_password_params.dart';
 import '../params/verify_token_params.dart';
 
-/// Merchant authentication and password recovery. All endpoints are public
-/// (no bearer token) and throttled to 10 requests per minute per IP.
+/// Merchant authentication, password recovery and approval status. The
+/// `/auth/vendor/*` endpoints are public and throttled to 10 requests per
+/// minute per IP.
 abstract class MerchantAuthRepository {
   /// `POST /auth/vendor/login`. Pending accounts still get a token.
   Future<Either<Failure, MerchantAuthResult>> login(LoginParams params);
@@ -29,4 +31,12 @@ abstract class MerchantAuthRepository {
 
   /// `PUT /auth/vendor/reset-password`. Sets the new password.
   Future<Either<Failure, Unit>> resetPassword(ResetPasswordParams params);
+
+  /// `GET /vendor/onboarding-status` with the saved token.
+  Future<Either<Failure, OnboardingStatus>> getOnboardingStatus();
+
+  /// Forgets the saved token on this device. Used by a pending merchant,
+  /// whose token only reaches onboarding routes; the next login replaces it
+  /// on the server anyway.
+  Future<Either<Failure, Unit>> clearSession();
 }

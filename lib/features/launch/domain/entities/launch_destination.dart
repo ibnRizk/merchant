@@ -3,10 +3,13 @@ enum LaunchDestination {
   /// First launch without a session: introduce the app.
   onboarding,
 
-  /// Onboarding already seen, but there is no saved session.
+  /// Onboarding already seen, but there is no usable session.
   login,
 
-  /// A session token is saved. If the server has revoked it, the first 401
-  /// sends the merchant back to login.
+  /// A saved session that can operate (or whose status couldn't be checked,
+  /// e.g. offline; a later 403 still reroutes to the pending screen).
   home,
+
+  /// A saved session whose account is pending, rejected or suspended.
+  pendingApproval,
 }

@@ -5,6 +5,7 @@ import '../../../../core/utils/price_format.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_toggle.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../domain/entities/product.dart';
 
 /// One row in the menu list: photo, name/category/price, the availability
@@ -80,7 +81,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       const SizedBox(height: 4),
                       Text(
-                        '${formatPrice(product.price)} ${Strings.currencySar}',
+                        formatMoney(product.price, context.currency),
                         style: TextStyle(
                           fontFamily: 'Cairo',
                           fontSize: 15,

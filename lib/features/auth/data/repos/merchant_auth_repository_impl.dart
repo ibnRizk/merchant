@@ -5,6 +5,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/error/guard_failure.dart';
 import '../../../../core/services/local_storage/app_secure_storage.dart';
 import '../../domain/entities/merchant_auth_result.dart';
+import '../../domain/entities/onboarding_status.dart';
 import '../../domain/params/login_params.dart';
 import '../../domain/params/register_params.dart';
 import '../../domain/params/reset_password_params.dart';
@@ -61,6 +62,21 @@ class MerchantAuthRepositoryImpl implements MerchantAuthRepository {
         await _remote.resetPassword(params);
         return unit;
       });
+
+  @override
+  Future<Either<Failure, OnboardingStatus>> getOnboardingStatus() =>
+      _guard<OnboardingStatus>(_remote.getOnboardingStatus);
+
+  @override
+  Future<Either<Failure, Unit>> clearSession() async {
+    try {
+      await _secureStorage.removeAccessToken();
+      return const Right<Failure, Unit>(unit);
+    } catch (_) {
+      // Keystore / platform-channel error.
+      return const Left<Failure, Unit>(CacheFailure());
+    }
+  }
 
   Future<Either<Failure, T>> _guard<T>(Future<T> Function() action) =>
       guardFailure(action);

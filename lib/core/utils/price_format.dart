@@ -24,3 +24,10 @@ double? parsePrice(String input) {
 String formatPrice(double price) => price == price.truncateToDouble()
     ? price.toStringAsFixed(0)
     : price.toStringAsFixed(2);
+
+/// `28.50 EGP`. The amount alone while the server's currency is unknown,
+/// rather than a guessed one.
+String formatMoney(double amount, String currency) {
+  final String price = formatPrice(amount);
+  return currency.isEmpty ? price : '$price $currency';
+}

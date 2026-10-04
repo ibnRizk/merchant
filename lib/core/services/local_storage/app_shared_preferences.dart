@@ -13,6 +13,7 @@ abstract class _Keys {
   static const String userType = 'userType';
   static const String userCycle = 'userCycle';
   static const String onboardingSeen = 'onboardingSeen';
+  static const String appConfig = 'appConfig';
 }
 
 /// Non-sensitive key/value storage. Anything secret (tokens, refresh tokens)
@@ -73,6 +74,13 @@ abstract class AppSharedPreferences {
 
   Future<bool> saveOnboardingSeen();
 
+  // --- App config ---
+  /// The last `/vendor/config` response, raw. Like [getUser], it stays a map
+  /// so `core` never imports a feature's model.
+  Map<String, dynamic>? getAppConfig();
+
+  Future<bool> saveAppConfig(Map<String, dynamic> config);
+
   Future<bool> clearAll();
 }
 
@@ -91,16 +99,7 @@ class AppSharedPreferencesImpl extends AppSharedPreferences {
 
   // --- User payload ---
   @override
-  Map<String, dynamic>? getUser() {
-    final String? raw = instance.getString(_Keys.user);
-    if (raw == null || raw.isEmpty) return null;
-    try {
-      final dynamic decoded = jsonDecode(raw);
-      return decoded is Map<String, dynamic> ? decoded : null;
-    } on FormatException {
-      return null;
-    }
-  }
+  Map<String, dynamic>? getUser() => _getJson(_Keys.user);
 
   @override
   Future<bool> saveUser(Map<String, dynamic> user) =>
@@ -167,6 +166,25 @@ class AppSharedPreferencesImpl extends AppSharedPreferences {
   Future<bool> saveOnboardingSeen() =>
       instance.setBool(_Keys.onboardingSeen, true);
 
+  // --- App config ---
+  @override
+  Map<String, dynamic>? getAppConfig() => _getJson(_Keys.appConfig);
+
+  @override
+  Future<bool> saveAppConfig(Map<String, dynamic> config) =>
+      instance.setString(_Keys.appConfig, jsonEncode(config));
+
   @override
   Future<bool> clearAll() => instance.clear();
+
+  Map<String, dynamic>? _getJson(String key) {
+    final String? raw = instance.getString(key);
+    if (raw == null || raw.isEmpty) return null;
+    try {
+      final dynamic decoded = jsonDecode(raw);
+      return decoded is Map<String, dynamic> ? decoded : null;
+    } on FormatException {
+      return null;
+    }
+  }
 }

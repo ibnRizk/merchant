@@ -4,6 +4,7 @@ import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/status_pill.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../domain/entities/merchant_order.dart';
 import '../../domain/entities/order_status.dart';
 import '../utils/order_display.dart';
@@ -36,6 +37,7 @@ class ActiveOrderDetailCard extends StatelessWidget {
       colors,
     );
     final OrderAction? next = order.status.nextAction;
+    final String currency = context.currency;
 
     return Material(
       color: colors.surface,
@@ -55,7 +57,7 @@ class ActiveOrderDetailCard extends StatelessWidget {
               OrderCardHeader(
                 title: order.number,
                 subtitle: order.customerName.isEmpty
-                    ? order.amountLabel
+                    ? order.amountLabel(currency)
                     : '${Strings.customerPrefix}${order.customerLabel}',
                 trailingWidget: StatusPill(
                   label: order.status.label,

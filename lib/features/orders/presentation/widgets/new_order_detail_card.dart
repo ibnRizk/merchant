@@ -4,6 +4,7 @@ import '../../../../core/utils/bidi_text.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/tip_banner.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../domain/entities/merchant_order.dart';
 import '../../domain/entities/order_line.dart';
 import '../utils/order_display.dart';
@@ -54,7 +55,7 @@ class NewOrderDetailCard extends StatelessWidget {
                 subtitle: order.metaLine(
                   Localizations.localeOf(context).languageCode,
                 ),
-                trailing: order.amountLabel,
+                trailing: order.amountLabel(context.currency),
               ),
               const SizedBox(height: 12),
               Divider(color: colors.border, height: 1),

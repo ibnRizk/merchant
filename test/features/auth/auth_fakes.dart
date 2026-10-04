@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:ssm_merchant/core/entities/store_category.dart';
 import 'package:ssm_merchant/core/error/failures.dart';
 import 'package:ssm_merchant/features/auth/domain/entities/merchant_auth_result.dart';
+import 'package:ssm_merchant/features/auth/domain/entities/onboarding_status.dart';
 import 'package:ssm_merchant/features/auth/domain/params/login_params.dart';
 import 'package:ssm_merchant/features/auth/domain/params/register_params.dart';
 import 'package:ssm_merchant/features/auth/domain/params/reset_password_params.dart';
@@ -51,6 +52,34 @@ Future<String> createTempLogo() async {
 class FakeMerchantAuthRepository implements MerchantAuthRepository {
   Either<Failure, List<StoreCategory>> categoriesResult =
       const Right<Failure, List<StoreCategory>>(<StoreCategory>[restaurant]);
+  Either<Failure, OnboardingStatus> onboardingResult =
+      const Right<Failure, OnboardingStatus>(
+        OnboardingStatus(status: MerchantApprovalStatus.approved),
+      );
+  Either<Failure, Unit> clearSessionResult = const Right<Failure, Unit>(unit);
+  Either<Failure, Unit> forgotPasswordResult = const Right<Failure, Unit>(
+    unit,
+  );
+  Either<Failure, Unit> verifyTokenResult = const Right<Failure, Unit>(unit);
+  Either<Failure, Unit> resetPasswordResult = const Right<Failure, Unit>(unit);
+
+  int onboardingCalls = 0;
+  int clearSessionCalls = 0;
+  final List<String> forgotPasswordEmails = <String>[];
+  final List<VerifyTokenParams> verifyCalls = <VerifyTokenParams>[];
+  final List<ResetPasswordParams> resetCalls = <ResetPasswordParams>[];
+
+  @override
+  Future<Either<Failure, OnboardingStatus>> getOnboardingStatus() async {
+    onboardingCalls++;
+    return onboardingResult;
+  }
+
+  @override
+  Future<Either<Failure, Unit>> clearSession() async {
+    clearSessionCalls++;
+    return clearSessionResult;
+  }
 
   @override
   Future<Either<Failure, List<StoreCategory>>> getStoreCategories() async =>
@@ -65,14 +94,22 @@ class FakeMerchantAuthRepository implements MerchantAuthRepository {
       throw UnimplementedError();
 
   @override
-  Future<Either<Failure, Unit>> forgotPassword(String email) =>
-      throw UnimplementedError();
+  Future<Either<Failure, Unit>> forgotPassword(String email) async {
+    forgotPasswordEmails.add(email);
+    return forgotPasswordResult;
+  }
 
   @override
-  Future<Either<Failure, Unit>> verifyToken(VerifyTokenParams params) =>
-      throw UnimplementedError();
+  Future<Either<Failure, Unit>> verifyToken(VerifyTokenParams params) async {
+    verifyCalls.add(params);
+    return verifyTokenResult;
+  }
 
   @override
-  Future<Either<Failure, Unit>> resetPassword(ResetPasswordParams params) =>
-      throw UnimplementedError();
+  Future<Either<Failure, Unit>> resetPassword(
+    ResetPasswordParams params,
+  ) async {
+    resetCalls.add(params);
+    return resetPasswordResult;
+  }
 }

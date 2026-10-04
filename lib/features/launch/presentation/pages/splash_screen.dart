@@ -47,7 +47,8 @@ class _SplashScreenState extends State<SplashScreen>
       LaunchDestination.onboarding => AppRoutes.onboarding,
       LaunchDestination.login => AppRoutes.login,
       LaunchDestination.home => AppRoutes.home,
-    });
+      LaunchDestination.pendingApproval => AppRoutes.pendingApproval,
+    }, extra: state.approvalStatus);
   }
 
   @override

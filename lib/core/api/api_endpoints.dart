@@ -18,6 +18,13 @@ abstract class ApiEndpoints {
   static const String updateActiveStatus = '/vendor/update-active-status';
   static const String workingHours = '/vendor/working-hours';
   static const String dashboardStats = '/vendor/dashboard-stats';
+  static const String vendorConfig = '/vendor/config';
+
+  /// `DELETE` requests account deletion; an admin completes it.
+  static const String vendorAccount = '/vendor/account';
+
+  // --- Onboarding (token, works while pending) ---
+  static const String onboardingStatus = '/vendor/onboarding-status';
 
   // --- Catalog (approved) ---
   static const String catalogMetadata = '/vendor/catalog/metadata';

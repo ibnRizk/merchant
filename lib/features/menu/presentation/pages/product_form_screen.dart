@@ -15,6 +15,7 @@ import '../../../../core/widgets/image_picker_field.dart';
 import '../../../../core/widgets/labeled_field.dart';
 import '../../../../core/widgets/primary_button.dart';
 import '../../../../core/widgets/status_views.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../domain/entities/catalog_metadata.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/params/product_params.dart';
@@ -135,6 +136,9 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
+    // Read here, not in the builder below: `select` must run in this
+    // element's own build.
+    final String currency = context.currency;
     return BlocListener<ProductFormCubit, ProductFormState>(
       listener: _onStateChanged,
       child: Scaffold(
@@ -172,7 +176,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
                     ),
                   ),
                   ProductFormReady(:final metadata, :final product) =>
-                    _buildForm(metadata, product),
+                    _buildForm(metadata, product, currency),
                 },
           ),
         ),
@@ -180,7 +184,11 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
     );
   }
 
-  Widget _buildForm(CatalogMetadata metadata, Product? product) {
+  Widget _buildForm(
+    CatalogMetadata metadata,
+    Product? product,
+    String currency,
+  ) {
     final AppColors colors = context.colors;
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
@@ -210,7 +218,7 @@ class _ProductFormScreenState extends State<ProductFormScreen> {
               keyboardType: const TextInputType.numberWithOptions(
                 decimal: true,
               ),
-              suffixText: Strings.currencySar,
+              suffixText: currency.isEmpty ? null : currency,
               validator: _validatePrice,
             ),
             const SizedBox(height: 16),

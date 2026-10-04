@@ -5,11 +5,13 @@ import 'package:flutter/foundation.dart';
 
 import '../../config/env/app_env.dart';
 import '../../injection_container.dart';
+import '../entities/merchant_approval_status.dart';
 import '../error/exceptions.dart';
 import '../utils/extension.dart';
 import '../utils/log_utils.dart';
 import '../utils/values/strings.dart';
 import 'api_endpoints.dart';
+import 'api_error_body.dart';
 import 'status_code.dart';
 
 /// Thin, typed wrapper over Dio. Data sources depend on this abstraction, not
@@ -228,12 +230,25 @@ class DioConsumerImpl implements DioConsumer {
     final int? status = error.response?.statusCode;
     final dynamic data = error.response?.data;
 
+    if (status == StatusCode.forbidden) {
+      final MerchantApprovalStatus? restriction = accountRestrictionOf(data);
+      if (restriction != null) {
+        throw AccountRestrictedException(
+          status: restriction,
+          message: _messageOf(data),
+        );
+      }
+    }
+
     if (status == StatusCode.unauthorized || status == StatusCode.forbidden) {
       throw UnauthorizedException(message: _messageOf(data));
     }
 
     if (status == StatusCode.conflict) {
-      throw ConflictException(message: _messageOf(data));
+      throw ConflictException(
+        message: _messageOf(data),
+        code: apiErrorCode(data),
+      );
     }
 
     if (status == StatusCode.unProcessableContent) {

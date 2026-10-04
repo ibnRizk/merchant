@@ -71,7 +71,12 @@ class FakeDioConsumer implements DioConsumer {
     String path, {
     Map<String, dynamic>? queryParameters,
     Object? data,
-  }) => _answer('DELETE', path);
+  }) => _answer(
+    'DELETE',
+    path,
+    query: queryParameters,
+    body: data is Map<String, dynamic> ? data : null,
+  );
 
   @override
   void updateLanguageCodeHeader() {}

@@ -2,7 +2,9 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 
 import '/injection_container.dart';
+import '../entities/merchant_approval_status.dart';
 import 'api_endpoints.dart';
+import 'api_error_body.dart';
 
 class AppInterceptors extends Interceptor {
   @override
@@ -30,6 +32,12 @@ class AppInterceptors extends Interceptor {
     if (err.response?.statusCode == 401 &&
         !err.requestOptions.path.startsWith(ApiEndpoints.authPrefix)) {
       eventBus.emitUnauthorized(); // 🔥 Trigger navigation to Login
+    }
+    if (err.response?.statusCode == 403) {
+      final MerchantApprovalStatus? restriction = accountRestrictionOf(
+        err.response?.data,
+      );
+      if (restriction != null) eventBus.emitAccountRestricted(restriction);
     }
     // debugPrint is not stripped in release builds.
     if (kDebugMode) {

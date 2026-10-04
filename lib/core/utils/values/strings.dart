@@ -180,9 +180,6 @@ abstract class Strings {
   static const String _processingOrders = 'processing_orders';
   static String get processingOrders => _processingOrders.tr;
 
-  static const String _currencySar = 'currency_sar';
-  static String get currencySar => _currencySar.tr;
-
   static const String _needsAttention = 'needs_attention';
   static String get needsAttention => _needsAttention.tr;
 
@@ -781,4 +778,71 @@ abstract class Strings {
 
   static const String _onboardingStoreBody = 'onboarding_store_body';
   static String get onboardingStoreBody => _onboardingStoreBody.tr;
+
+  // --- Account status (pending screen) ---
+  static const String _accountSuspendedTitle = 'account_suspended_title';
+  static String get accountSuspendedTitle => _accountSuspendedTitle.tr;
+
+  static const String _accountSuspendedBody = 'account_suspended_body';
+  static String get accountSuspendedBody => _accountSuspendedBody.tr;
+
+  static const String _accountStatusUnchanged = 'account_status_unchanged';
+  static String get accountStatusUnchanged => _accountStatusUnchanged.tr;
+
+  static const String _rejectionReasonPrefix = 'rejection_reason_prefix';
+  static String get rejectionReasonPrefix => _rejectionReasonPrefix.tr;
+
+  static const String _checkAgain = 'check_again';
+  static String get checkAgain => _checkAgain.tr;
+
+  // --- Help & legal ---
+  static const String _helpAndLegal = 'help_and_legal';
+  static String get helpAndLegal => _helpAndLegal.tr;
+
+  static const String _callSupport = 'call_support';
+  static String get callSupport => _callSupport.tr;
+
+  static const String _whatsappSupport = 'whatsapp_support';
+  static String get whatsappSupport => _whatsappSupport.tr;
+
+  static const String _emailSupport = 'email_support';
+  static String get emailSupport => _emailSupport.tr;
+
+  static const String _privacyPolicy = 'privacy_policy';
+  static String get privacyPolicy => _privacyPolicy.tr;
+
+  static const String _termsOfService = 'terms_of_service';
+  static String get termsOfService => _termsOfService.tr;
+
+  static const String _linkOpenFailed = 'link_open_failed';
+  static String get linkOpenFailed => _linkOpenFailed.tr;
+
+  // --- Account deletion ---
+  static const String _deleteAccount = 'delete_account';
+  static String get deleteAccount => _deleteAccount.tr;
+
+  static const String _deleteAccountTitle = 'delete_account_title';
+  static String get deleteAccountTitle => _deleteAccountTitle.tr;
+
+  static const String _deleteAccountMessage = 'delete_account_message';
+  static String get deleteAccountMessage => _deleteAccountMessage.tr;
+
+  static const String _deleteAccountReasonHint = 'delete_account_reason_hint';
+  static String get deleteAccountReasonHint => _deleteAccountReasonHint.tr;
+
+  static const String _typeToConfirm = 'type_to_confirm';
+  static String get typeToConfirm => _typeToConfirm.tr;
+
+  /// What the merchant must type to enable the delete button.
+  static const String _deleteConfirmWord = 'delete_confirm_word';
+  static String get deleteConfirmWord => _deleteConfirmWord.tr;
+
+  static const String _deletionRequested = 'deletion_requested';
+  static String get deletionRequested => _deletionRequested.tr;
+
+  static const String _deletionBlockedOrders = 'deletion_blocked_orders';
+  static String get deletionBlockedOrders => _deletionBlockedOrders.tr;
+
+  static const String _deletionBlockedWallet = 'deletion_blocked_wallet';
+  static String get deletionBlockedWallet => _deletionBlockedWallet.tr;
 }

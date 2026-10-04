@@ -1,10 +1,8 @@
 import 'package:equatable/equatable.dart';
 
-/// Where the merchant's account is in the admin approval process.
-///
-/// A pending (or rejected) merchant still gets a token, but only onboarding
-/// routes work; operational routes return 403 `merchant-not-approved`.
-enum MerchantApprovalStatus { pending, approved, rejected }
+import '../../../../core/entities/merchant_approval_status.dart';
+
+export '../../../../core/entities/merchant_approval_status.dart';
 
 /// Result of `POST /auth/vendor/login`.
 class MerchantAuthResult extends Equatable {

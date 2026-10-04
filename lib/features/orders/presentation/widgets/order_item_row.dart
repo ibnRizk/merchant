@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../domain/entities/order_line.dart';
 import '../utils/order_display.dart';
 
@@ -54,7 +55,7 @@ class OrderItemRow extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Text(
-            line.totalLabel,
+            line.totalLabel(context.currency),
             maxLines: 1,
             style: TextStyle(
               fontFamily: 'Cairo',

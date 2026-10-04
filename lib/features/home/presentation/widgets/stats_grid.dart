@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import 'stat_card.dart';
 
 /// 2x2 grid of [StatCard]s: white/navy cards on the right column, peach/
@@ -23,6 +24,7 @@ class StatsGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final AppColors colors = context.colors;
+    final String currency = context.currency;
     return Column(
       children: <Widget>[
         Row(
@@ -53,7 +55,7 @@ class StatsGrid extends StatelessWidget {
               child: StatCard(
                 label: Strings.todaysRevenue,
                 value: revenueToday,
-                suffix: Strings.currencySar,
+                suffix: currency.isEmpty ? null : currency,
                 background: colors.surface,
                 valueColor: colors.textPrimary,
               ),

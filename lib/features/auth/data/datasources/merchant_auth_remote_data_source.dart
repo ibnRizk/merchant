@@ -9,9 +9,10 @@ import '../../domain/params/reset_password_params.dart';
 import '../../domain/params/verify_token_params.dart';
 import '../models/auth_requests.dart';
 import '../models/merchant_auth_result_model.dart';
+import '../models/onboarding_status_model.dart';
 
-/// Talks to the public `/auth/vendor/*` routes. Throws [AppException]s; the
-/// repository turns them into failures.
+/// Talks to the public `/auth/vendor/*` routes and the onboarding status.
+/// Throws [AppException]s; the repository turns them into failures.
 abstract class MerchantAuthRemoteDataSource {
   Future<MerchantAuthResultModel> login(LoginParams params);
 
@@ -25,6 +26,9 @@ abstract class MerchantAuthRemoteDataSource {
   Future<void> verifyToken(VerifyTokenParams params);
 
   Future<void> resetPassword(ResetPasswordParams params);
+
+  /// Needs the token; works while the account is pending.
+  Future<OnboardingStatusModel> getOnboardingStatus();
 }
 
 class MerchantAuthRemoteDataSourceImpl implements MerchantAuthRemoteDataSource {
@@ -104,6 +108,12 @@ class MerchantAuthRemoteDataSourceImpl implements MerchantAuthRemoteDataSource {
   @override
   Future<void> resetPassword(ResetPasswordParams params) =>
       _client.put(ApiEndpoints.resetPassword, body: params.toJson());
+
+  @override
+  Future<OnboardingStatusModel> getOnboardingStatus() async =>
+      OnboardingStatusModel.fromJson(
+        _asMap(await _client.get(ApiEndpoints.onboardingStatus)),
+      );
 
   Map<String, dynamic> _asMap(dynamic response) {
     if (response is Map<String, dynamic>) return response;

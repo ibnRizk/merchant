@@ -4,6 +4,7 @@ import '../../../../core/error/exceptions.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/error/guard_failure.dart';
 import '../../../../core/services/local_storage/app_secure_storage.dart';
+import '../../domain/entities/account_deletion.dart';
 import '../../domain/entities/merchant_profile.dart';
 import '../../domain/params/update_profile_params.dart';
 import '../../domain/repos/profile_repository.dart';
@@ -40,4 +41,31 @@ class ProfileRepositoryImpl implements ProfileRepository {
     }
     return unit;
   });
+
+  @override
+  Future<Either<Failure, Unit>> requestAccountDeletion({
+    String? reason,
+  }) async {
+    final Either<Failure, Unit> result = await guardFailure(() async {
+      await _remote.requestAccountDeletion(reason: reason);
+      return unit;
+    });
+    return result.leftMap(_deletionFailure);
+  }
+
+  /// Turns the documented 409 codes into a reason the UI can explain.
+  static Failure _deletionFailure(Failure failure) {
+    if (failure is! ConflictFailure) return failure;
+    final DeletionBlockReason? reason = switch (failure.code) {
+      'active_orders_exist' => DeletionBlockReason.activeOrders,
+      'wallet_balance_not_settled' => DeletionBlockReason.walletNotSettled,
+      _ => null,
+    };
+    return reason == null
+        ? failure
+        : AccountDeletionBlockedFailure(
+            reason: reason,
+            message: failure.message,
+          );
+  }
 }

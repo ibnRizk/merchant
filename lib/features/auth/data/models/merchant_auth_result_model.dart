@@ -32,6 +32,7 @@ class MerchantAuthResultModel extends MerchantAuthResult {
     return switch (raw) {
       null || 'approved' => MerchantApprovalStatus.approved,
       'rejected' || 'denied' => MerchantApprovalStatus.rejected,
+      'suspended' => MerchantApprovalStatus.suspended,
       _ => MerchantApprovalStatus.pending,
     };
   }

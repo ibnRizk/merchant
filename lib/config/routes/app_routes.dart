@@ -7,6 +7,7 @@ import '../../core/widgets/slider_photo.dart';
 import '../../features/auth/domain/entities/merchant_auth_result.dart';
 import '../../features/auth/presentation/cubit/forgot_password/forgot_password_cubit.dart';
 import '../../features/auth/presentation/cubit/login/login_cubit.dart';
+import '../../features/auth/presentation/cubit/pending_approval/pending_approval_cubit.dart';
 import '../../features/auth/presentation/cubit/register/register_cubit.dart';
 import '../../features/auth/presentation/cubit/store_categories/store_categories_cubit.dart';
 import '../../features/auth/presentation/pages/forgot_password_screen.dart';
@@ -32,6 +33,7 @@ import '../../features/orders/presentation/cubit/orders_history/orders_history_c
 import '../../features/orders/presentation/pages/active_orders_screen.dart';
 import '../../features/orders/presentation/pages/order_details_screen.dart';
 import '../../features/orders/presentation/pages/orders_screen.dart';
+import '../../features/profile/presentation/cubit/delete_account/delete_account_cubit.dart';
 import '../../features/profile/presentation/cubit/logout/logout_cubit.dart';
 import '../../features/profile/presentation/cubit/profile/profile_cubit.dart';
 import '../../injection_container.dart';
@@ -126,6 +128,9 @@ abstract class AppRoutes {
             BlocProvider<LogoutCubit>(
               create: (_) => ServiceLocator.instance<LogoutCubit>(),
             ),
+            BlocProvider<DeleteAccountCubit>(
+              create: (_) => ServiceLocator.instance<DeleteAccountCubit>(),
+            ),
             BlocProvider<WorkingHoursCubit>(
               create: (_) =>
                   ServiceLocator.instance<WorkingHoursCubit>()..load(),
@@ -204,10 +209,16 @@ abstract class AppRoutes {
       GoRoute(
         path: pendingApproval,
         name: pendingApprovalName,
-        builder: (_, GoRouterState state) => PendingApprovalScreen(
-          status:
-              state.extra as MerchantApprovalStatus? ??
-              MerchantApprovalStatus.pending,
+        // `extra` is the status already known (login, splash or a 403), so
+        // the right copy shows at once; the cubit then re-checks it.
+        builder: (_, GoRouterState state) => BlocProvider<PendingApprovalCubit>(
+          create: (_) =>
+              ServiceLocator.instance<PendingApprovalCubit>(
+                param1:
+                    state.extra as MerchantApprovalStatus? ??
+                    MerchantApprovalStatus.pending,
+              )..check(silent: true),
+          child: const PendingApprovalScreen(),
         ),
       ),
       GoRoute(
@@ -246,6 +257,10 @@ abstract class AppRoutes {
 
   static String get currentRoute =>
       routesStack.isEmpty ? splash : routesStack.last;
+
+  /// The location the router is showing, e.g. `/home`.
+  static String get currentPath =>
+      router.routerDelegate.currentConfiguration.uri.path;
 
   static void pushRouteToRoutesStack(String route) => routesStack.add(route);
 

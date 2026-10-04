@@ -11,14 +11,21 @@ import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/free_trial_banner.dart';
 import '../../../../core/widgets/status_views.dart';
 import '../../../../core/widgets/title_action_header.dart';
+import '../../../app_config/domain/entities/app_config.dart';
+import '../../../app_config/presentation/cubit/app_config_cubit.dart';
+import '../../domain/entities/account_deletion.dart';
 import '../../domain/entities/merchant_profile.dart';
+import '../cubit/delete_account/delete_account_cubit.dart';
 import '../cubit/logout/logout_cubit.dart';
 import '../cubit/profile/profile_cubit.dart';
+import '../widgets/delete_account_button.dart';
+import '../widgets/delete_account_dialog.dart';
 import '../widgets/language_bottom_sheet.dart';
 import '../widgets/language_tile.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/profile_form.dart';
 import '../widgets/profile_section_card.dart';
+import '../widgets/support_legal_section.dart';
 import '../widgets/theme_mode_selector.dart';
 
 /// Profile tab body, rendered inside [MainScaffold]. [ProfileCubit] and
@@ -86,6 +93,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     context.read<LogoutCubit>().logout();
   }
 
+  Future<void> _deleteAccount() async {
+    final DeleteAccountCubit cubit = context.read<DeleteAccountCubit>();
+    final String? reason = await showDeleteAccountDialog(context);
+    if (reason == null || cubit.isClosed) return;
+    cubit.requestDeletion(reason: reason);
+  }
+
+  void _onDeleteAccountState(BuildContext context, DeleteAccountState state) {
+    switch (state) {
+      case DeleteAccountRequested():
+        showBrandSnackBar(
+          context,
+          Strings.deletionRequested,
+          duration: const Duration(seconds: 5),
+        );
+        // The account lives on until an admin completes the request; end
+        // the session now so the store stops being operated from here.
+        context.read<LogoutCubit>().logout();
+      case DeleteAccountBlocked(:final reason):
+        showBrandSnackBar(
+          context,
+          switch (reason) {
+            DeletionBlockReason.activeOrders => Strings.deletionBlockedOrders,
+            DeletionBlockReason.walletNotSettled =>
+              Strings.deletionBlockedWallet,
+          },
+          isError: true,
+          duration: const Duration(seconds: 5),
+        );
+      case DeleteAccountFailure(:final message):
+        showBrandSnackBar(context, message, isError: true);
+      case DeleteAccountInitial() || DeleteAccountLoading():
+        break;
+    }
+  }
+
   void _onProfileState(BuildContext context, ProfileState state) {
     switch (state) {
       case ProfileLoaded(:final profile):
@@ -134,6 +177,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       listeners: <BlocListener<dynamic, dynamic>>[
         BlocListener<ProfileCubit, ProfileState>(listener: _onProfileState),
         BlocListener<LogoutCubit, LogoutState>(listener: _onLogoutState),
+        BlocListener<DeleteAccountCubit, DeleteAccountState>(
+          listener: _onDeleteAccountState,
+        ),
       ],
       child: SafeArea(
         bottom: false,
@@ -206,6 +252,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onSelected: context.read<LocaleCubit>().setLocale,
                 ),
               ),
+              BlocBuilder<AppConfigCubit, AppConfig>(
+                builder: (BuildContext context, AppConfig config) =>
+                    (config.hasSupport || config.hasLegal)
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: SupportLegalSection(config: config),
+                      )
+                    : const SizedBox.shrink(),
+              ),
               const SizedBox(height: 20),
               FreeTrialBanner(text: Strings.freeTrialBanner),
               const SizedBox(height: 28),
@@ -215,6 +270,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     state is LogoutLoading || state is LogoutSuccess,
                 builder: (_, bool isLoading) =>
                     LogoutButton(isLoading: isLoading, onPressed: _logout),
+              ),
+              const SizedBox(height: 12),
+              BlocSelector<DeleteAccountCubit, DeleteAccountState, bool>(
+                selector: (DeleteAccountState state) =>
+                    state is DeleteAccountLoading ||
+                    state is DeleteAccountRequested,
+                builder: (_, bool isLoading) => DeleteAccountButton(
+                  isLoading: isLoading,
+                  onPressed: _deleteAccount,
+                ),
               ),
             ],
           ),
