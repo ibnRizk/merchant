@@ -36,6 +36,10 @@ import '../../features/orders/presentation/cubit/orders_history/orders_history_c
 import '../../features/orders/presentation/pages/active_orders_screen.dart';
 import '../../features/orders/presentation/pages/order_details_screen.dart';
 import '../../features/orders/presentation/pages/orders_screen.dart';
+import '../../features/pharmacy/presentation/cubit/request/pharmacy_request_cubit.dart';
+import '../../features/pharmacy/presentation/cubit/requests/pharmacy_requests_cubit.dart';
+import '../../features/pharmacy/presentation/pages/pharmacy_request_screen.dart';
+import '../../features/pharmacy/presentation/pages/pharmacy_requests_screen.dart';
 import '../../features/profile/presentation/cubit/delete_account/delete_account_cubit.dart';
 import '../../features/profile/presentation/cubit/logout/logout_cubit.dart';
 import '../../features/profile/presentation/cubit/profile/profile_cubit.dart';
@@ -62,6 +66,8 @@ abstract class AppRoutes {
   static const String productForm = '/menu/product';
   static const String productOptions = '/menu/product/options';
   static const String wallet = '/wallet';
+  static const String pharmacyRequests = '/pharmacy-requests';
+  static const String pharmacyRequest = '/pharmacy-requests/:id';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -80,6 +86,8 @@ abstract class AppRoutes {
   static const String productFormName = 'productForm';
   static const String productOptionsName = 'productOptions';
   static const String walletName = 'wallet';
+  static const String pharmacyRequestsName = 'pharmacyRequests';
+  static const String pharmacyRequestName = 'pharmacyRequest';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -269,6 +277,27 @@ abstract class AppRoutes {
           create: (_) => ServiceLocator.instance<WalletCubit>()..load(),
           child: const WalletScreen(),
         ),
+      ),
+      GoRoute(
+        path: pharmacyRequests,
+        name: pharmacyRequestsName,
+        builder: (_, __) => BlocProvider<PharmacyRequestsCubit>(
+          create: (_) =>
+              ServiceLocator.instance<PharmacyRequestsCubit>()..load(),
+          child: const PharmacyRequestsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: pharmacyRequest,
+        name: pharmacyRequestName,
+        builder: (_, GoRouterState state) {
+          final int id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          return BlocProvider<PharmacyRequestCubit>(
+            create: (_) =>
+                ServiceLocator.instance<PharmacyRequestCubit>()..load(id),
+            child: PharmacyRequestScreen(requestId: id),
+          );
+        },
       ),
       GoRoute(
         path: photoViewer,

@@ -19,6 +19,9 @@ import 'status_code.dart';
 abstract class DioConsumer {
   Future<dynamic> get(String path, {Map<String, dynamic>? queryParameters});
 
+  /// The raw body of a binary download (e.g. a private image stream).
+  Future<List<int>> getBytes(String path);
+
   /// [headers] are added to this request only (e.g. `Idempotency-Key`).
   Future<dynamic> post(
     String path, {
@@ -128,6 +131,21 @@ class DioConsumerImpl implements DioConsumer {
       );
 
   @override
+  Future<List<int>> getBytes(String path) async {
+    final dynamic data = await _request(
+      'GET',
+      path,
+      () => client.get<List<int>>(
+        path,
+        options: Options(responseType: ResponseType.bytes),
+      ),
+      logResponse: false,
+    );
+    if (data is List<int>) return data;
+    throw const UnexpectedResponseException();
+  }
+
+  @override
   Future<dynamic> post(
     String path, {
     FormData? formData,
@@ -203,6 +221,7 @@ class DioConsumerImpl implements DioConsumer {
     String path,
     Future<Response<dynamic>> Function() send, {
     String details = '',
+    bool logResponse = true,
   }) async {
     // Auth bodies carry passwords/OTPs and responses carry the token.
     final bool redact = path.startsWith(ApiEndpoints.authPrefix);
@@ -211,7 +230,8 @@ class DioConsumerImpl implements DioConsumer {
       await _attachAccessToken();
       final Response<dynamic> response = await send();
       Log.i(
-        '[$verb][$path] response: ${redact ? '<redacted>' : response.data}',
+        '[$verb][$path] response: '
+        '${redact || !logResponse ? '<redacted>' : response.data}',
       );
       return response.data;
     } on SocketException {

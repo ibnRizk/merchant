@@ -143,6 +143,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 actionLabel: Strings.view,
                 onTap: () => context.pushNamed(AppRoutes.walletName),
               ),
+              BlocSelector<ProfileCubit, ProfileState, bool>(
+                selector: (ProfileState state) =>
+                    state is ProfileReady &&
+                    (state.profile.store?.category?.isPharmacy ?? false),
+                builder: (BuildContext context, bool isPharmacy) => isPharmacy
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 12),
+                        child: ActionCard(
+                          title: Strings.pharmacyRequestsTitle,
+                          subtitle: Strings.pharmacyShortcutSubtitle,
+                          actionLabel: Strings.view,
+                          onTap: () =>
+                              context.pushNamed(AppRoutes.pharmacyRequestsName),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
             ],
           ),
         ),

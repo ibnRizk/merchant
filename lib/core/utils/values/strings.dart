@@ -1007,4 +1007,84 @@ abstract class Strings {
 
   static const String _optionDuplicateName = 'option_duplicate_name';
   static String get optionDuplicateName => _optionDuplicateName.tr;
+
+  // --- Pharmacy requests ---
+
+  static const String _pharmacyRequestsTitle = 'pharmacy_requests_title';
+  static String get pharmacyRequestsTitle => _pharmacyRequestsTitle.tr;
+
+  static const String _pharmacyShortcutSubtitle = 'pharmacy_shortcut_subtitle';
+  static String get pharmacyShortcutSubtitle => _pharmacyShortcutSubtitle.tr;
+
+  static const String _pharmacyRequestPrefix = 'pharmacy_request_prefix';
+  static String get pharmacyRequestPrefix => _pharmacyRequestPrefix.tr;
+
+  static const String _noPharmacyRequests = 'no_pharmacy_requests';
+  static String get noPharmacyRequests => _noPharmacyRequests.tr;
+
+  static const String _pharmacyAwaitingPrice = 'pharmacy_awaiting_price';
+  static String get pharmacyAwaitingPrice => _pharmacyAwaitingPrice.tr;
+
+  static const String _pharmacyQuoted = 'pharmacy_quoted';
+  static String get pharmacyQuoted => _pharmacyQuoted.tr;
+
+  static const String _pharmacyConverted = 'pharmacy_converted';
+  static String get pharmacyConverted => _pharmacyConverted.tr;
+
+  static const String _prescriptionAttached = 'prescription_attached';
+  static String get prescriptionAttached => _prescriptionAttached.tr;
+
+  static const String _prescription = 'prescription';
+  static String get prescription => _prescription.tr;
+
+  static const String _prescriptionLoadFailed = 'prescription_load_failed';
+  static String get prescriptionLoadFailed => _prescriptionLoadFailed.tr;
+
+  static const String _customerRequestNote = 'customer_request_note';
+  static String get customerRequestNote => _customerRequestNote.tr;
+
+  static const String _priceQuote = 'price_quote';
+  static String get priceQuote => _priceQuote.tr;
+
+  static const String _quoteHint = 'quote_hint';
+  static String get quoteHint => _quoteHint.tr;
+
+  static const String _quoteWaitingForCustomer = 'quote_waiting_for_customer';
+  static String get quoteWaitingForCustomer => _quoteWaitingForCustomer.tr;
+
+  static const String _quoteAmount = 'quote_amount';
+  static String get quoteAmount => _quoteAmount.tr;
+
+  static const String _quoteSummary = 'quote_summary';
+  static String get quoteSummary => _quoteSummary.tr;
+
+  static const String _quoteSummaryHint = 'quote_summary_hint';
+  static String get quoteSummaryHint => _quoteSummaryHint.tr;
+
+  static const String _quoteNote = 'quote_note';
+  static String get quoteNote => _quoteNote.tr;
+
+  static const String _quoteNoteHint = 'quote_note_hint';
+  static String get quoteNoteHint => _quoteNoteHint.tr;
+
+  static const String _sendQuote = 'send_quote';
+  static String get sendQuote => _sendQuote.tr;
+
+  static const String _updateQuote = 'update_quote';
+  static String get updateQuote => _updateQuote.tr;
+
+  static const String _quoteSent = 'quote_sent';
+  static String get quoteSent => _quoteSent.tr;
+
+  static const String _quoteAmountInvalid = 'quote_amount_invalid';
+  static String get quoteAmountInvalid => _quoteAmountInvalid.tr;
+
+  static const String _quoteSummaryRequired = 'quote_summary_required';
+  static String get quoteSummaryRequired => _quoteSummaryRequired.tr;
+
+  static const String _pharmacyRequestNotActionable = 'pharmacy_request_not_actionable';
+  static String get pharmacyRequestNotActionable => _pharmacyRequestNotActionable.tr;
+
+  static const String _pharmacyRequestClosed = 'pharmacy_request_closed';
+  static String get pharmacyRequestClosed => _pharmacyRequestClosed.tr;
 }
