@@ -8,6 +8,7 @@ class StoreCategoryModel extends StoreCategory {
     required super.name,
     required super.nameAr,
     required super.nameEn,
+    super.slug,
   });
 
   factory StoreCategoryModel.fromJson(Map<String, dynamic> json) {
@@ -17,6 +18,7 @@ class StoreCategoryModel extends StoreCategory {
       name: text(json['name']),
       nameAr: text(json['name_ar']),
       nameEn: text(json['name_en']),
+      slug: text(json['slug'] ?? json['key'] ?? json['module_type']),
     );
   }
 

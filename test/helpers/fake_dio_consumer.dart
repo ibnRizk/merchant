@@ -42,6 +42,10 @@ class FakeDioConsumer implements DioConsumer {
       _answer('GET', path, query: queryParameters);
 
   @override
+  Future<List<int>> getBytes(String path) async =>
+      await _answer('GET', path) as List<int>;
+
+  @override
   Future<dynamic> post(
     String path, {
     FormData? formData,

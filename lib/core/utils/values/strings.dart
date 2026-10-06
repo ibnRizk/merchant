@@ -859,4 +859,240 @@ abstract class Strings {
 
   static const String _deletionBlockedWallet = 'deletion_blocked_wallet';
   static String get deletionBlockedWallet => _deletionBlockedWallet.tr;
+
+  // --- Wallet ---
+
+  static const String _walletTitle = 'wallet_title';
+  static String get walletTitle => _walletTitle.tr;
+
+  static const String _availableBalance = 'available_balance';
+  static String get availableBalance => _availableBalance.tr;
+
+  static const String _totalEarning = 'total_earning';
+  static String get totalEarning => _totalEarning.tr;
+
+  static const String _totalWithdrawn = 'total_withdrawn';
+  static String get totalWithdrawn => _totalWithdrawn.tr;
+
+  static const String _pendingWithdraw = 'pending_withdraw';
+  static String get pendingWithdraw => _pendingWithdraw.tr;
+
+  static const String _collectedCash = 'collected_cash';
+  static String get collectedCash => _collectedCash.tr;
+
+  static const String _requestPayout = 'request_payout';
+  static String get requestPayout => _requestPayout.tr;
+
+  static const String _payoutAmount = 'payout_amount';
+  static String get payoutAmount => _payoutAmount.tr;
+
+  static const String _submitPayout = 'submit_payout';
+  static String get submitPayout => _submitPayout.tr;
+
+  static const String _payoutRequested = 'payout_requested';
+  static String get payoutRequested => _payoutRequested.tr;
+
+  static const String _noBalanceToWithdraw = 'no_balance_to_withdraw';
+  static String get noBalanceToWithdraw => _noBalanceToWithdraw.tr;
+
+  static const String _payoutHistory = 'payout_history';
+  static String get payoutHistory => _payoutHistory.tr;
+
+  static const String _noPayoutsYet = 'no_payouts_yet';
+  static String get noPayoutsYet => _noPayoutsYet.tr;
+
+  static const String _withdrawPending = 'withdraw_pending';
+  static String get withdrawPending => _withdrawPending.tr;
+
+  static const String _withdrawApproved = 'withdraw_approved';
+  static String get withdrawApproved => _withdrawApproved.tr;
+
+  static const String _withdrawDenied = 'withdraw_denied';
+  static String get withdrawDenied => _withdrawDenied.tr;
+
+  static const String _withdrawAmountInvalid = 'withdraw_amount_invalid';
+  static String get withdrawAmountInvalid => _withdrawAmountInvalid.tr;
+
+  static const String _withdrawAmountTooLow = 'withdraw_amount_too_low';
+  static String get withdrawAmountTooLow => _withdrawAmountTooLow.tr;
+
+  static const String _withdrawAmountAboveBalance = 'withdraw_amount_above_balance';
+  static String get withdrawAmountAboveBalance => _withdrawAmountAboveBalance.tr;
+
+  // --- Analytics ---
+
+  static const String _performance = 'performance';
+  static String get performance => _performance.tr;
+
+  static const String _last7Days = 'last_7_days';
+  static String get last7Days => _last7Days.tr;
+
+  static const String _last30Days = 'last_30_days';
+  static String get last30Days => _last30Days.tr;
+
+  static const String _last90Days = 'last_90_days';
+  static String get last90Days => _last90Days.tr;
+
+  static const String _totalSales = 'total_sales';
+  static String get totalSales => _totalSales.tr;
+
+  static const String _averageOrderValue = 'average_order_value';
+  static String get averageOrderValue => _averageOrderValue.tr;
+
+  static const String _ordersInPeriod = 'orders_in_period';
+  static String get ordersInPeriod => _ordersInPeriod.tr;
+
+  static const String _otherOrders = 'other_orders';
+  static String get otherOrders => _otherOrders.tr;
+
+  static const String _topItems = 'top_items';
+  static String get topItems => _topItems.tr;
+
+  static const String _unitsSold = 'units_sold';
+  static String get unitsSold => _unitsSold.tr;
+
+  static const String _noSalesInPeriod = 'no_sales_in_period';
+  static String get noSalesInPeriod => _noSalesInPeriod.tr;
+
+  static const String _walletShortcutSubtitle = 'wallet_shortcut_subtitle';
+  static String get walletShortcutSubtitle => _walletShortcutSubtitle.tr;
+
+  // --- Product options ---
+
+  static const String _sizesAndAddOns = 'sizes_and_add_ons';
+  static String get sizesAndAddOns => _sizesAndAddOns.tr;
+
+  static const String _sizes = 'sizes';
+  static String get sizes => _sizes.tr;
+
+  static const String _sizesHint = 'sizes_hint';
+  static String get sizesHint => _sizesHint.tr;
+
+  static const String _optionGroupTitle = 'option_group_title';
+  static String get optionGroupTitle => _optionGroupTitle.tr;
+
+  static const String _sizeTitleDefault = 'size_title_default';
+  static String get sizeTitleDefault => _sizeTitleDefault.tr;
+
+  static const String _sizeNameHint = 'size_name_hint';
+  static String get sizeNameHint => _sizeNameHint.tr;
+
+  static const String _addSize = 'add_size';
+  static String get addSize => _addSize.tr;
+
+  static const String _addOns = 'add_ons';
+  static String get addOns => _addOns.tr;
+
+  static const String _addOnsHint = 'add_ons_hint';
+  static String get addOnsHint => _addOnsHint.tr;
+
+  static const String _addOnNameHint = 'add_on_name_hint';
+  static String get addOnNameHint => _addOnNameHint.tr;
+
+  static const String _addAddOn = 'add_add_on';
+  static String get addAddOn => _addAddOn.tr;
+
+  static const String _optionPrice = 'option_price';
+  static String get optionPrice => _optionPrice.tr;
+
+  static const String _removeOption = 'remove_option';
+  static String get removeOption => _removeOption.tr;
+
+  static const String _saveOptions = 'save_options';
+  static String get saveOptions => _saveOptions.tr;
+
+  static const String _optionsSaved = 'options_saved';
+  static String get optionsSaved => _optionsSaved.tr;
+
+  static const String _optionNameRequired = 'option_name_required';
+  static String get optionNameRequired => _optionNameRequired.tr;
+
+  static const String _optionPriceInvalid = 'option_price_invalid';
+  static String get optionPriceInvalid => _optionPriceInvalid.tr;
+
+  static const String _optionTitleRequired = 'option_title_required';
+  static String get optionTitleRequired => _optionTitleRequired.tr;
+
+  static const String _optionDuplicateName = 'option_duplicate_name';
+  static String get optionDuplicateName => _optionDuplicateName.tr;
+
+  // --- Pharmacy requests ---
+
+  static const String _pharmacyRequestsTitle = 'pharmacy_requests_title';
+  static String get pharmacyRequestsTitle => _pharmacyRequestsTitle.tr;
+
+  static const String _pharmacyShortcutSubtitle = 'pharmacy_shortcut_subtitle';
+  static String get pharmacyShortcutSubtitle => _pharmacyShortcutSubtitle.tr;
+
+  static const String _pharmacyRequestPrefix = 'pharmacy_request_prefix';
+  static String get pharmacyRequestPrefix => _pharmacyRequestPrefix.tr;
+
+  static const String _noPharmacyRequests = 'no_pharmacy_requests';
+  static String get noPharmacyRequests => _noPharmacyRequests.tr;
+
+  static const String _pharmacyAwaitingPrice = 'pharmacy_awaiting_price';
+  static String get pharmacyAwaitingPrice => _pharmacyAwaitingPrice.tr;
+
+  static const String _pharmacyQuoted = 'pharmacy_quoted';
+  static String get pharmacyQuoted => _pharmacyQuoted.tr;
+
+  static const String _pharmacyConverted = 'pharmacy_converted';
+  static String get pharmacyConverted => _pharmacyConverted.tr;
+
+  static const String _prescriptionAttached = 'prescription_attached';
+  static String get prescriptionAttached => _prescriptionAttached.tr;
+
+  static const String _prescription = 'prescription';
+  static String get prescription => _prescription.tr;
+
+  static const String _prescriptionLoadFailed = 'prescription_load_failed';
+  static String get prescriptionLoadFailed => _prescriptionLoadFailed.tr;
+
+  static const String _customerRequestNote = 'customer_request_note';
+  static String get customerRequestNote => _customerRequestNote.tr;
+
+  static const String _priceQuote = 'price_quote';
+  static String get priceQuote => _priceQuote.tr;
+
+  static const String _quoteHint = 'quote_hint';
+  static String get quoteHint => _quoteHint.tr;
+
+  static const String _quoteWaitingForCustomer = 'quote_waiting_for_customer';
+  static String get quoteWaitingForCustomer => _quoteWaitingForCustomer.tr;
+
+  static const String _quoteAmount = 'quote_amount';
+  static String get quoteAmount => _quoteAmount.tr;
+
+  static const String _quoteSummary = 'quote_summary';
+  static String get quoteSummary => _quoteSummary.tr;
+
+  static const String _quoteSummaryHint = 'quote_summary_hint';
+  static String get quoteSummaryHint => _quoteSummaryHint.tr;
+
+  static const String _quoteNote = 'quote_note';
+  static String get quoteNote => _quoteNote.tr;
+
+  static const String _quoteNoteHint = 'quote_note_hint';
+  static String get quoteNoteHint => _quoteNoteHint.tr;
+
+  static const String _sendQuote = 'send_quote';
+  static String get sendQuote => _sendQuote.tr;
+
+  static const String _updateQuote = 'update_quote';
+  static String get updateQuote => _updateQuote.tr;
+
+  static const String _quoteSent = 'quote_sent';
+  static String get quoteSent => _quoteSent.tr;
+
+  static const String _quoteAmountInvalid = 'quote_amount_invalid';
+  static String get quoteAmountInvalid => _quoteAmountInvalid.tr;
+
+  static const String _quoteSummaryRequired = 'quote_summary_required';
+  static String get quoteSummaryRequired => _quoteSummaryRequired.tr;
+
+  static const String _pharmacyRequestNotActionable = 'pharmacy_request_not_actionable';
+  static String get pharmacyRequestNotActionable => _pharmacyRequestNotActionable.tr;
+
+  static const String _pharmacyRequestClosed = 'pharmacy_request_closed';
+  static String get pharmacyRequestClosed => _pharmacyRequestClosed.tr;
 }

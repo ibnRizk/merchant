@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/error/failures.dart';
 import '../entities/catalog_metadata.dart';
 import '../entities/product.dart';
+import '../entities/product_options.dart';
 import '../params/product_params.dart';
 
 /// The merchant's catalog. Every route needs an approved account.
@@ -29,4 +30,10 @@ abstract class CatalogRepository {
   Future<Either<Failure, Unit>> deleteProduct(int id);
 
   Future<Either<Failure, Unit>> updateStatus(int id, {required bool isActive});
+
+  /// Replaces the product's variations and add-ons; returns what was saved.
+  Future<Either<Failure, ProductOptions>> updateOptions(
+    int id,
+    ProductOptions options,
+  );
 }

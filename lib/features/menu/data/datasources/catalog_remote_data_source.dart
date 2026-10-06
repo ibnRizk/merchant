@@ -1,6 +1,7 @@
 import '../../../../core/api/api_endpoints.dart';
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/error/exceptions.dart';
+import '../../domain/entities/product_options.dart';
 import '../../domain/params/product_params.dart';
 import '../models/catalog_models.dart';
 import '../models/catalog_requests.dart';
@@ -25,6 +26,9 @@ abstract class CatalogRemoteDataSource {
   Future<void> deleteProduct(int id);
 
   Future<void> updateStatus(int id, {required bool isActive});
+
+  /// Replaces the product's variations and add-ons.
+  Future<void> updateOptions(int id, ProductOptions options);
 }
 
 class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
@@ -85,6 +89,14 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
   Future<void> updateStatus(int id, {required bool isActive}) => _client.patch(
     ApiEndpoints.catalogItemStatus(id),
     body: <String, dynamic>{'status': isActive},
+  );
+
+  /// Answers `{item_id, ...}`; the saved options are the ones sent, so the
+  /// body isn't read.
+  @override
+  Future<void> updateOptions(int id, ProductOptions options) => _client.put(
+    ApiEndpoints.catalogItemOptions(id),
+    body: options.toJson(),
   );
 
   /// Writes answer `{message, item}`; reads may return the item itself.

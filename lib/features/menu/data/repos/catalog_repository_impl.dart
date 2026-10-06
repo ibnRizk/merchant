@@ -4,6 +4,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/error/guard_failure.dart';
 import '../../domain/entities/catalog_metadata.dart';
 import '../../domain/entities/product.dart';
+import '../../domain/entities/product_options.dart';
 import '../../domain/params/product_params.dart';
 import '../../domain/repos/catalog_repository.dart';
 import '../datasources/catalog_remote_data_source.dart';
@@ -56,5 +57,14 @@ class CatalogRepositoryImpl implements CatalogRepository {
   }) => guardFailure(() async {
     await _remote.updateStatus(id, isActive: isActive);
     return unit;
+  });
+
+  @override
+  Future<Either<Failure, ProductOptions>> updateOptions(
+    int id,
+    ProductOptions options,
+  ) => guardFailure(() async {
+    await _remote.updateOptions(id, options);
+    return options;
   });
 }

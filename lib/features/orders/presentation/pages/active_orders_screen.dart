@@ -129,7 +129,10 @@ class ActiveOrdersScreen extends StatelessWidget {
                                     return CollapsedActiveOrderCard(
                                       key: ValueKey<int>(order.id),
                                       order: order,
+                                      isBusy: busyIds.contains(order.id),
                                       onTap: () => _openDetails(context, order),
+                                      onRetryDispatch: () =>
+                                          cubit.retryDispatch(order),
                                     );
                                   }
                                   return ActiveOrderDetailCard(

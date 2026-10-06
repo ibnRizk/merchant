@@ -10,12 +10,23 @@ class StoreCategory extends Equatable {
   final String nameAr;
   final String nameEn;
 
+  /// Machine name (e.g. `pharmacy`) when the API sends one.
+  final String slug;
+
   const StoreCategory({
     required this.id,
     required this.name,
     required this.nameAr,
     required this.nameEn,
+    this.slug = '',
   });
+
+  /// Pharmacies also handle prescription requests. Matched on the slug,
+  /// or the English name when there is none.
+  bool get isPharmacy {
+    final String key = (slug.isNotEmpty ? slug : nameEn).toLowerCase();
+    return key.contains('pharmac');
+  }
 
   /// Name for [languageCode] (`ar`/`en`), so a language switch doesn't need
   /// a refetch. Falls back to [name] when that translation is missing.
@@ -25,5 +36,5 @@ class StoreCategory extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, name, nameAr, nameEn];
+  List<Object?> get props => [id, name, nameAr, nameEn, slug];
 }

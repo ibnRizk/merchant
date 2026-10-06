@@ -15,6 +15,7 @@ import '../../features/auth/presentation/pages/location_picker_screen.dart';
 import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/pending_approval_screen.dart';
 import '../../features/auth/presentation/pages/register_screen.dart';
+import '../../features/home/presentation/cubit/analytics/analytics_cubit.dart';
 import '../../features/home/presentation/cubit/dashboard/dashboard_cubit.dart';
 import '../../features/home/presentation/cubit/store_status/store_status_cubit.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
@@ -26,16 +27,24 @@ import '../../features/launch/presentation/pages/splash_screen.dart';
 import '../../features/menu/domain/entities/product.dart';
 import '../../features/menu/presentation/cubit/menu/menu_cubit.dart';
 import '../../features/menu/presentation/cubit/product_form/product_form_cubit.dart';
+import '../../features/menu/presentation/cubit/product_options/product_options_cubit.dart';
 import '../../features/menu/presentation/pages/product_form_screen.dart';
+import '../../features/menu/presentation/pages/product_options_screen.dart';
 import '../../features/orders/presentation/cubit/current_orders/current_orders_cubit.dart';
 import '../../features/orders/presentation/cubit/order_details/order_details_cubit.dart';
 import '../../features/orders/presentation/cubit/orders_history/orders_history_cubit.dart';
 import '../../features/orders/presentation/pages/active_orders_screen.dart';
 import '../../features/orders/presentation/pages/order_details_screen.dart';
 import '../../features/orders/presentation/pages/orders_screen.dart';
+import '../../features/pharmacy/presentation/cubit/request/pharmacy_request_cubit.dart';
+import '../../features/pharmacy/presentation/cubit/requests/pharmacy_requests_cubit.dart';
+import '../../features/pharmacy/presentation/pages/pharmacy_request_screen.dart';
+import '../../features/pharmacy/presentation/pages/pharmacy_requests_screen.dart';
 import '../../features/profile/presentation/cubit/delete_account/delete_account_cubit.dart';
 import '../../features/profile/presentation/cubit/logout/logout_cubit.dart';
 import '../../features/profile/presentation/cubit/profile/profile_cubit.dart';
+import '../../features/wallet/presentation/cubit/wallet_cubit.dart';
+import '../../features/wallet/presentation/pages/wallet_screen.dart';
 import '../../injection_container.dart';
 import 'navigator_observer.dart';
 
@@ -55,6 +64,10 @@ abstract class AppRoutes {
   static const String locationPicker = '/register/location';
   static const String pendingApproval = '/pending-approval';
   static const String productForm = '/menu/product';
+  static const String productOptions = '/menu/product/options';
+  static const String wallet = '/wallet';
+  static const String pharmacyRequests = '/pharmacy-requests';
+  static const String pharmacyRequest = '/pharmacy-requests/:id';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -71,6 +84,10 @@ abstract class AppRoutes {
   static const String locationPickerName = 'locationPicker';
   static const String pendingApprovalName = 'pendingApproval';
   static const String productFormName = 'productForm';
+  static const String productOptionsName = 'productOptions';
+  static const String walletName = 'wallet';
+  static const String pharmacyRequestsName = 'pharmacyRequests';
+  static const String pharmacyRequestName = 'pharmacyRequest';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -113,6 +130,9 @@ abstract class AppRoutes {
             ),
             BlocProvider<StoreStatusCubit>(
               create: (_) => ServiceLocator.instance<StoreStatusCubit>(),
+            ),
+            BlocProvider<AnalyticsCubit>(
+              create: (_) => ServiceLocator.instance<AnalyticsCubit>()..load(),
             ),
             BlocProvider<OrdersHistoryCubit>(
               create: (_) =>
@@ -233,6 +253,49 @@ abstract class AppRoutes {
                 ServiceLocator.instance<ProductFormCubit>()
                   ..load(productId: product?.id),
             child: ProductFormScreen(initialProduct: product),
+          );
+        },
+      ),
+      GoRoute(
+        path: productOptions,
+        name: productOptionsName,
+        // `extra` is the product whose sizes and add-ons are edited.
+        builder: (_, GoRouterState state) {
+          final Product product = state.extra! as Product;
+          return BlocProvider<ProductOptionsCubit>(
+            create: (_) =>
+                ServiceLocator.instance<ProductOptionsCubit>()
+                  ..load(product.id),
+            child: ProductOptionsScreen(product: product),
+          );
+        },
+      ),
+      GoRoute(
+        path: wallet,
+        name: walletName,
+        builder: (_, __) => BlocProvider<WalletCubit>(
+          create: (_) => ServiceLocator.instance<WalletCubit>()..load(),
+          child: const WalletScreen(),
+        ),
+      ),
+      GoRoute(
+        path: pharmacyRequests,
+        name: pharmacyRequestsName,
+        builder: (_, __) => BlocProvider<PharmacyRequestsCubit>(
+          create: (_) =>
+              ServiceLocator.instance<PharmacyRequestsCubit>()..load(),
+          child: const PharmacyRequestsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: pharmacyRequest,
+        name: pharmacyRequestName,
+        builder: (_, GoRouterState state) {
+          final int id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          return BlocProvider<PharmacyRequestCubit>(
+            create: (_) =>
+                ServiceLocator.instance<PharmacyRequestCubit>()..load(id),
+            child: PharmacyRequestScreen(requestId: id),
           );
         },
       ),
