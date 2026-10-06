@@ -35,4 +35,11 @@ void main() {
     expect(updated.status, OrderStatus.accepted);
     expect(updated.statusVersion, 5);
   });
+
+  test('only an accepted or preparing order can be cancelled', () {
+    expect(
+      OrderStatus.values.where((OrderStatus s) => s.canCancel),
+      <OrderStatus>[OrderStatus.accepted, OrderStatus.preparing],
+    );
+  });
 }

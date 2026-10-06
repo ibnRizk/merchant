@@ -59,6 +59,10 @@ enum OrderStatus {
   /// [assignmentFailed], which the merchant can still recover).
   bool get isActive => !isNew && !isTerminal && this != unknown;
 
+  /// Accepted but not handed to dispatch yet: the store can still call the
+  /// order off (out of stock, closing, the customer asked).
+  bool get canCancel => this == accepted || this == preparing;
+
   /// No driver accepted the order; `retry-dispatch` offers it again.
   bool get canRetryDispatch => this == assignmentFailed;
 
@@ -77,7 +81,10 @@ enum OrderAction {
   accept('accept'),
   reject('reject'),
   startPreparing('start-preparing'),
-  readyForPickup('ready-for-pickup');
+  readyForPickup('ready-for-pickup'),
+
+  /// Only while [OrderStatus.canCancel]; needs a reason.
+  cancel('cancel');
 
   /// The last path segment of `POST /vendor/orders/{id}/{path}`.
   final String path;
