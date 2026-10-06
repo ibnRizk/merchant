@@ -8,7 +8,6 @@ import '../../../../../core/error/failures.dart';
 import '../../../domain/entities/merchant_order.dart';
 import '../../../domain/entities/order_line.dart';
 import '../../../domain/entities/order_status.dart';
-import '../../../domain/failures/stale_order_failure.dart';
 import '../../../domain/params/order_command.dart';
 import '../../../domain/repos/orders_repository.dart';
 import '../order_notice.dart';
@@ -86,8 +85,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     ),
   );
 
-  /// Start preparing, mark ready for pickup, or retry a failed dispatch,
-  /// whichever comes next.
+  /// Start preparing, or mark ready for pickup, whichever comes next.
   Future<void> advance() => _send((MerchantOrder order) {
     final OrderAction? action = order.status.nextAction;
     if (action == null || action == OrderAction.accept) return null;
@@ -111,7 +109,7 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
     result.fold(
       (failure) {
-        if (failure.isStaleOrder) {
+        if (failure is ConflictFailure) {
           emit(latest.copyWith(isBusy: false, notice: OrderConflictNotice()));
           refresh();
         } else {

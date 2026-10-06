@@ -32,7 +32,7 @@ class AnalyticsRemoteDataSourceImpl implements AnalyticsRemoteDataSource {
       },
     );
     if (response is! Map<String, dynamic>) {
-      throw const UnexpectedResponseException();
+      throw ServerException.unexpectedResponse();
     }
     return StoreAnalyticsModel.fromJson(response);
   }

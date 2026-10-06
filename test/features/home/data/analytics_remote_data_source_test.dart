@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ssm_merchant/core/api/api_endpoints.dart';
 import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/core/utils/values/strings.dart';
 import 'package:ssm_merchant/features/home/data/datasources/analytics_remote_data_source.dart';
 import 'package:ssm_merchant/features/home/domain/entities/store_analytics.dart';
 
@@ -60,6 +61,15 @@ void main() {
       'sales': <String, dynamic>{'total': 1, 'average_order_value': 1},
     };
 
-    expect(fetch, throwsA(isA<UnexpectedResponseException>()));
+    expect(
+      fetch,
+      throwsA(
+        isA<ServerException>().having(
+          (ServerException e) => e.message,
+          'message',
+          Strings.unexpectedResponse,
+        ),
+      ),
+    );
   });
 }

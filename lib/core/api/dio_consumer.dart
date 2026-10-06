@@ -142,7 +142,7 @@ class DioConsumerImpl implements DioConsumer {
       logResponse: false,
     );
     if (data is List<int>) return data;
-    throw const UnexpectedResponseException();
+    throw ServerException.unexpectedResponse();
   }
 
   @override
@@ -238,9 +238,10 @@ class DioConsumerImpl implements DioConsumer {
       throw InternetConnectionException(message: Strings.noInternetConnection);
     } on DioException catch (error) {
       _throwMappedError(error);
-    } catch (_) {
-      // Raw exception text is not fit to show users.
-      throw const UnexpectedResponseException();
+    } catch (error) {
+      // Raw text is for the logs only; it is not fit to show users.
+      Log.e('[$verb][$path] unexpected error: $error');
+      throw ServerException.unexpectedResponse();
     }
   }
 
@@ -314,7 +315,8 @@ class DioConsumerImpl implements DioConsumer {
       return data['message'].toString();
     }
     if (data == null) return Strings.somethingWentWrong;
-    // An HTML error page or other raw payload: never show it to users.
+    // An HTML error page or a bare string from a proxy: not for users.
+    Log.e('Unreadable error body (${data.runtimeType})');
     return Strings.unexpectedResponse;
   }
 

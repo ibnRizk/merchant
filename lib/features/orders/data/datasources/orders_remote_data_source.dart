@@ -4,14 +4,11 @@ import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/merchant_order.dart';
 import '../../domain/entities/order_line.dart';
 import '../../domain/params/order_command.dart';
-import '../exceptions/stale_order_exception.dart';
 import '../models/order_models.dart';
 
 /// Talks to the `/vendor` order routes. Throws [AppException]s; the
-/// repository turns them into failures. On commands, a stale
-/// `expected_version` surfaces as [ConflictException] (HTTP 409), and an
-/// order that moved on (HTTP 404, or 422 `order_transition_invalid`) as
-/// [StaleOrderException].
+/// repository turns them into failures. A stale `expected_version` surfaces
+/// as [ConflictException] (HTTP 409).
 abstract class OrdersRemoteDataSource {
   Future<List<MerchantOrder>> getCurrentOrders();
 
@@ -28,6 +25,10 @@ abstract class OrdersRemoteDataSource {
     OrderCommand command, {
     required String idempotencyKey,
   });
+
+  /// The `{ outcome, assignment_id, reason }` body is not needed: the order
+  /// is reloaded afterwards.
+  Future<void> retryDispatch(int orderId, {required String idempotencyKey});
 }
 
 class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
@@ -44,7 +45,7 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
     if (response is Map<String, dynamic>) {
       return parseOrders(response['orders'] ?? response['data']);
     }
-    throw const UnexpectedResponseException();
+    throw ServerException.unexpectedResponse();
   }
 
   /// `offset` is the page number on this endpoint, not a row offset.
@@ -88,27 +89,33 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
     OrderCommand command, {
     required String idempotencyKey,
   }) async {
-    final dynamic response;
-    try {
-      response = await _client.post(
-        ApiEndpoints.orderCommand(command.orderId, command.action.path),
-        headers: <String, String>{'Idempotency-Key': idempotencyKey},
-        body: <String, dynamic>{
-          if (command.expectedVersion != null)
-            'expected_version': command.expectedVersion,
-          if (command.reason != null) 'reason': command.reason,
-          if (command.note?.trim().isNotEmpty ?? false)
-            'note': command.note!.trim(),
-        },
-      );
-    } on ServerException catch (error) {
-      throw StaleOrderException.from(error) ?? error;
-    }
+    final dynamic response = await _client.post(
+      ApiEndpoints.orderCommand(command.orderId, command.action.path),
+      headers: <String, String>{'Idempotency-Key': idempotencyKey},
+      body: <String, dynamic>{
+        if (command.expectedVersion != null)
+          'expected_version': command.expectedVersion,
+        if (command.reason != null) 'reason': command.reason,
+        if (command.note?.trim().isNotEmpty ?? false)
+          'note': command.note!.trim(),
+      },
+    );
     return parseStatusChange(_asMap(response), command.orderId);
+  }
+
+  @override
+  Future<void> retryDispatch(
+    int orderId, {
+    required String idempotencyKey,
+  }) async {
+    await _client.post(
+      ApiEndpoints.retryDispatch(orderId),
+      headers: <String, String>{'Idempotency-Key': idempotencyKey},
+    );
   }
 
   Map<String, dynamic> _asMap(dynamic response) {
     if (response is Map<String, dynamic>) return response;
-    throw const UnexpectedResponseException();
+    throw ServerException.unexpectedResponse();
   }
 }

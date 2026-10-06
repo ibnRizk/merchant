@@ -26,10 +26,10 @@ class DayScheduleModel extends DaySchedule {
     );
 
     if (day == null || day < 0 || day > 6) {
-      throw const UnexpectedResponseException();
+      throw ServerException.unexpectedResponse();
     }
     if (isOpen && (opening == null || closing == null)) {
-      throw const UnexpectedResponseException();
+      throw ServerException.unexpectedResponse();
     }
 
     return DayScheduleModel(
@@ -53,14 +53,14 @@ class DayScheduleModel extends DaySchedule {
   static List<DaySchedule> listFromResponse(dynamic response) {
     final dynamic days = response is Map ? response['days'] : null;
     if (days is! List) {
-      throw const UnexpectedResponseException();
+      throw ServerException.unexpectedResponse();
     }
     return <DaySchedule>[
       for (final dynamic day in days)
         if (day is Map<String, dynamic>)
           DayScheduleModel.fromJson(day)
         else
-          throw const UnexpectedResponseException(),
+          throw ServerException.unexpectedResponse(),
     ]..sort((DaySchedule a, DaySchedule b) => a.day.compareTo(b.day));
   }
 

@@ -15,7 +15,7 @@ class MerchantAuthResultModel extends MerchantAuthResult {
   factory MerchantAuthResultModel.fromJson(Map<String, dynamic> json) {
     final Object? token = json['token'];
     if (token is! String || token.isEmpty) {
-      throw const ServerException(message: 'Login response has no token.');
+      throw ServerException.unexpectedResponse();
     }
     return MerchantAuthResultModel(
       token: token,

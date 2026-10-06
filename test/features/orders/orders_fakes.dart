@@ -73,7 +73,6 @@ class FakeOrdersRepository implements OrdersRepository {
         OrderAction.reject => OrderStatus.rejected,
         OrderAction.startPreparing => OrderStatus.preparing,
         OrderAction.readyForPickup => OrderStatus.readyForPickup,
-        OrderAction.retryDispatch => OrderStatus.dispatching,
       },
       statusVersion: (command.expectedVersion ?? 0) + 1,
     ),
@@ -81,6 +80,8 @@ class FakeOrdersRepository implements OrdersRepository {
 
   final List<int> completedRequests = <int>[];
   final List<OrderCommand> commands = <OrderCommand>[];
+  final List<int> retriedDispatches = <int>[];
+  Either<Failure, Unit> retryDispatchResult = const Right(unit);
   int currentRequests = 0;
 
   @override
@@ -109,5 +110,11 @@ class FakeOrdersRepository implements OrdersRepository {
   Future<Either<Failure, OrderStatusChange>> sendCommand(OrderCommand command) {
     commands.add(command);
     return onSendCommand(command);
+  }
+
+  @override
+  Future<Either<Failure, Unit>> retryDispatch(int orderId) async {
+    retriedDispatches.add(orderId);
+    return retryDispatchResult;
   }
 }

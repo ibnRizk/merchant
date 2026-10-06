@@ -1,9 +1,11 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/error/failure_message.dart';
+import '../../../../../core/error/failures.dart';
 import '../../../domain/entities/merchant_order.dart';
 import '../../../domain/entities/order_status.dart';
-import '../../../domain/failures/stale_order_failure.dart';
+import '../../../domain/order_failures.dart';
 import '../../../domain/params/order_command.dart';
 import '../../../domain/repos/orders_repository.dart';
 import '../order_notice.dart';
@@ -62,6 +64,27 @@ class CurrentOrdersCubit extends Cubit<CurrentOrdersState> {
     );
   }
 
+  /// Background refresh. Failures stay quiet (the next tick retries, and a
+  /// pull-to-refresh still reports them); a success also recovers from a
+  /// failed first load.
+  Future<void> poll() async {
+    if (state is CurrentOrdersLoading) return;
+
+    final int generation = ++_generation;
+    final result = await _repository.getCurrentOrders();
+    final CurrentOrdersState latest = state;
+    if (isClosed || generation != _generation) return;
+
+    result.fold(
+      (_) {},
+      (orders) => emit(
+        latest is CurrentOrdersLoaded
+            ? latest.copyWith(orders: orders)
+            : CurrentOrdersLoaded(orders: orders),
+      ),
+    );
+  }
+
   Future<void> accept(MerchantOrder order) => _send(
     order,
     OrderCommand(
@@ -85,8 +108,7 @@ class CurrentOrdersCubit extends Cubit<CurrentOrdersState> {
     ),
   );
 
-  /// Start preparing, mark ready for pickup, or retry a failed dispatch,
-  /// whichever comes next.
+  /// Start preparing, or mark ready for pickup, whichever comes next.
   Future<void> advance(MerchantOrder order) async {
     final OrderAction? action = order.status.nextAction;
     if (action == null || action == OrderAction.accept) return;
@@ -100,35 +122,29 @@ class CurrentOrdersCubit extends Cubit<CurrentOrdersState> {
     );
   }
 
-  Future<void> _send(MerchantOrder order, OrderCommand command) async {
-    final CurrentOrdersState current = state;
-    if (current is! CurrentOrdersLoaded || current.busyIds.contains(order.id)) {
-      return;
-    }
+  /// Offers an `assignmentFailed` order to drivers again, then reloads the
+  /// list: the response carries no status.
+  Future<void> retryDispatch(MerchantOrder order) async {
+    if (!order.status.canRetryDispatch) return;
+    await _act(order, () => _repository.retryDispatch(order.id), (
+      CurrentOrdersLoaded latest,
+      Set<int> busyIds,
+      Unit _,
+    ) {
+      emit(
+        latest.copyWith(
+          busyIds: busyIds,
+          notice: OrderDispatchRetriedNotice(),
+        ),
+      );
+      refresh();
+    });
+  }
 
-    emit(current.copyWith(busyIds: <int>{...current.busyIds, order.id}));
-    final result = await _repository.sendCommand(command);
-    final CurrentOrdersState latest = state;
-    if (isClosed || latest is! CurrentOrdersLoaded) return;
-
-    final Set<int> busyIds = <int>{...latest.busyIds}..remove(order.id);
-    result.fold(
-      (failure) {
-        if (failure.isStaleOrder) {
-          emit(
-            latest.copyWith(busyIds: busyIds, notice: OrderConflictNotice()),
-          );
-          refresh();
-        } else {
-          emit(
-            latest.copyWith(
-              busyIds: busyIds,
-              notice: OrderActionFailedNotice(failure.displayMessage),
-            ),
-          );
-        }
-      },
-      (change) {
+  Future<void> _send(MerchantOrder order, OrderCommand command) => _act(
+    order,
+    () => _repository.sendCommand(command),
+    (CurrentOrdersLoaded latest, Set<int> busyIds, OrderStatusChange change) =>
         emit(
           latest.copyWith(
             orders: <MerchantOrder>[
@@ -141,8 +157,43 @@ class CurrentOrdersCubit extends Cubit<CurrentOrdersState> {
               status: order.applyChange(change).status,
             ),
           ),
+        ),
+  );
+
+  /// Runs one order action with the order marked busy. A stale order
+  /// (409/422/404) is announced and reloaded; other failures show their
+  /// message.
+  Future<void> _act<T>(
+    MerchantOrder order,
+    Future<Either<Failure, T>> Function() request,
+    void Function(CurrentOrdersLoaded latest, Set<int> busyIds, T value)
+    onSuccess,
+  ) async {
+    final CurrentOrdersState current = state;
+    if (current is! CurrentOrdersLoaded || current.busyIds.contains(order.id)) {
+      return;
+    }
+
+    emit(current.copyWith(busyIds: <int>{...current.busyIds, order.id}));
+    final Either<Failure, T> result = await request();
+    // A list fetched before this landed would undo it.
+    _generation++;
+    final CurrentOrdersState latest = state;
+    if (isClosed || latest is! CurrentOrdersLoaded) return;
+
+    final Set<int> busyIds = <int>{...latest.busyIds}..remove(order.id);
+    result.fold((Failure failure) {
+      if (failure.meansStaleOrder) {
+        emit(latest.copyWith(busyIds: busyIds, notice: OrderConflictNotice()));
+        refresh();
+      } else {
+        emit(
+          latest.copyWith(
+            busyIds: busyIds,
+            notice: OrderActionFailedNotice(failure.displayMessage),
+          ),
         );
-      },
-    );
+      }
+    }, (T value) => onSuccess(latest, busyIds, value));
   }
 }

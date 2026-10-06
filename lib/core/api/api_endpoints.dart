@@ -55,4 +55,7 @@ abstract class ApiEndpoints {
   /// `ready-for-pickup` or `retry-dispatch`.
   static String orderCommand(int id, String command) =>
       '/vendor/orders/$id/$command';
+
+  /// Only valid while the order is `assignment_failed`.
+  static String retryDispatch(int id) => '/vendor/orders/$id/retry-dispatch';
 }

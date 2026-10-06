@@ -77,7 +77,11 @@ void main() {
       expect(
         result,
         const Left<Failure, ProductOptions>(
-          ServerFailure(message: 'The options are required.'),
+          ServerFailure(
+            message: 'The options are required.',
+            statusCode: 422,
+            code: 'options_required',
+          ),
         ),
       );
     });

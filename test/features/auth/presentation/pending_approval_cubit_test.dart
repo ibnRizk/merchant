@@ -1,20 +1,15 @@
 import 'package:dartz/dartz.dart';
 import 'package:ssm_merchant/core/entities/merchant_approval_status.dart';
 import 'package:ssm_merchant/core/error/failures.dart';
-import 'package:ssm_merchant/core/utils/values/strings.dart';
 import 'package:ssm_merchant/features/auth/domain/entities/onboarding_status.dart';
 import 'package:ssm_merchant/features/auth/presentation/cubit/pending_approval/pending_approval_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import '../../../helpers/test_localizations.dart';
 import '../auth_fakes.dart';
 
 void main() {
   late FakeMerchantAuthRepository repository;
   late PendingApprovalCubit cubit;
-
-  // A failure without a message falls back to a localized string.
-  setUpAll(registerTestLocalizations);
 
   setUp(() {
     repository = FakeMerchantAuthRepository()
@@ -107,12 +102,14 @@ void main() {
   });
 
   test('a failed signOut reports the error', () async {
-    repository.clearSessionResult = const Left(CacheFailure());
+    repository.clearSessionResult = const Left(
+      CacheFailure(message: 'keystore unavailable'),
+    );
 
     await cubit.signOut();
 
     expect(cubit.state.status, PendingApprovalStatus.failure);
-    expect(cubit.state.errorMessage, Strings.somethingWentWrong);
+    expect(cubit.state.errorMessage, 'keystore unavailable');
   });
 
   test('nothing runs after signing out', () async {

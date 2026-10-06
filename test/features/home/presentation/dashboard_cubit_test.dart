@@ -61,6 +61,50 @@ void main() {
     expect(loaded().refreshFailure?.message, 'offline');
   });
 
+  group('poll', () {
+    test('updates the figures', () async {
+      await cubit.load();
+      repository.onGet = () async => const Right(DashboardStats.empty);
+
+      await cubit.poll();
+
+      expect(loaded().stats, DashboardStats.empty);
+    });
+
+    test('a failure keeps the figures without reporting it', () async {
+      await cubit.load();
+      final DashboardState before = cubit.state;
+      repository.onGet = () async =>
+          const Left(NetworkFailure(message: 'offline'));
+
+      await cubit.poll();
+
+      expect(cubit.state, same(before));
+    });
+
+    test('a success recovers from a failed first load', () async {
+      repository.onGet = () async =>
+          const Left(NetworkFailure(message: 'offline'));
+      await cubit.load();
+      repository.onGet = () async => const Right(figures);
+
+      await cubit.poll();
+
+      expect(loaded().stats, figures);
+    });
+
+    test('a failure leaves a failed first load as it is', () async {
+      repository.onGet = () async =>
+          const Left(NetworkFailure(message: 'offline'));
+      await cubit.load();
+      final DashboardState before = cubit.state;
+
+      await cubit.poll();
+
+      expect(cubit.state, same(before));
+    });
+  });
+
   test('an older response does not overwrite a newer one', () async {
     final Completer<Either<Failure, DashboardStats>> slow = Completer();
     repository.onGet = () => slow.future;

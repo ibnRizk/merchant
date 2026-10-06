@@ -2,8 +2,6 @@
 ///
 /// The merchant drives `pendingMerchant` → `accepted` → `preparing` →
 /// `readyForPickup`; dispatch and delivery are driven by the driver app.
-/// When no driver could be found (`assignmentFailed`) the merchant can
-/// retry the dispatch.
 enum OrderStatus {
   pendingMerchant,
   accepted,
@@ -49,8 +47,7 @@ enum OrderStatus {
 
   bool get isCompleted => this == delivered;
 
-  /// Ended without reaching the customer. `assignmentFailed` is not one:
-  /// the merchant can still retry the dispatch.
+  /// Ended without reaching the customer.
   bool get isCancelled => switch (this) {
     rejected || cancelled || failed || refunded => true,
     _ => false,
@@ -58,8 +55,12 @@ enum OrderStatus {
 
   bool get isTerminal => isCompleted || isCancelled;
 
-  /// Accepted and not finished yet (includes the dispatch stages).
+  /// Accepted and not finished yet (includes the dispatch stages, and
+  /// [assignmentFailed], which the merchant can still recover).
   bool get isActive => !isNew && !isTerminal && this != unknown;
+
+  /// No driver accepted the order; `retry-dispatch` offers it again.
+  bool get canRetryDispatch => this == assignmentFailed;
 
   /// The single forward step the merchant can take, if any. Rejecting is
   /// the extra option on a new order and is not returned here.
@@ -67,7 +68,6 @@ enum OrderStatus {
     pendingMerchant => OrderAction.accept,
     accepted => OrderAction.startPreparing,
     preparing => OrderAction.readyForPickup,
-    assignmentFailed => OrderAction.retryDispatch,
     _ => null,
   };
 }
@@ -77,10 +77,7 @@ enum OrderAction {
   accept('accept'),
   reject('reject'),
   startPreparing('start-preparing'),
-  readyForPickup('ready-for-pickup'),
-
-  /// Asks dispatch to look for a driver again after `assignmentFailed`.
-  retryDispatch('retry-dispatch');
+  readyForPickup('ready-for-pickup');
 
   /// The last path segment of `POST /vendor/orders/{id}/{path}`.
   final String path;

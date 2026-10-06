@@ -11,12 +11,12 @@ class WalletOverviewModel extends WalletOverview {
     required super.withdrawals,
   });
 
-  /// Throws [UnexpectedResponseException] when the balances are missing: a
+  /// Throws [ServerException.unexpectedResponse] when the balances are missing: a
   /// default zero would read as the real balance.
   factory WalletOverviewModel.fromJson(Map<String, dynamic> json) {
     final dynamic wallet = json['wallet'];
     if (wallet is! Map<String, dynamic>) {
-      throw const UnexpectedResponseException();
+      throw ServerException.unexpectedResponse();
     }
     return WalletOverviewModel(
       balance: WalletBalance(
@@ -38,7 +38,7 @@ class WalletOverviewModel extends WalletOverview {
   static double _amount(dynamic value) {
     final double? amount = double.tryParse('$value');
     if (amount != null) return amount;
-    throw const UnexpectedResponseException();
+    throw ServerException.unexpectedResponse();
   }
 }
 

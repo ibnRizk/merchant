@@ -21,7 +21,7 @@ class WalletRemoteDataSourceImpl implements WalletRemoteDataSource {
   Future<WalletOverviewModel> getWallet() async {
     final dynamic response = await _client.get(ApiEndpoints.wallet);
     if (response is! Map<String, dynamic>) {
-      throw const UnexpectedResponseException();
+      throw ServerException.unexpectedResponse();
     }
     return WalletOverviewModel.fromJson(response);
   }

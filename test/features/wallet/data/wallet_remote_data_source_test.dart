@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ssm_merchant/core/api/api_endpoints.dart';
 import 'package:ssm_merchant/core/error/exceptions.dart';
+import 'package:ssm_merchant/core/utils/values/strings.dart';
 import 'package:ssm_merchant/features/wallet/data/datasources/wallet_remote_data_source.dart';
 import 'package:ssm_merchant/features/wallet/domain/entities/wallet.dart';
 
@@ -50,7 +51,16 @@ void main() {
       'wallet': <String, dynamic>{'total_earning': 1},
     };
 
-    expect(dataSource.getWallet, throwsA(isA<UnexpectedResponseException>()));
+    expect(
+      dataSource.getWallet,
+      throwsA(
+        isA<ServerException>().having(
+          (ServerException e) => e.message,
+          'message',
+          Strings.unexpectedResponse,
+        ),
+      ),
+    );
   });
 
   test('a withdrawal posts the amount', () async {

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../entities/merchant_approval_status.dart';
+import '../utils/values/strings.dart';
 import 'failures.dart';
 
 abstract class AppException extends Equatable implements Exception {
@@ -31,25 +32,20 @@ class ServerException extends AppException {
 
   const ServerException({this.message, this.statusCode, this.code});
 
+  /// The response could not be read. Callers log the raw detail; users get
+  /// a localized message instead.
+  ServerException.unexpectedResponse()
+    : message = Strings.unexpectedResponse,
+      statusCode = null,
+      code = null;
+
   @override
   Failure toFailure() {
-    return ServerFailure(message: message);
+    return ServerFailure(message: message, statusCode: statusCode, code: code);
   }
 
   @override
   List<Object?> get props => [message, statusCode, code];
-}
-
-/// The response could not be read (an HTML error page, a missing field...).
-/// Carries no text on purpose: raw payloads and exception strings are not
-/// fit for users, so the UI shows a localized message instead.
-class UnexpectedResponseException extends ServerException {
-  const UnexpectedResponseException();
-
-  @override
-  Failure toFailure() {
-    return const UnexpectedResponseFailure();
-  }
 }
 
 class FetchDataException extends AppException {

@@ -78,6 +78,6 @@ class PharmacyRemoteDataSourceImpl implements PharmacyRemoteDataSource {
 
   Map<String, dynamic> _asMap(dynamic response) {
     if (response is Map<String, dynamic>) return response;
-    throw const UnexpectedResponseException();
+    throw ServerException.unexpectedResponse();
   }
 }

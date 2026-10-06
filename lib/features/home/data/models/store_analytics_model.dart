@@ -15,7 +15,7 @@ class StoreAnalyticsModel extends StoreAnalytics {
     super.topItems,
   });
 
-  /// Throws [UnexpectedResponseException] when a figure is missing: a
+  /// Throws [ServerException.unexpectedResponse] when a figure is missing: a
   /// default zero would be shown as if it were real.
   factory StoreAnalyticsModel.fromJson(Map<String, dynamic> json) {
     final Map<String, dynamic> orders = _section(json['orders']);
@@ -57,18 +57,18 @@ class StoreAnalyticsModel extends StoreAnalytics {
 
   static Map<String, dynamic> _section(dynamic value) {
     if (value is Map<String, dynamic>) return value;
-    throw const UnexpectedResponseException();
+    throw ServerException.unexpectedResponse();
   }
 
   static int _count(dynamic value) {
     final int? count = int.tryParse('$value');
     if (count != null && count >= 0) return count;
-    throw const UnexpectedResponseException();
+    throw ServerException.unexpectedResponse();
   }
 
   static double _amount(dynamic value) {
     final double? amount = double.tryParse('$value');
     if (amount != null) return amount;
-    throw const UnexpectedResponseException();
+    throw ServerException.unexpectedResponse();
   }
 }

@@ -25,7 +25,7 @@ class AppConfigModel extends AppConfig {
     final Map<String, dynamic>? legal = _map(json['legal']);
     final Map<String, dynamic>? application = _map(json['application']);
     if (support == null && legal == null && application == null) {
-      throw const UnexpectedResponseException();
+      throw ServerException.unexpectedResponse();
     }
 
     return AppConfigModel(

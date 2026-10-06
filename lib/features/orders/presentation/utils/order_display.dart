@@ -42,10 +42,6 @@ extension OrderStatusDisplay on OrderStatus {
     if (isCancelled)
       return (colors.errorContainer, colors.error);
     if (isNew) return (colors.primaryLight, colors.primary);
-    // Still active, but stuck until the merchant retries the dispatch.
-    if (this == OrderStatus.assignmentFailed) {
-      return (colors.errorContainer, colors.error);
-    }
     if (isActive)
       return (
         colors.info.withValues(alpha: 0.12),
@@ -53,17 +49,6 @@ extension OrderStatusDisplay on OrderStatus {
       );
     return (colors.border, colors.textSecondary);
   }
-}
-
-extension OrderActionDisplay on OrderAction {
-  /// Button label for a forward step ([OrderStatus.nextAction]).
-  String get label => switch (this) {
-    OrderAction.accept => Strings.acceptOrder,
-    OrderAction.reject => Strings.rejectOrder,
-    OrderAction.startPreparing => Strings.startPreparing,
-    OrderAction.readyForPickup => Strings.statusReadyForPickup,
-    OrderAction.retryDispatch => Strings.retryDispatch,
-  };
 }
 
 extension OrderDisplay on MerchantOrder {

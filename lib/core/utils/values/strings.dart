@@ -41,6 +41,8 @@ abstract class Strings {
   static const String _somethingWentWrong = 'something_went_wrong';
   static String get somethingWentWrong => _somethingWentWrong.tr;
 
+  /// The server answered with something the app can't read (HTML error
+  /// page, missing fields...). Raw details go to the logs only.
   static const String _unexpectedResponse = 'unexpected_response';
   static String get unexpectedResponse => _unexpectedResponse.tr;
 
@@ -327,6 +329,12 @@ abstract class Strings {
 
   static const String _retryDispatch = 'retry_dispatch';
   static String get retryDispatch => _retryDispatch.tr;
+
+  static const String _dispatchRetried = 'dispatch_retried';
+  static String get dispatchRetried => _dispatchRetried.tr;
+
+  static const String _noDriverAccepted = 'no_driver_accepted';
+  static String get noDriverAccepted => _noDriverAccepted.tr;
 
   static const String _orderDetailsTitle = 'order_details_title';
   static String get orderDetailsTitle => _orderDetailsTitle.tr;

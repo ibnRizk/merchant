@@ -131,7 +131,10 @@ void main() {
       expect(
         result,
         const Left<Failure, PharmacyRequest>(
-          ServerFailure(message: 'The medicine summary field is required.'),
+          ServerFailure(
+            message: 'The medicine summary field is required.',
+            statusCode: 422,
+          ),
         ),
       );
     });
