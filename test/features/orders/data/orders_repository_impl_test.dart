@@ -3,6 +3,7 @@ import 'package:ssm_merchant/core/error/failures.dart';
 import 'package:ssm_merchant/features/orders/data/datasources/orders_remote_data_source.dart';
 import 'package:ssm_merchant/features/orders/data/repos/orders_repository_impl.dart';
 import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/domain/failures/transition_rejected_failure.dart';
 import 'package:ssm_merchant/features/orders/domain/params/order_command.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -96,5 +97,40 @@ void main() {
     final result = await repository.sendCommand(accept);
 
     expect(result.fold((Failure f) => f, (_) => null), isA<ConflictFailure>());
+  });
+
+  test(
+    'a 422 order_transition_invalid fails with TransitionRejected',
+    () async {
+      client.error = const ServerException(
+        statusCode: 422,
+        code: 'order_transition_invalid',
+      );
+
+      final result = await repository.sendCommand(accept);
+
+      expect(
+        result.fold((Failure f) => f, (_) => null),
+        isA<TransitionRejectedFailure>(),
+      );
+    },
+  );
+
+  test('a retry after a rejected transition gets a new key', () async {
+    client.error = const ServerException(statusCode: 404);
+    await repository.sendCommand(accept);
+    client.error = null;
+
+    await repository.sendCommand(accept);
+
+    expect(sentKeys(), <String>['key-1', 'key-2']);
+  });
+
+  test('retry dispatch carries an idempotency key', () async {
+    await repository.sendCommand(
+      const OrderCommand(orderId: 5, action: OrderAction.retryDispatch),
+    );
+
+    expect(sentKeys(), <String>['key-1']);
   });
 }

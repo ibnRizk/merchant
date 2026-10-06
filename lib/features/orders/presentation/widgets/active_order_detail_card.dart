@@ -14,8 +14,8 @@ import 'order_progress_stepper.dart';
 import 'system_notice_banner.dart';
 
 /// An accepted order the merchant still has to move: header, the 3-step
-/// progress bar, lines and the next action ("start preparing" or "ready
-/// for pickup").
+/// progress bar, lines and the next action ("start preparing", "ready for
+/// pickup", or "retry dispatch" when no driver was found).
 class ActiveOrderDetailCard extends StatelessWidget {
   const ActiveOrderDetailCard({
     super.key,
@@ -72,9 +72,7 @@ class ActiveOrderDetailCard extends StatelessWidget {
               if (next != null) ...<Widget>[
                 const SizedBox(height: 12),
                 PrimaryButton(
-                  label: next == OrderAction.startPreparing
-                      ? Strings.startPreparing
-                      : Strings.statusReadyForPickup,
+                  label: next.label,
                   isLoading: isBusy,
                   onPressed: onAdvance,
                 ),
@@ -82,6 +80,10 @@ class ActiveOrderDetailCard extends StatelessWidget {
               if (next == OrderAction.readyForPickup) ...<Widget>[
                 const SizedBox(height: 12),
                 SystemNoticeBanner(text: Strings.systemWillNotifyDriver),
+              ],
+              if (next == OrderAction.retryDispatch) ...<Widget>[
+                const SizedBox(height: 12),
+                SystemNoticeBanner(text: Strings.assignmentFailedHint),
               ],
             ],
           ),

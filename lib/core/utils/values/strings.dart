@@ -295,6 +295,12 @@ abstract class Strings {
   static const String _startPreparing = 'start_preparing';
   static String get startPreparing => _startPreparing.tr;
 
+  static const String _retryDispatch = 'retry_dispatch';
+  static String get retryDispatch => _retryDispatch.tr;
+
+  static const String _assignmentFailedHint = 'assignment_failed_hint';
+  static String get assignmentFailedHint => _assignmentFailedHint.tr;
+
   static const String _viewDetails = 'view_details';
   static String get viewDetails => _viewDetails.tr;
 

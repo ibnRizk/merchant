@@ -2,6 +2,8 @@
 ///
 /// The merchant drives `pendingMerchant` → `accepted` → `preparing` →
 /// `readyForPickup`; dispatch and delivery are driven by the driver app.
+/// When no driver could be found (`assignmentFailed`) the merchant can
+/// retry the dispatch.
 enum OrderStatus {
   pendingMerchant,
   accepted,
@@ -47,9 +49,10 @@ enum OrderStatus {
 
   bool get isCompleted => this == delivered;
 
-  /// Ended without reaching the customer.
+  /// Ended without reaching the customer. `assignmentFailed` is not one:
+  /// the merchant can still retry the dispatch.
   bool get isCancelled => switch (this) {
-    rejected || cancelled || assignmentFailed || failed || refunded => true,
+    rejected || cancelled || failed || refunded => true,
     _ => false,
   };
 
@@ -64,6 +67,7 @@ enum OrderStatus {
     pendingMerchant => OrderAction.accept,
     accepted => OrderAction.startPreparing,
     preparing => OrderAction.readyForPickup,
+    assignmentFailed => OrderAction.retryDispatch,
     _ => null,
   };
 }
@@ -73,7 +77,10 @@ enum OrderAction {
   accept('accept'),
   reject('reject'),
   startPreparing('start-preparing'),
-  readyForPickup('ready-for-pickup');
+  readyForPickup('ready-for-pickup'),
+
+  /// Asks dispatch to look for a driver again after `assignmentFailed`.
+  retryDispatch('retry-dispatch');
 
   /// The last path segment of `POST /vendor/orders/{id}/{path}`.
   final String path;

@@ -35,4 +35,14 @@ void main() {
     expect(updated.status, OrderStatus.accepted);
     expect(updated.statusVersion, 5);
   });
+
+  test('assignment failed offers retry dispatch and stays active', () {
+    expect(OrderStatus.assignmentFailed.nextAction, OrderAction.retryDispatch);
+    expect(OrderStatus.assignmentFailed.isActive, isTrue);
+    expect(OrderStatus.assignmentFailed.isCancelled, isFalse);
+  });
+
+  test('retry dispatch posts to the retry-dispatch route', () {
+    expect(OrderAction.retryDispatch.path, 'retry-dispatch');
+  });
 }

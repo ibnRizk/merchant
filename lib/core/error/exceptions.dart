@@ -23,12 +23,21 @@ class ServerException extends AppException {
   @override
   final String? message;
 
-  const ServerException({this.message});
+  /// The HTTP status, when the server answered with one.
+  final int? statusCode;
+
+  /// The API's `errors[].code`, e.g. `order_transition_invalid`.
+  final String? code;
+
+  const ServerException({this.message, this.statusCode, this.code});
 
   @override
   Failure toFailure() {
     return ServerFailure(message: message);
   }
+
+  @override
+  List<Object?> get props => [message, statusCode, code];
 }
 
 class FetchDataException extends AppException {

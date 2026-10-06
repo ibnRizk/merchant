@@ -252,7 +252,11 @@ class DioConsumerImpl implements DioConsumer {
     }
 
     if (status == StatusCode.unProcessableContent) {
-      throw ServerException(message: _messageOf(data));
+      throw ServerException(
+        message: _messageOf(data),
+        statusCode: status,
+        code: apiErrorCode(data),
+      );
     }
 
     switch (error.type) {
@@ -266,7 +270,11 @@ class DioConsumerImpl implements DioConsumer {
       case DioExceptionType.cancel:
         throw ServerException(message: Strings.requestCancelled);
       default:
-        throw ServerException(message: _messageOf(data));
+        throw ServerException(
+          message: _messageOf(data),
+          statusCode: status,
+          code: apiErrorCode(data),
+        );
     }
   }
 

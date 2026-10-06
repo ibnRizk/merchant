@@ -93,6 +93,8 @@
   "orders_count": "طلبات",
   "accept_order": "قبول الطلب",
   "start_preparing": "بدء التجهيز",
+  "retry_dispatch": "إعادة البحث عن مندوب",
+  "assignment_failed_hint": "لم يقبل أي مندوب هذا الطلب. أعد المحاولة للبحث عن مندوب مرة أخرى.",
   "view_details": "عرض التفاصيل",
   "load_more": "عرض المزيد",
   "no_new_orders": "لا توجد طلبات جديدة حالياً",

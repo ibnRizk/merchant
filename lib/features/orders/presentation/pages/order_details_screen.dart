@@ -194,15 +194,17 @@ class _OrderDetailsBody extends StatelessWidget {
           )
         else if (next != null)
           PrimaryButton(
-            label: next == OrderAction.startPreparing
-                ? Strings.startPreparing
-                : Strings.statusReadyForPickup,
+            label: next.label,
             isLoading: state.isBusy,
             onPressed: cubit.advance,
           ),
         if (next == OrderAction.readyForPickup) ...<Widget>[
           const SizedBox(height: 12),
           SystemNoticeBanner(text: Strings.systemWillNotifyDriver),
+        ],
+        if (next == OrderAction.retryDispatch) ...<Widget>[
+          const SizedBox(height: 12),
+          SystemNoticeBanner(text: Strings.assignmentFailedHint),
         ],
       ],
     );

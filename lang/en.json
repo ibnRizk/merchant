@@ -93,6 +93,8 @@
   "orders_count": "orders",
   "accept_order": "Accept order",
   "start_preparing": "Start preparing",
+  "retry_dispatch": "Retry dispatch",
+  "assignment_failed_hint": "No driver accepted this order. Retry to search for a driver again.",
   "view_details": "View details",
   "load_more": "Load more",
   "no_new_orders": "No new orders right now",

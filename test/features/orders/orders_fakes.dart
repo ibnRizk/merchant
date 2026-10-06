@@ -73,6 +73,7 @@ class FakeOrdersRepository implements OrdersRepository {
         OrderAction.reject => OrderStatus.rejected,
         OrderAction.startPreparing => OrderStatus.preparing,
         OrderAction.readyForPickup => OrderStatus.readyForPickup,
+        OrderAction.retryDispatch => OrderStatus.dispatching,
       },
       statusVersion: (command.expectedVersion ?? 0) + 1,
     ),

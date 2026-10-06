@@ -15,8 +15,9 @@ final class OrderUpdatedNotice extends OrderNotice {
   OrderUpdatedNotice({required this.orderId, required this.status});
 }
 
-/// HTTP 409: the order changed elsewhere (another device, or the customer
-/// cancelled) since it was loaded. The data is reloaded.
+/// The order changed elsewhere (another device, or the customer cancelled)
+/// since it was loaded: HTTP 409, 404, or 422 `order_transition_invalid`.
+/// The data is reloaded.
 final class OrderConflictNotice extends OrderNotice {
   OrderConflictNotice();
 }

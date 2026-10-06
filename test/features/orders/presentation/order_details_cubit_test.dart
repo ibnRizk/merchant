@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:ssm_merchant/core/error/failures.dart';
 import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/domain/failures/transition_rejected_failure.dart';
 import 'package:ssm_merchant/features/orders/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -57,5 +58,33 @@ void main() {
 
     expect(loaded().notice, isA<OrderConflictNotice>());
     await reloaded;
+  });
+
+  test('a rejected transition announces it and reloads the order', () async {
+    await cubit.load(1);
+    repository.onSendCommand = (_) async =>
+        const Left(TransitionRejectedFailure());
+    repository.orderResult = Right(anOrder(1, status: OrderStatus.cancelled));
+    final Future<OrderDetailsState> reloaded = cubit.stream.firstWhere(
+      (OrderDetailsState s) =>
+          s is OrderDetailsLoaded && s.order.status == OrderStatus.cancelled,
+    );
+
+    await cubit.advance();
+
+    expect(loaded().notice, isA<OrderConflictNotice>());
+    await reloaded;
+  });
+
+  test('advance retries the dispatch after assignment failed', () async {
+    repository.orderResult = Right(
+      anOrder(1, status: OrderStatus.assignmentFailed),
+    );
+    await cubit.load(1);
+
+    await cubit.advance();
+
+    expect(repository.commands.single.action, OrderAction.retryDispatch);
+    expect(loaded().order.status, OrderStatus.dispatching);
   });
 }

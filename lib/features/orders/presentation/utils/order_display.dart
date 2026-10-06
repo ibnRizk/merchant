@@ -39,7 +39,8 @@ extension OrderStatusDisplay on OrderStatus {
   (Color, Color) pillColors(AppColors colors) {
     if (isCompleted)
       return (colors.successContainer, colors.success);
-    if (isCancelled)
+    // A failed dispatch still needs the merchant, so it keeps the alarm color.
+    if (isCancelled || this == OrderStatus.assignmentFailed)
       return (colors.errorContainer, colors.error);
     if (isNew) return (colors.primaryLight, colors.primary);
     if (isActive)
@@ -49,6 +50,17 @@ extension OrderStatusDisplay on OrderStatus {
       );
     return (colors.border, colors.textSecondary);
   }
+}
+
+extension OrderActionDisplay on OrderAction {
+  /// Label of the single forward button (see [OrderStatus.nextAction]).
+  String get label => switch (this) {
+    OrderAction.accept => Strings.acceptOrder,
+    OrderAction.reject => Strings.rejectOrder,
+    OrderAction.startPreparing => Strings.startPreparing,
+    OrderAction.readyForPickup => Strings.statusReadyForPickup,
+    OrderAction.retryDispatch => Strings.retryDispatch,
+  };
 }
 
 extension OrderDisplay on MerchantOrder {
