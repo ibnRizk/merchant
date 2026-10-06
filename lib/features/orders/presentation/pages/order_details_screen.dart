@@ -7,6 +7,7 @@ import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/primary_button.dart';
+import '../../../../core/widgets/refresh_poller.dart';
 import '../../../../core/widgets/status_pill.dart';
 import '../../../../core/widgets/status_views.dart';
 import '../../../../core/widgets/tip_banner.dart';
@@ -52,31 +53,38 @@ class OrderDetailsScreen extends StatelessWidget {
               state is OrderDetailsLoaded ? state.notice : null,
             ),
         child: SafeArea(
-          child: RefreshIndicator(
+          // Dispatch moves on without the merchant (driver found, no driver
+          // found): re-read while the screen is visible, like the lists.
+          child: RefreshPoller(
             onRefresh: cubit.refresh,
-            color: context.colors.primary,
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-              children: <Widget>[
-                OrdersScreenHeader(
-                  title: Strings.orderDetailsTitle,
-                  leading: const BrandBackButton(),
-                ),
-                const SizedBox(height: 16),
-                BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
-                  builder: (BuildContext context, OrderDetailsState state) =>
-                      switch (state) {
-                        OrderDetailsLoading() => const SectionLoadingView(),
-                        OrderDetailsLoadFailure(:final message) =>
-                          RetryErrorView(
-                            message: message,
-                            onRetry: cubit.refresh,
+            child: RefreshIndicator(
+              onRefresh: cubit.refresh,
+              color: context.colors.primary,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                children: <Widget>[
+                  OrdersScreenHeader(
+                    title: Strings.orderDetailsTitle,
+                    leading: const BrandBackButton(),
+                  ),
+                  const SizedBox(height: 16),
+                  BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
+                    builder: (BuildContext context, OrderDetailsState state) =>
+                        switch (state) {
+                          OrderDetailsLoading() => const SectionLoadingView(),
+                          OrderDetailsLoadFailure(:final message) =>
+                            RetryErrorView(
+                              message: message,
+                              onRetry: cubit.refresh,
+                            ),
+                          OrderDetailsLoaded() => _OrderDetailsBody(
+                            state: state,
                           ),
-                        OrderDetailsLoaded() => _OrderDetailsBody(state: state),
-                      },
-                ),
-              ],
+                        },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -210,6 +218,26 @@ class _OrderDetailsBody extends StatelessWidget {
         if (next == OrderAction.readyForPickup) ...<Widget>[
           const SizedBox(height: 12),
           SystemNoticeBanner(text: Strings.systemWillNotifyDriver),
+        ],
+        if (order.status.canRetryDispatch) ...<Widget>[
+          // No driver accepted the order: without this the merchant would
+          // have to go back to the list to send it out again.
+          Text(
+            Strings.noDriverAccepted,
+            textAlign: TextAlign.start,
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: colors.error,
+            ),
+          ),
+          const SizedBox(height: 10),
+          PrimaryButton(
+            label: Strings.retryDispatch,
+            isLoading: state.isBusy,
+            onPressed: cubit.retryDispatch,
+          ),
         ],
         if (order.status.canCancel) ...<Widget>[
           const SizedBox(height: 8),

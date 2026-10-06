@@ -109,6 +109,46 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     );
   });
 
+  /// Offers an `assignmentFailed` order to drivers again — the same call as
+  /// the Active Orders card — then re-reads it: the response carries no
+  /// status.
+  Future<void> retryDispatch() async {
+    final OrderDetailsState current = state;
+    if (current is! OrderDetailsLoaded ||
+        current.isBusy ||
+        !current.order.status.canRetryDispatch) {
+      return;
+    }
+
+    emit(current.copyWith(isBusy: true));
+    final Either<Failure, Unit> result = await _repository.retryDispatch(
+      current.order.id,
+    );
+    final OrderDetailsState latest = state;
+    if (isClosed || latest is! OrderDetailsLoaded) return;
+
+    result.fold(
+      (Failure failure) {
+        if (failure.meansStaleOrder) {
+          emit(latest.copyWith(isBusy: false, notice: OrderConflictNotice()));
+        } else {
+          emit(
+            latest.copyWith(
+              isBusy: false,
+              notice: OrderActionFailedNotice(failure.displayMessage),
+            ),
+          );
+        }
+      },
+      (_) => emit(
+        latest.copyWith(isBusy: false, notice: OrderDispatchRetriedNotice()),
+      ),
+    );
+    // Either way the order moved on (dispatching again, or a stale copy):
+    // show the server's status.
+    await refresh();
+  }
+
   Future<void> _send(OrderCommand? Function(MerchantOrder order) build) async {
     final OrderDetailsState current = state;
     if (current is! OrderDetailsLoaded || current.isBusy) return;
