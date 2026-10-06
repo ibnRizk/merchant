@@ -851,4 +851,63 @@ abstract class Strings {
 
   static const String _deletionBlockedWallet = 'deletion_blocked_wallet';
   static String get deletionBlockedWallet => _deletionBlockedWallet.tr;
+
+  // --- Wallet ---
+
+  static const String _walletTitle = 'wallet_title';
+  static String get walletTitle => _walletTitle.tr;
+
+  static const String _availableBalance = 'available_balance';
+  static String get availableBalance => _availableBalance.tr;
+
+  static const String _totalEarning = 'total_earning';
+  static String get totalEarning => _totalEarning.tr;
+
+  static const String _totalWithdrawn = 'total_withdrawn';
+  static String get totalWithdrawn => _totalWithdrawn.tr;
+
+  static const String _pendingWithdraw = 'pending_withdraw';
+  static String get pendingWithdraw => _pendingWithdraw.tr;
+
+  static const String _collectedCash = 'collected_cash';
+  static String get collectedCash => _collectedCash.tr;
+
+  static const String _requestPayout = 'request_payout';
+  static String get requestPayout => _requestPayout.tr;
+
+  static const String _payoutAmount = 'payout_amount';
+  static String get payoutAmount => _payoutAmount.tr;
+
+  static const String _submitPayout = 'submit_payout';
+  static String get submitPayout => _submitPayout.tr;
+
+  static const String _payoutRequested = 'payout_requested';
+  static String get payoutRequested => _payoutRequested.tr;
+
+  static const String _noBalanceToWithdraw = 'no_balance_to_withdraw';
+  static String get noBalanceToWithdraw => _noBalanceToWithdraw.tr;
+
+  static const String _payoutHistory = 'payout_history';
+  static String get payoutHistory => _payoutHistory.tr;
+
+  static const String _noPayoutsYet = 'no_payouts_yet';
+  static String get noPayoutsYet => _noPayoutsYet.tr;
+
+  static const String _withdrawPending = 'withdraw_pending';
+  static String get withdrawPending => _withdrawPending.tr;
+
+  static const String _withdrawApproved = 'withdraw_approved';
+  static String get withdrawApproved => _withdrawApproved.tr;
+
+  static const String _withdrawDenied = 'withdraw_denied';
+  static String get withdrawDenied => _withdrawDenied.tr;
+
+  static const String _withdrawAmountInvalid = 'withdraw_amount_invalid';
+  static String get withdrawAmountInvalid => _withdrawAmountInvalid.tr;
+
+  static const String _withdrawAmountTooLow = 'withdraw_amount_too_low';
+  static String get withdrawAmountTooLow => _withdrawAmountTooLow.tr;
+
+  static const String _withdrawAmountAboveBalance = 'withdraw_amount_above_balance';
+  static String get withdrawAmountAboveBalance => _withdrawAmountAboveBalance.tr;
 }

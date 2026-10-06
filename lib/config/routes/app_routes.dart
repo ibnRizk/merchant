@@ -36,6 +36,8 @@ import '../../features/orders/presentation/pages/orders_screen.dart';
 import '../../features/profile/presentation/cubit/delete_account/delete_account_cubit.dart';
 import '../../features/profile/presentation/cubit/logout/logout_cubit.dart';
 import '../../features/profile/presentation/cubit/profile/profile_cubit.dart';
+import '../../features/wallet/presentation/cubit/wallet_cubit.dart';
+import '../../features/wallet/presentation/pages/wallet_screen.dart';
 import '../../injection_container.dart';
 import 'navigator_observer.dart';
 
@@ -55,6 +57,7 @@ abstract class AppRoutes {
   static const String locationPicker = '/register/location';
   static const String pendingApproval = '/pending-approval';
   static const String productForm = '/menu/product';
+  static const String wallet = '/wallet';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -71,6 +74,7 @@ abstract class AppRoutes {
   static const String locationPickerName = 'locationPicker';
   static const String pendingApprovalName = 'pendingApproval';
   static const String productFormName = 'productForm';
+  static const String walletName = 'wallet';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -235,6 +239,14 @@ abstract class AppRoutes {
             child: ProductFormScreen(initialProduct: product),
           );
         },
+      ),
+      GoRoute(
+        path: wallet,
+        name: walletName,
+        builder: (_, __) => BlocProvider<WalletCubit>(
+          create: (_) => ServiceLocator.instance<WalletCubit>()..load(),
+          child: const WalletScreen(),
+        ),
       ),
       GoRoute(
         path: photoViewer,

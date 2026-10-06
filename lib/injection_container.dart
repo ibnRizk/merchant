@@ -21,6 +21,7 @@ import 'features/launch/launch_injection.dart';
 import 'features/menu/menu_injection.dart';
 import 'features/orders/orders_injection.dart';
 import 'features/profile/profile_injection.dart';
+import 'features/wallet/wallet_injection.dart';
 
 /// Composition root.
 ///
@@ -57,6 +58,7 @@ abstract class ServiceLocator {
     await initOrdersFeatureInjection();
     await initHoursFeatureInjection();
     await initLaunchFeatureInjection();
+    await initWalletFeatureInjection();
     // Register new features here.
   }
 

@@ -31,6 +31,19 @@ abstract class ApiEndpoints {
   static const String catalogItems = '/vendor/catalog/items';
   static String catalogItem(int id) => '$catalogItems/$id';
   static String catalogItemStatus(int id) => '$catalogItems/$id/status';
+  static String catalogItemOptions(int id) => '$catalogItems/$id/options';
+
+  // --- Wallet & analytics (approved) ---
+  static const String wallet = '/vendor/wallet';
+  static const String withdrawRequests = '/vendor/withdraw-requests';
+  static const String analytics = '/vendor/analytics';
+
+  // --- Pharmacy requests (approved pharmacy stores) ---
+  static const String pharmacyRequests = '/vendor/pharmacy-requests';
+  static String pharmacyRequest(int id) => '$pharmacyRequests/$id';
+  static String pharmacyPrescription(int id) =>
+      '$pharmacyRequests/$id/prescription';
+  static String pharmacyQuote(int id) => '$pharmacyRequests/$id/quote';
 
   // --- Orders (approved) ---
   static const String currentOrders = '/vendor/current-orders';
@@ -38,8 +51,8 @@ abstract class ApiEndpoints {
   static const String orderSummary = '/vendor/order';
   static const String orderLines = '/vendor/order-details';
 
-  /// [command] is `accept`, `reject`, `start-preparing` or
-  /// `ready-for-pickup`.
+  /// [command] is `accept`, `reject`, `start-preparing`,
+  /// `ready-for-pickup` or `retry-dispatch`.
   static String orderCommand(int id, String command) =>
       '/vendor/orders/$id/$command';
 }
