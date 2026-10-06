@@ -24,7 +24,7 @@ import '../widgets/order_details_section.dart';
 import '../widgets/order_item_row.dart';
 import '../widgets/order_progress_stepper.dart';
 import '../widgets/orders_screen_header.dart';
-import '../widgets/reject_order_sheet.dart';
+import '../widgets/order_reason_sheet.dart';
 import '../widgets/system_notice_banner.dart';
 
 /// One order's summary, lines and next action. [OrderDetailsCubit] is
@@ -95,6 +95,13 @@ class _OrderDetailsBody extends StatelessWidget {
     final RejectDecision? decision = await showRejectOrderSheet(context);
     if (decision == null || cubit.isClosed) return;
     cubit.reject(reason: decision.reason, note: decision.note);
+  }
+
+  Future<void> _cancel(BuildContext context) async {
+    final OrderDetailsCubit cubit = context.read<OrderDetailsCubit>();
+    final CancelDecision? decision = await showCancelOrderSheet(context);
+    if (decision == null || cubit.isClosed) return;
+    cubit.cancel(reason: decision.reason, note: decision.note);
   }
 
   @override
@@ -203,6 +210,20 @@ class _OrderDetailsBody extends StatelessWidget {
         if (next == OrderAction.readyForPickup) ...<Widget>[
           const SizedBox(height: 12),
           SystemNoticeBanner(text: Strings.systemWillNotifyDriver),
+        ],
+        if (order.status.canCancel) ...<Widget>[
+          const SizedBox(height: 8),
+          TextButton(
+            onPressed: state.isBusy ? null : () => _cancel(context),
+            child: Text(
+              Strings.cancelOrder,
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                fontWeight: FontWeight.w700,
+                color: colors.error,
+              ),
+            ),
+          ),
         ],
       ],
     );

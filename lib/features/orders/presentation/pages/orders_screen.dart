@@ -17,7 +17,7 @@ import '../widgets/order_live_banner.dart';
 import '../widgets/orders_list_states.dart';
 import '../widgets/orders_screen_header.dart';
 import '../widgets/ready_for_pickup_banner.dart';
-import '../widgets/reject_order_sheet.dart';
+import '../widgets/order_reason_sheet.dart';
 
 /// New orders (`pending_merchant`), reached by pushing
 /// `AppRoutes.newOrdersName`. [CurrentOrdersCubit] is provided by the route.

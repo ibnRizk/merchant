@@ -12,6 +12,7 @@ void showOrderNotice(BuildContext context, OrderNotice? notice) {
       showBrandSnackBar(context, switch (status) {
         OrderStatus.accepted => Strings.orderAccepted,
         OrderStatus.rejected => Strings.orderRejected,
+        OrderStatus.cancelled => Strings.orderCancelled,
         _ => Strings.orderUpdated,
       });
     case OrderConflictNotice():

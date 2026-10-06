@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:ssm_merchant/core/error/failures.dart';
 import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/domain/order_failures.dart';
+import 'package:ssm_merchant/features/orders/domain/params/order_command.dart';
 import 'package:ssm_merchant/features/orders/presentation/cubit/order_details/order_details_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -57,5 +59,69 @@ void main() {
 
     expect(loaded().notice, isA<OrderConflictNotice>());
     await reloaded;
+  });
+
+  group('cancel', () {
+    test('sends the reason, note and version of an accepted order', () async {
+      await cubit.load(1);
+      final int? version = loaded().order.statusVersion;
+
+      await cubit.cancel(reason: CancelReason.itemUnavailable, note: 'no buns');
+
+      expect(
+        repository.commands.single,
+        OrderCommand.cancel(
+          orderId: 1,
+          reason: CancelReason.itemUnavailable,
+          note: 'no buns',
+          expectedVersion: version,
+        ),
+      );
+    });
+
+    test('a cancelled order shows as cancelled', () async {
+      await cubit.load(1);
+
+      await cubit.cancel(reason: CancelReason.customerRequest);
+
+      expect(loaded().order.status, OrderStatus.cancelled);
+      expect(loaded().notice, isA<OrderUpdatedNotice>());
+    });
+
+    test('is allowed while preparing', () async {
+      repository.orderResult = Right(anOrder(1, status: OrderStatus.preparing));
+      await cubit.load(1);
+
+      await cubit.cancel(reason: CancelReason.storeClosing);
+
+      expect(repository.commands, hasLength(1));
+    });
+
+    test('is not sent once the order is ready for pickup', () async {
+      repository.orderResult = Right(
+        anOrder(1, status: OrderStatus.readyForPickup),
+      );
+      await cubit.load(1);
+
+      await cubit.cancel(reason: CancelReason.other);
+
+      expect(repository.commands, isEmpty);
+    });
+
+    test('a refused transition reloads the order', () async {
+      await cubit.load(1);
+      repository.onSendCommand = (_) async =>
+          const Left(TransitionRejectedFailure());
+      repository.orderResult = Right(anOrder(1, status: OrderStatus.cancelled));
+      final Future<OrderDetailsState> reloaded = cubit.stream.firstWhere(
+        (OrderDetailsState s) =>
+            s is OrderDetailsLoaded && s.order.status == OrderStatus.cancelled,
+      );
+
+      await cubit.cancel(reason: CancelReason.other);
+
+      expect(loaded().notice, isA<OrderConflictNotice>());
+      await reloaded;
+    });
   });
 }

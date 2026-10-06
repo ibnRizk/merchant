@@ -14,6 +14,18 @@ enum RejectReason {
   const RejectReason(this.code);
 }
 
+/// Why the store cancels an order it already accepted.
+enum CancelReason {
+  itemUnavailable('item_unavailable'),
+  storeClosing('store_closing'),
+  customerRequest('customer_request'),
+  other('other');
+
+  final String code;
+
+  const CancelReason(this.code);
+}
+
 /// A status command for one order.
 class OrderCommand extends Equatable {
   final int orderId;
@@ -23,7 +35,7 @@ class OrderCommand extends Equatable {
   /// command fail with a conflict instead of acting on stale data.
   final int? expectedVersion;
 
-  /// Required for [OrderAction.reject].
+  /// Required for [OrderAction.reject] and [OrderAction.cancel].
   final String? reason;
   final String? note;
 
@@ -41,6 +53,14 @@ class OrderCommand extends Equatable {
     this.expectedVersion,
     this.note,
   }) : action = OrderAction.reject,
+       reason = reason.code;
+
+  OrderCommand.cancel({
+    required this.orderId,
+    required CancelReason reason,
+    this.expectedVersion,
+    this.note,
+  }) : action = OrderAction.cancel,
        reason = reason.code;
 
   @override

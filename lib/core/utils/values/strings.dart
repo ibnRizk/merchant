@@ -321,6 +321,21 @@ abstract class Strings {
   static const String _orderRejected = 'order_rejected';
   static String get orderRejected => _orderRejected.tr;
 
+  static const String _cancelOrder = 'cancel_order';
+  static String get cancelOrder => _cancelOrder.tr;
+
+  static const String _cancelOrderTitle = 'cancel_order_title';
+  static String get cancelOrderTitle => _cancelOrderTitle.tr;
+
+  static const String _cancelReasonLabel = 'cancel_reason_label';
+  static String get cancelReasonLabel => _cancelReasonLabel.tr;
+
+  static const String _cancelReasonCustomerRequest = 'cancel_reason_customer_request';
+  static String get cancelReasonCustomerRequest => _cancelReasonCustomerRequest.tr;
+
+  static const String _orderCancelled = 'order_cancelled';
+  static String get orderCancelled => _orderCancelled.tr;
+
   static const String _orderUpdated = 'order_updated';
   static String get orderUpdated => _orderUpdated.tr;
 

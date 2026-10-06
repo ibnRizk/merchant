@@ -6,30 +6,94 @@ import '../../../../core/widgets/show_modal_bottom_sheet.dart';
 import '../../domain/params/order_command.dart';
 
 typedef RejectDecision = ({RejectReason reason, String note});
+typedef CancelDecision = ({CancelReason reason, String note});
 
 /// Asks for a rejection reason (required by the API) and an optional note.
 /// Resolves to `null` when dismissed.
 Future<RejectDecision?> showRejectOrderSheet(BuildContext context) async {
-  RejectDecision? decision;
+  return _showReasonSheet<RejectReason>(
+    context,
+    title: Strings.rejectOrderTitle,
+    reasonLabel: Strings.rejectReasonLabel,
+    confirmLabel: Strings.rejectOrder,
+    reasons: RejectReason.values,
+    label: (RejectReason reason) => switch (reason) {
+      RejectReason.itemUnavailable => Strings.rejectReasonItemUnavailable,
+      RejectReason.storeBusy => Strings.rejectReasonStoreBusy,
+      RejectReason.storeClosing => Strings.rejectReasonStoreClosing,
+      RejectReason.other => Strings.rejectReasonOther,
+    },
+  );
+}
+
+/// Asks why an accepted order is being cancelled (required by the API) and
+/// for an optional note. Resolves to `null` when dismissed.
+Future<CancelDecision?> showCancelOrderSheet(BuildContext context) async {
+  return _showReasonSheet<CancelReason>(
+    context,
+    title: Strings.cancelOrderTitle,
+    reasonLabel: Strings.cancelReasonLabel,
+    confirmLabel: Strings.cancelOrder,
+    reasons: CancelReason.values,
+    label: (CancelReason reason) => switch (reason) {
+      CancelReason.itemUnavailable => Strings.rejectReasonItemUnavailable,
+      CancelReason.storeClosing => Strings.rejectReasonStoreClosing,
+      CancelReason.customerRequest => Strings.cancelReasonCustomerRequest,
+      CancelReason.other => Strings.rejectReasonOther,
+    },
+  );
+}
+
+Future<({R reason, String note})?> _showReasonSheet<R>(
+  BuildContext context, {
+  required String title,
+  required String reasonLabel,
+  required String confirmLabel,
+  required List<R> reasons,
+  required String Function(R reason) label,
+}) async {
+  ({R reason, String note})? decision;
   await showAppModalBottomSheet(
     context: context,
-    child: _RejectOrderSheet(onConfirm: (RejectDecision d) => decision = d),
+    child: _OrderReasonSheet<R>(
+      title: title,
+      reasonLabel: reasonLabel,
+      confirmLabel: confirmLabel,
+      reasons: reasons,
+      label: label,
+      onConfirm: (R reason, String note) =>
+          decision = (reason: reason, note: note),
+    ),
   );
   return decision;
 }
 
-class _RejectOrderSheet extends StatefulWidget {
-  const _RejectOrderSheet({required this.onConfirm});
+/// A destructive decision on an order that needs a reason: pick one, add an
+/// optional note, confirm.
+class _OrderReasonSheet<R> extends StatefulWidget {
+  const _OrderReasonSheet({
+    required this.title,
+    required this.reasonLabel,
+    required this.confirmLabel,
+    required this.reasons,
+    required this.label,
+    required this.onConfirm,
+  });
 
-  final ValueChanged<RejectDecision> onConfirm;
+  final String title;
+  final String reasonLabel;
+  final String confirmLabel;
+  final List<R> reasons;
+  final String Function(R reason) label;
+  final void Function(R reason, String note) onConfirm;
 
   @override
-  State<_RejectOrderSheet> createState() => _RejectOrderSheetState();
+  State<_OrderReasonSheet<R>> createState() => _OrderReasonSheetState<R>();
 }
 
-class _RejectOrderSheetState extends State<_RejectOrderSheet> {
+class _OrderReasonSheetState<R> extends State<_OrderReasonSheet<R>> {
   final TextEditingController _noteController = TextEditingController();
-  RejectReason? _reason;
+  R? _reason;
 
   @override
   void dispose() {
@@ -38,18 +102,11 @@ class _RejectOrderSheetState extends State<_RejectOrderSheet> {
   }
 
   void _confirm() {
-    final RejectReason? reason = _reason;
+    final R? reason = _reason;
     if (reason == null) return;
-    widget.onConfirm((reason: reason, note: _noteController.text.trim()));
+    widget.onConfirm(reason, _noteController.text.trim());
     Navigator.of(context).pop();
   }
-
-  static String _label(RejectReason reason) => switch (reason) {
-    RejectReason.itemUnavailable => Strings.rejectReasonItemUnavailable,
-    RejectReason.storeBusy => Strings.rejectReasonStoreBusy,
-    RejectReason.storeClosing => Strings.rejectReasonStoreClosing,
-    RejectReason.other => Strings.rejectReasonOther,
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +131,7 @@ class _RejectOrderSheetState extends State<_RejectOrderSheet> {
             ),
             const SizedBox(height: 16),
             Text(
-              Strings.rejectOrderTitle,
+              widget.title,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.start,
@@ -87,7 +144,7 @@ class _RejectOrderSheetState extends State<_RejectOrderSheet> {
             ),
             const SizedBox(height: 4),
             Text(
-              Strings.rejectReasonLabel,
+              widget.reasonLabel,
               textAlign: TextAlign.start,
               style: TextStyle(
                 fontFamily: 'Cairo',
@@ -96,9 +153,9 @@ class _RejectOrderSheetState extends State<_RejectOrderSheet> {
               ),
             ),
             const SizedBox(height: 8),
-            for (final RejectReason reason in RejectReason.values)
+            for (final R reason in widget.reasons)
               _ReasonTile(
-                label: _label(reason),
+                label: widget.label(reason),
                 isSelected: reason == _reason,
                 onTap: () => setState(() => _reason = reason),
               ),
@@ -145,7 +202,7 @@ class _RejectOrderSheetState extends State<_RejectOrderSheet> {
                   ),
                 ),
                 child: Text(
-                  Strings.rejectOrder,
+                  widget.confirmLabel,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(

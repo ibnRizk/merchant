@@ -7,6 +7,7 @@ import '../../../../../core/error/failure_message.dart';
 import '../../../../../core/error/failures.dart';
 import '../../../domain/entities/merchant_order.dart';
 import '../../../domain/entities/order_line.dart';
+import '../../../domain/order_failures.dart';
 import '../../../domain/entities/order_status.dart';
 import '../../../domain/params/order_command.dart';
 import '../../../domain/repos/orders_repository.dart';
@@ -85,6 +86,18 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
     ),
   );
 
+  /// Calls off an accepted order before it goes to dispatch.
+  Future<void> cancel({required CancelReason reason, String? note}) => _send(
+    (MerchantOrder order) => order.status.canCancel
+        ? OrderCommand.cancel(
+            orderId: order.id,
+            reason: reason,
+            note: note,
+            expectedVersion: order.statusVersion,
+          )
+        : null,
+  );
+
   /// Start preparing, or mark ready for pickup, whichever comes next.
   Future<void> advance() => _send((MerchantOrder order) {
     final OrderAction? action = order.status.nextAction;
@@ -109,7 +122,9 @@ class OrderDetailsCubit extends Cubit<OrderDetailsState> {
 
     result.fold(
       (failure) {
-        if (failure is ConflictFailure) {
+        // A stale order (409 version, 422 transition refused — e.g. the
+        // customer cancelled meanwhile) is re-read, not just reported.
+        if (failure.meansStaleOrder) {
           emit(latest.copyWith(isBusy: false, notice: OrderConflictNotice()));
           refresh();
         } else {
