@@ -27,7 +27,9 @@ import '../../features/launch/presentation/pages/splash_screen.dart';
 import '../../features/menu/domain/entities/product.dart';
 import '../../features/menu/presentation/cubit/menu/menu_cubit.dart';
 import '../../features/menu/presentation/cubit/product_form/product_form_cubit.dart';
+import '../../features/menu/presentation/cubit/product_options/product_options_cubit.dart';
 import '../../features/menu/presentation/pages/product_form_screen.dart';
+import '../../features/menu/presentation/pages/product_options_screen.dart';
 import '../../features/orders/presentation/cubit/current_orders/current_orders_cubit.dart';
 import '../../features/orders/presentation/cubit/order_details/order_details_cubit.dart';
 import '../../features/orders/presentation/cubit/orders_history/orders_history_cubit.dart';
@@ -58,6 +60,7 @@ abstract class AppRoutes {
   static const String locationPicker = '/register/location';
   static const String pendingApproval = '/pending-approval';
   static const String productForm = '/menu/product';
+  static const String productOptions = '/menu/product/options';
   static const String wallet = '/wallet';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
@@ -75,6 +78,7 @@ abstract class AppRoutes {
   static const String locationPickerName = 'locationPicker';
   static const String pendingApprovalName = 'pendingApproval';
   static const String productFormName = 'productForm';
+  static const String productOptionsName = 'productOptions';
   static const String walletName = 'wallet';
 
   static final GoRouter router = GoRouter(
@@ -241,6 +245,20 @@ abstract class AppRoutes {
                 ServiceLocator.instance<ProductFormCubit>()
                   ..load(productId: product?.id),
             child: ProductFormScreen(initialProduct: product),
+          );
+        },
+      ),
+      GoRoute(
+        path: productOptions,
+        name: productOptionsName,
+        // `extra` is the product whose sizes and add-ons are edited.
+        builder: (_, GoRouterState state) {
+          final Product product = state.extra! as Product;
+          return BlocProvider<ProductOptionsCubit>(
+            create: (_) =>
+                ServiceLocator.instance<ProductOptionsCubit>()
+                  ..load(product.id),
+            child: ProductOptionsScreen(product: product),
           );
         },
       ),

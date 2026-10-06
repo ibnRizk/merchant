@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import 'catalog_metadata.dart';
+import 'product_options.dart';
 
 /// A product in the merchant's catalog.
 class Product extends Equatable {
@@ -14,6 +15,9 @@ class Product extends Equatable {
   final bool isActive;
   final CatalogOption? category;
 
+  /// Variations and add-ons; empty when the product has none.
+  final ProductOptions options;
+
   const Product({
     required this.id,
     required this.name,
@@ -22,6 +26,7 @@ class Product extends Equatable {
     required this.isActive,
     this.imageUrl,
     this.category,
+    this.options = ProductOptions.none,
   });
 
   Product copyWith({bool? isActive}) => Product(
@@ -32,6 +37,7 @@ class Product extends Equatable {
     isActive: isActive ?? this.isActive,
     imageUrl: imageUrl,
     category: category,
+    options: options,
   );
 
   @override
@@ -43,6 +49,7 @@ class Product extends Equatable {
     imageUrl,
     isActive,
     category,
+    options,
   ];
 }
 

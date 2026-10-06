@@ -99,6 +99,10 @@ class _MenuScreenState extends State<MenuScreen> {
             Navigator.of(sheetContext).pop();
             _openForm(product);
           },
+          onEditOptions: () {
+            Navigator.of(sheetContext).pop();
+            context.pushNamed(AppRoutes.productOptionsName, extra: product);
+          },
           onDelete: () {
             Navigator.of(sheetContext).pop();
             _confirmDelete(product);

@@ -9,11 +9,15 @@ class ProductOptionsSheet extends StatelessWidget {
     super.key,
     required this.productName,
     required this.onEdit,
+    required this.onEditOptions,
     required this.onDelete,
   });
 
   final String productName;
   final VoidCallback onEdit;
+
+  /// Sizes and add-ons.
+  final VoidCallback onEditOptions;
   final VoidCallback onDelete;
 
   @override
@@ -56,6 +60,12 @@ class ProductOptionsSheet extends StatelessWidget {
               label: Strings.editProduct,
               color: colors.textPrimary,
               onTap: onEdit,
+            ),
+            _OptionTile(
+              icon: Icons.tune_rounded,
+              label: Strings.sizesAndAddOns,
+              color: colors.textPrimary,
+              onTap: onEditOptions,
             ),
             _OptionTile(
               icon: Icons.delete_outline,

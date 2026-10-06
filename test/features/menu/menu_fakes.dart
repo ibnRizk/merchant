@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:ssm_merchant/core/error/failures.dart';
 import 'package:ssm_merchant/features/menu/domain/entities/catalog_metadata.dart';
 import 'package:ssm_merchant/features/menu/domain/entities/product.dart';
+import 'package:ssm_merchant/features/menu/domain/entities/product_options.dart';
 import 'package:ssm_merchant/features/menu/domain/params/product_params.dart';
 import 'package:ssm_merchant/features/menu/domain/repos/catalog_repository.dart';
 
@@ -35,6 +36,8 @@ class FakeCatalogRepository implements CatalogRepository {
   Either<Failure, Product> updateResult = Right(product(1, price: 30));
   Either<Failure, Unit> deleteResult = const Right(unit);
   Either<Failure, Unit> statusResult = const Right(unit);
+  Either<Failure, Unit> optionsResult = const Right(unit);
+  final List<({int id, ProductOptions options})> optionUpdates = [];
 
   /// Default: one page holding products 1–3.
   Future<Either<Failure, ProductPage>> Function(int page, String search)
@@ -91,5 +94,14 @@ class FakeCatalogRepository implements CatalogRepository {
   }) async {
     statusChanges.add((id: id, isActive: isActive));
     return statusResult;
+  }
+
+  @override
+  Future<Either<Failure, ProductOptions>> updateOptions(
+    int id,
+    ProductOptions options,
+  ) async {
+    optionUpdates.add((id: id, options: options));
+    return optionsResult.map((_) => options);
   }
 }

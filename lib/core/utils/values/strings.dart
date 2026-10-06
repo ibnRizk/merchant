@@ -948,4 +948,63 @@ abstract class Strings {
 
   static const String _walletShortcutSubtitle = 'wallet_shortcut_subtitle';
   static String get walletShortcutSubtitle => _walletShortcutSubtitle.tr;
+
+  // --- Product options ---
+
+  static const String _sizesAndAddOns = 'sizes_and_add_ons';
+  static String get sizesAndAddOns => _sizesAndAddOns.tr;
+
+  static const String _sizes = 'sizes';
+  static String get sizes => _sizes.tr;
+
+  static const String _sizesHint = 'sizes_hint';
+  static String get sizesHint => _sizesHint.tr;
+
+  static const String _optionGroupTitle = 'option_group_title';
+  static String get optionGroupTitle => _optionGroupTitle.tr;
+
+  static const String _sizeTitleDefault = 'size_title_default';
+  static String get sizeTitleDefault => _sizeTitleDefault.tr;
+
+  static const String _sizeNameHint = 'size_name_hint';
+  static String get sizeNameHint => _sizeNameHint.tr;
+
+  static const String _addSize = 'add_size';
+  static String get addSize => _addSize.tr;
+
+  static const String _addOns = 'add_ons';
+  static String get addOns => _addOns.tr;
+
+  static const String _addOnsHint = 'add_ons_hint';
+  static String get addOnsHint => _addOnsHint.tr;
+
+  static const String _addOnNameHint = 'add_on_name_hint';
+  static String get addOnNameHint => _addOnNameHint.tr;
+
+  static const String _addAddOn = 'add_add_on';
+  static String get addAddOn => _addAddOn.tr;
+
+  static const String _optionPrice = 'option_price';
+  static String get optionPrice => _optionPrice.tr;
+
+  static const String _removeOption = 'remove_option';
+  static String get removeOption => _removeOption.tr;
+
+  static const String _saveOptions = 'save_options';
+  static String get saveOptions => _saveOptions.tr;
+
+  static const String _optionsSaved = 'options_saved';
+  static String get optionsSaved => _optionsSaved.tr;
+
+  static const String _optionNameRequired = 'option_name_required';
+  static String get optionNameRequired => _optionNameRequired.tr;
+
+  static const String _optionPriceInvalid = 'option_price_invalid';
+  static String get optionPriceInvalid => _optionPriceInvalid.tr;
+
+  static const String _optionTitleRequired = 'option_title_required';
+  static String get optionTitleRequired => _optionTitleRequired.tr;
+
+  static const String _optionDuplicateName = 'option_duplicate_name';
+  static String get optionDuplicateName => _optionDuplicateName.tr;
 }

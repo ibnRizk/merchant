@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import '../../domain/entities/catalog_metadata.dart';
 import '../../domain/entities/product.dart';
+import '../../domain/entities/product_options.dart';
 
 class CatalogOptionModel extends CatalogOption {
   const CatalogOptionModel({required super.id, required super.name});
@@ -29,6 +32,7 @@ class ProductModel extends Product {
     required super.isActive,
     super.imageUrl,
     super.category,
+    super.options,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -44,8 +48,52 @@ class ProductModel extends Product {
       category: category is Map<String, dynamic>
           ? CatalogOptionModel.fromJson(category)
           : null,
+      options: parseProductOptions(json),
     );
   }
+}
+
+/// Reads `variations`, `choice_options` and `add_ons` off a catalog item.
+/// The API stores them as JSON, so each may arrive as a list or as a
+/// JSON-encoded string. Add-ons that are bare ids (another catalog's
+/// add-on records) are skipped: they can't be edited here. Returns the
+/// plain entity so it compares equal to options built in the app.
+ProductOptions parseProductOptions(Map<String, dynamic> json) {
+  final List<dynamic> choices = _jsonArray(json['choice_options']);
+  final dynamic firstChoice = choices.isEmpty ? null : choices.first;
+  return ProductOptions(
+    variationTitle: firstChoice is Map ? _text(firstChoice['title']) : '',
+    variations: <ProductVariation>[
+      for (final dynamic item in _jsonArray(json['variations']))
+        if (item is Map && _text(item['type']).isNotEmpty)
+          ProductVariation(
+            name: _text(item['type']),
+            price: double.tryParse('${item['price']}') ?? 0,
+            stock: int.tryParse('${item['stock']}'),
+          ),
+    ],
+    addOns: <ProductAddOn>[
+      for (final dynamic item in _jsonArray(json['add_ons']))
+        if (item is Map && _text(item['name']).isNotEmpty)
+          ProductAddOn(
+            name: _text(item['name']),
+            price: double.tryParse('${item['price']}') ?? 0,
+          ),
+    ],
+  );
+}
+
+List<dynamic> _jsonArray(dynamic value) {
+  if (value is List) return value;
+  if (value is String && value.trim().isNotEmpty) {
+    try {
+      final dynamic decoded = jsonDecode(value);
+      if (decoded is List) return decoded;
+    } on FormatException {
+      return const <dynamic>[];
+    }
+  }
+  return const <dynamic>[];
 }
 
 /// Laravel pagination: either flat (`data`, `current_page`, `last_page`) or
