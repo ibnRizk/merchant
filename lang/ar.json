@@ -291,5 +291,17 @@
   "withdraw_denied": "مرفوض",
   "withdraw_amount_invalid": "أدخل مبلغًا صحيحًا.",
   "withdraw_amount_too_low": "الحد الأدنى للسحب هو 1.",
-  "withdraw_amount_above_balance": "المبلغ أكبر من رصيدك المتاح."
+  "withdraw_amount_above_balance": "المبلغ أكبر من رصيدك المتاح.",
+  "performance": "الأداء",
+  "last_7_days": "7 أيام",
+  "last_30_days": "30 يومًا",
+  "last_90_days": "90 يومًا",
+  "total_sales": "المبيعات",
+  "average_order_value": "متوسط الطلب",
+  "orders_in_period": "الطلبات",
+  "other_orders": "أخرى",
+  "top_items": "الأكثر مبيعًا",
+  "units_sold": "مباع",
+  "no_sales_in_period": "لا توجد مبيعات في هذه الفترة بعد.",
+  "wallet_shortcut_subtitle": "رصيدك وطلبات السحب"
 }

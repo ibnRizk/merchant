@@ -7,13 +7,16 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/price_format.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
+import '../../../../core/widgets/action_card.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
 import '../../../../core/widgets/status_views.dart';
 import '../../../profile/presentation/cubit/profile/profile_cubit.dart';
 import '../../domain/entities/dashboard_stats.dart';
 import '../../domain/entities/greeting_period.dart';
+import '../cubit/analytics/analytics_cubit.dart';
 import '../cubit/dashboard/dashboard_cubit.dart';
 import '../cubit/store_status/store_status_cubit.dart';
+import '../widgets/analytics_section.dart';
 import '../widgets/attention_section_header.dart';
 import '../widgets/home_header.dart';
 import '../widgets/needs_attention_list.dart';
@@ -52,10 +55,13 @@ class _HomeScreenState extends State<HomeScreen> {
     if (!dashboard.isClosed) dashboard.refresh();
   }
 
-  Future<void> _refresh() {
+  Future<void> _refresh() async {
     final ProfileCubit profile = context.read<ProfileCubit>();
     if (profile.state is ProfileLoadFailure) profile.loadProfile();
-    return context.read<DashboardCubit>().refresh();
+    await Future.wait(<Future<void>>[
+      context.read<DashboardCubit>().refresh(),
+      context.read<AnalyticsCubit>().refresh(),
+    ]);
   }
 
   @override
@@ -127,6 +133,15 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(height: 20),
               BlocBuilder<DashboardCubit, DashboardState>(
                 builder: _buildDashboard,
+              ),
+              const SizedBox(height: 28),
+              const AnalyticsSection(),
+              const SizedBox(height: 28),
+              ActionCard(
+                title: Strings.walletTitle,
+                subtitle: Strings.walletShortcutSubtitle,
+                actionLabel: Strings.view,
+                onTap: () => context.pushNamed(AppRoutes.walletName),
               ),
             ],
           ),

@@ -15,6 +15,7 @@ import '../../features/auth/presentation/pages/location_picker_screen.dart';
 import '../../features/auth/presentation/pages/login_screen.dart';
 import '../../features/auth/presentation/pages/pending_approval_screen.dart';
 import '../../features/auth/presentation/pages/register_screen.dart';
+import '../../features/home/presentation/cubit/analytics/analytics_cubit.dart';
 import '../../features/home/presentation/cubit/dashboard/dashboard_cubit.dart';
 import '../../features/home/presentation/cubit/store_status/store_status_cubit.dart';
 import '../../features/home/presentation/pages/main_scaffold.dart';
@@ -117,6 +118,9 @@ abstract class AppRoutes {
             ),
             BlocProvider<StoreStatusCubit>(
               create: (_) => ServiceLocator.instance<StoreStatusCubit>(),
+            ),
+            BlocProvider<AnalyticsCubit>(
+              create: (_) => ServiceLocator.instance<AnalyticsCubit>()..load(),
             ),
             BlocProvider<OrdersHistoryCubit>(
               create: (_) =>

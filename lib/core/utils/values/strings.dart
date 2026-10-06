@@ -910,4 +910,42 @@ abstract class Strings {
 
   static const String _withdrawAmountAboveBalance = 'withdraw_amount_above_balance';
   static String get withdrawAmountAboveBalance => _withdrawAmountAboveBalance.tr;
+
+  // --- Analytics ---
+
+  static const String _performance = 'performance';
+  static String get performance => _performance.tr;
+
+  static const String _last7Days = 'last_7_days';
+  static String get last7Days => _last7Days.tr;
+
+  static const String _last30Days = 'last_30_days';
+  static String get last30Days => _last30Days.tr;
+
+  static const String _last90Days = 'last_90_days';
+  static String get last90Days => _last90Days.tr;
+
+  static const String _totalSales = 'total_sales';
+  static String get totalSales => _totalSales.tr;
+
+  static const String _averageOrderValue = 'average_order_value';
+  static String get averageOrderValue => _averageOrderValue.tr;
+
+  static const String _ordersInPeriod = 'orders_in_period';
+  static String get ordersInPeriod => _ordersInPeriod.tr;
+
+  static const String _otherOrders = 'other_orders';
+  static String get otherOrders => _otherOrders.tr;
+
+  static const String _topItems = 'top_items';
+  static String get topItems => _topItems.tr;
+
+  static const String _unitsSold = 'units_sold';
+  static String get unitsSold => _unitsSold.tr;
+
+  static const String _noSalesInPeriod = 'no_sales_in_period';
+  static String get noSalesInPeriod => _noSalesInPeriod.tr;
+
+  static const String _walletShortcutSubtitle = 'wallet_shortcut_subtitle';
+  static String get walletShortcutSubtitle => _walletShortcutSubtitle.tr;
 }
