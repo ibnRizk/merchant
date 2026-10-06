@@ -19,6 +19,6 @@ class AppConfigRemoteDataSourceImpl implements AppConfigRemoteDataSource {
   Future<Map<String, dynamic>> getConfig() async {
     final dynamic response = await _client.get(ApiEndpoints.vendorConfig);
     if (response is Map<String, dynamic>) return response;
-    throw const ServerException(message: 'Unexpected response format.');
+    throw ServerException.unexpectedResponse();
   }
 }

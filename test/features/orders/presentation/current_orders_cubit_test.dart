@@ -138,6 +138,52 @@ void main() {
     });
   });
 
+  group('poll', () {
+    test('replaces the list', () async {
+      await cubit.load();
+      repository.onGetCurrent = () async => Right(<MerchantOrder>[anOrder(7)]);
+
+      await cubit.poll();
+
+      expect(loaded().orders.map((MerchantOrder o) => o.id), <int>[7]);
+    });
+
+    test('a failure keeps the list without a notice', () async {
+      await cubit.load();
+      final CurrentOrdersState before = cubit.state;
+      repository.onGetCurrent = () async =>
+          const Left(NetworkFailure(message: 'offline'));
+
+      await cubit.poll();
+
+      expect(cubit.state, same(before));
+    });
+
+    test('a success recovers from a failed first load', () async {
+      repository.onGetCurrent = () async =>
+          const Left(NetworkFailure(message: 'offline'));
+      await cubit.load();
+      repository.onGetCurrent = () async => Right(<MerchantOrder>[anOrder(1)]);
+
+      await cubit.poll();
+
+      expect(loaded().orders.map((MerchantOrder o) => o.id), <int>[1]);
+    });
+
+    test('a list fetched before a command lands does not undo it', () async {
+      await cubit.load();
+      final Completer<Either<Failure, List<MerchantOrder>>> stale = Completer();
+      repository.onGetCurrent = () => stale.future;
+      final Future<void> poll = cubit.poll();
+
+      await cubit.accept(orderById(1));
+      stale.complete(Right(<MerchantOrder>[anOrder(1)]));
+      await poll;
+
+      expect(orderById(1).status, OrderStatus.accepted);
+    });
+  });
+
   test('reject sends the reason and removes the order', () async {
     await cubit.load();
 

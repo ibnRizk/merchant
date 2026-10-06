@@ -21,6 +21,8 @@ void showOrderNotice(BuildContext context, OrderNotice? notice) {
         isError: true,
         duration: const Duration(seconds: 4),
       );
+    case OrderDispatchRetriedNotice():
+      showBrandSnackBar(context, Strings.dispatchRetried);
     case OrderActionFailedNotice(:final message):
       showBrandSnackBar(context, message, isError: true);
     case null:

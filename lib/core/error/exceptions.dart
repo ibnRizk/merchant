@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 import '../entities/merchant_approval_status.dart';
+import '../utils/values/strings.dart';
 import 'failures.dart';
 
 abstract class AppException extends Equatable implements Exception {
@@ -23,12 +24,28 @@ class ServerException extends AppException {
   @override
   final String? message;
 
-  const ServerException({this.message});
+  /// The HTTP status, when the server answered with one.
+  final int? statusCode;
+
+  /// The API's `errors[].code`, e.g. `order_transition_invalid`.
+  final String? code;
+
+  const ServerException({this.message, this.statusCode, this.code});
+
+  /// The response could not be read. Callers log the raw detail; users get
+  /// a localized message instead.
+  ServerException.unexpectedResponse()
+    : message = Strings.unexpectedResponse,
+      statusCode = null,
+      code = null;
 
   @override
   Failure toFailure() {
-    return ServerFailure(message: message);
+    return ServerFailure(message: message, statusCode: statusCode, code: code);
   }
+
+  @override
+  List<Object?> get props => [message, statusCode, code];
 }
 
 class FetchDataException extends AppException {

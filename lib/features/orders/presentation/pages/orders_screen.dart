@@ -7,6 +7,7 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_back_button.dart';
+import '../../../../core/widgets/refresh_poller.dart';
 import '../../../../core/widgets/status_views.dart';
 import '../../domain/entities/merchant_order.dart';
 import '../cubit/current_orders/current_orders_cubit.dart';
@@ -37,48 +38,51 @@ class OrdersScreen extends StatelessWidget {
               context,
               state is CurrentOrdersLoaded ? state.notice : null,
             ),
-        child: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: cubit.refresh,
-            color: context.colors.primary,
-            child: CustomScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              slivers: <Widget>[
-                SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-                  sliver: SliverToBoxAdapter(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        BlocSelector<
-                          CurrentOrdersCubit,
-                          CurrentOrdersState,
-                          int?
-                        >(
-                          selector: (CurrentOrdersState state) =>
-                              state is CurrentOrdersLoaded
-                              ? state.newOrders.length
-                              : null,
-                          builder: (BuildContext context, int? count) =>
-                              OrdersScreenHeader(
-                                title: Strings.newOrdersTitle,
-                                badgeText: count == null
-                                    ? null
-                                    : '$count ${Strings.waiting}',
-                                leading: const BrandBackButton(),
-                              ),
-                        ),
-                        const SizedBox(height: 16),
-                        OrderLiveBanner(
-                          title: Strings.directFromCustomer,
-                          subtitle: Strings.managementMonitors,
-                        ),
-                      ],
+        child: RefreshPoller(
+          onRefresh: cubit.poll,
+          child: SafeArea(
+            child: RefreshIndicator(
+              onRefresh: cubit.refresh,
+              color: context.colors.primary,
+              child: CustomScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                slivers: <Widget>[
+                  SliverPadding(
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+                    sliver: SliverToBoxAdapter(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: <Widget>[
+                          BlocSelector<
+                            CurrentOrdersCubit,
+                            CurrentOrdersState,
+                            int?
+                          >(
+                            selector: (CurrentOrdersState state) =>
+                                state is CurrentOrdersLoaded
+                                ? state.newOrders.length
+                                : null,
+                            builder: (BuildContext context, int? count) =>
+                                OrdersScreenHeader(
+                                  title: Strings.newOrdersTitle,
+                                  badgeText: count == null
+                                      ? null
+                                      : '$count ${Strings.waiting}',
+                                  leading: const BrandBackButton(),
+                                ),
+                          ),
+                          const SizedBox(height: 16),
+                          OrderLiveBanner(
+                            title: Strings.directFromCustomer,
+                            subtitle: Strings.managementMonitors,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const _NewOrdersList(),
-              ],
+                  const _NewOrdersList(),
+                ],
+              ),
             ),
           ),
         ),

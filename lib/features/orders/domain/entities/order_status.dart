@@ -49,14 +49,18 @@ enum OrderStatus {
 
   /// Ended without reaching the customer.
   bool get isCancelled => switch (this) {
-    rejected || cancelled || assignmentFailed || failed || refunded => true,
+    rejected || cancelled || failed || refunded => true,
     _ => false,
   };
 
   bool get isTerminal => isCompleted || isCancelled;
 
-  /// Accepted and not finished yet (includes the dispatch stages).
+  /// Accepted and not finished yet (includes the dispatch stages, and
+  /// [assignmentFailed], which the merchant can still recover).
   bool get isActive => !isNew && !isTerminal && this != unknown;
+
+  /// No driver accepted the order; `retry-dispatch` offers it again.
+  bool get canRetryDispatch => this == assignmentFailed;
 
   /// The single forward step the merchant can take, if any. Rejecting is
   /// the extra option on a new order and is not returned here.

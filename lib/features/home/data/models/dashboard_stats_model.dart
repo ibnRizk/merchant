@@ -28,19 +28,19 @@ class DashboardStatsModel extends DashboardStats {
 
   static Map<String, dynamic> _section(dynamic value) {
     if (value is Map<String, dynamic>) return value;
-    throw const ServerException(message: 'Unexpected response format.');
+    throw ServerException.unexpectedResponse();
   }
 
   static int _count(dynamic value) {
     final int? count = int.tryParse('$value');
     if (count != null && count >= 0) return count;
-    throw const ServerException(message: 'Unexpected response format.');
+    throw ServerException.unexpectedResponse();
   }
 
   /// The API sends money as a decimal string, e.g. `"125.50"`.
   static double _amount(dynamic value) {
     final double? amount = double.tryParse('$value');
     if (amount != null) return amount;
-    throw const ServerException(message: 'Unexpected response format.');
+    throw ServerException.unexpectedResponse();
   }
 }

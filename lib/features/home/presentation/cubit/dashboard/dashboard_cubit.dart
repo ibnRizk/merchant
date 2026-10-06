@@ -57,4 +57,18 @@ class DashboardCubit extends Cubit<DashboardState> {
       ),
     );
   }
+
+  /// Background refresh. Failures stay quiet (the next tick retries, and a
+  /// pull-to-refresh still reports them); a success also recovers from a
+  /// failed first load.
+  Future<void> poll() async {
+    if (state is DashboardLoading) return;
+
+    final int generation = ++_generation;
+    final Either<Failure, DashboardStats> result = await _repository
+        .getDashboardStats();
+    if (isClosed || generation != _generation) return;
+
+    result.fold((_) {}, (DashboardStats stats) => emit(DashboardLoaded(stats)));
+  }
 }

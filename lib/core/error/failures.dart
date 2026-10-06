@@ -15,7 +15,16 @@ class ServerFailure extends Failure {
   @override
   final String? message;
 
-  const ServerFailure({this.message});
+  /// The HTTP status, when the server answered with one.
+  final int? statusCode;
+
+  /// The API's `errors[].code`, e.g. `order_transition_invalid`.
+  final String? code;
+
+  const ServerFailure({this.message, this.statusCode, this.code});
+
+  @override
+  List<Object?> get props => [message, statusCode, code];
 }
 
 class UnauthorizedFailure extends Failure {

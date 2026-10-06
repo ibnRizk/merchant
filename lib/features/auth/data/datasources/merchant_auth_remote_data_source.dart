@@ -63,7 +63,7 @@ class MerchantAuthRemoteDataSourceImpl implements MerchantAuthRemoteDataSource {
       await _client.get(ApiEndpoints.storeCategories),
     )['categories'];
     if (categories is! List) {
-      throw const ServerException(message: 'Categories response has no list.');
+      throw ServerException.unexpectedResponse();
     }
     return <StoreCategoryModel>[
       for (final dynamic json in categories)
@@ -88,9 +88,7 @@ class MerchantAuthRemoteDataSourceImpl implements MerchantAuthRemoteDataSource {
     );
     final int? storeId = int.tryParse('${_asMap(response)['store_id']}');
     if (storeId == null) {
-      throw const ServerException(
-        message: 'Register response has no store_id.',
-      );
+      throw ServerException.unexpectedResponse();
     }
     return storeId;
   }
@@ -117,6 +115,6 @@ class MerchantAuthRemoteDataSourceImpl implements MerchantAuthRemoteDataSource {
 
   Map<String, dynamic> _asMap(dynamic response) {
     if (response is Map<String, dynamic>) return response;
-    throw const ServerException(message: 'Unexpected response format.');
+    throw ServerException.unexpectedResponse();
   }
 }

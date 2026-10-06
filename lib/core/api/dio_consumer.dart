@@ -219,7 +219,9 @@ class DioConsumerImpl implements DioConsumer {
     } on DioException catch (error) {
       _throwMappedError(error);
     } catch (error) {
-      throw ServerException(message: error.toString());
+      // Raw text is for the logs only; it is not fit to show users.
+      Log.e('[$verb][$path] unexpected error: $error');
+      throw ServerException.unexpectedResponse();
     }
   }
 
@@ -252,7 +254,11 @@ class DioConsumerImpl implements DioConsumer {
     }
 
     if (status == StatusCode.unProcessableContent) {
-      throw ServerException(message: _messageOf(data));
+      throw ServerException(
+        message: _messageOf(data),
+        statusCode: status,
+        code: apiErrorCode(data),
+      );
     }
 
     switch (error.type) {
@@ -266,7 +272,11 @@ class DioConsumerImpl implements DioConsumer {
       case DioExceptionType.cancel:
         throw ServerException(message: Strings.requestCancelled);
       default:
-        throw ServerException(message: _messageOf(data));
+        throw ServerException(
+          message: _messageOf(data),
+          statusCode: status,
+          code: apiErrorCode(data),
+        );
     }
   }
 
@@ -285,7 +295,9 @@ class DioConsumerImpl implements DioConsumer {
       return data['message'].toString();
     }
     if (data == null) return Strings.somethingWentWrong;
-    return data.toString();
+    // An HTML error page or a bare string from a proxy: not for users.
+    Log.e('Unreadable error body (${data.runtimeType})');
+    return Strings.unexpectedResponse;
   }
 
   List<String> _errorMessagesOf(dynamic errors) {

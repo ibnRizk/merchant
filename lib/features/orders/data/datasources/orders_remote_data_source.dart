@@ -25,6 +25,10 @@ abstract class OrdersRemoteDataSource {
     OrderCommand command, {
     required String idempotencyKey,
   });
+
+  /// The `{ outcome, assignment_id, reason }` body is not needed: the order
+  /// is reloaded afterwards.
+  Future<void> retryDispatch(int orderId, {required String idempotencyKey});
 }
 
 class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
@@ -41,7 +45,7 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
     if (response is Map<String, dynamic>) {
       return parseOrders(response['orders'] ?? response['data']);
     }
-    throw const ServerException(message: 'Unexpected response format.');
+    throw ServerException.unexpectedResponse();
   }
 
   /// `offset` is the page number on this endpoint, not a row offset.
@@ -99,8 +103,19 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
     return parseStatusChange(_asMap(response), command.orderId);
   }
 
+  @override
+  Future<void> retryDispatch(
+    int orderId, {
+    required String idempotencyKey,
+  }) async {
+    await _client.post(
+      ApiEndpoints.retryDispatch(orderId),
+      headers: <String, String>{'Idempotency-Key': idempotencyKey},
+    );
+  }
+
   Map<String, dynamic> _asMap(dynamic response) {
     if (response is Map<String, dynamic>) return response;
-    throw const ServerException(message: 'Unexpected response format.');
+    throw ServerException.unexpectedResponse();
   }
 }

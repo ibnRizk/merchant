@@ -21,6 +21,12 @@ abstract class OrdersRepository {
 
   /// Sends [command] with an `Idempotency-Key`. Retrying the same command
   /// after a network failure reuses its key, so the server applies it once.
-  /// Fails with a `ConflictFailure` when `expectedVersion` is stale.
+  /// Fails with a `ConflictFailure` when `expectedVersion` is stale, and a
+  /// `TransitionRejectedFailure` when the order can no longer take it.
   Future<Either<Failure, OrderStatusChange>> sendCommand(OrderCommand command);
+
+  /// Restarts automatic dispatch for an `assignmentFailed` order. Same
+  /// `Idempotency-Key` and failure rules as [sendCommand]. The response
+  /// carries no status, so callers reload the order afterwards.
+  Future<Either<Failure, Unit>> retryDispatch(int orderId);
 }

@@ -19,7 +19,7 @@ class DashboardRemoteDataSourceImpl implements DashboardRemoteDataSource {
   Future<DashboardStatsModel> getDashboardStats() async {
     final dynamic response = await _client.get(ApiEndpoints.dashboardStats);
     if (response is! Map<String, dynamic>) {
-      throw const ServerException(message: 'Unexpected response format.');
+      throw ServerException.unexpectedResponse();
     }
     return DashboardStatsModel.fromJson(response);
   }

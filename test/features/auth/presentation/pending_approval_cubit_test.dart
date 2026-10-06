@@ -102,11 +102,14 @@ void main() {
   });
 
   test('a failed signOut reports the error', () async {
-    repository.clearSessionResult = const Left(CacheFailure());
+    repository.clearSessionResult = const Left(
+      CacheFailure(message: 'keystore unavailable'),
+    );
 
     await cubit.signOut();
 
     expect(cubit.state.status, PendingApprovalStatus.failure);
+    expect(cubit.state.errorMessage, 'keystore unavailable');
   });
 
   test('nothing runs after signing out', () async {
