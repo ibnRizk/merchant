@@ -133,6 +133,7 @@ class _ProductOptionsScreenState extends State<ProductOptionsScreen> {
   Widget build(BuildContext context) {
     context.watch<LocaleCubit>();
     final AppColors colors = context.colors;
+    final String currency = context.currency;
 
     return Scaffold(
       backgroundColor: colors.background,
@@ -166,6 +167,7 @@ class _ProductOptionsScreenState extends State<ProductOptionsScreen> {
                     ),
                     ProductOptionsReady(:final isSaving) => _buildEditor(
                       isSaving: isSaving,
+                      currency: currency,
                     ),
                   },
                 ],
@@ -175,8 +177,7 @@ class _ProductOptionsScreenState extends State<ProductOptionsScreen> {
     );
   }
 
-  Widget _buildEditor({required bool isSaving}) {
-    final String currency = context.currency;
+  Widget _buildEditor({required bool isSaving, required String currency}) {
     return Form(
       key: _formKey,
       child: Column(
