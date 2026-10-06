@@ -16,6 +16,16 @@ void main() {
     expect(OrderStatus.dispatching.nextAction, isNull);
   });
 
+  test('a failed driver assignment can be retried', () {
+    expect(OrderStatus.assignmentFailed.nextAction, OrderAction.retryDispatch);
+    expect(OrderStatus.assignmentFailed.isActive, isTrue);
+    expect(OrderStatus.assignmentFailed.isCancelled, isFalse);
+  });
+
+  test('retry dispatch posts to the retry-dispatch route', () {
+    expect(OrderAction.retryDispatch.path, 'retry-dispatch');
+  });
+
   test('dispatch stages are active, not new or terminal', () {
     expect(OrderStatus.driverAssigned.isActive, isTrue);
     expect(OrderStatus.driverAssigned.isNew, isFalse);

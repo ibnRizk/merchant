@@ -98,6 +98,6 @@ class CatalogRemoteDataSourceImpl implements CatalogRemoteDataSource {
 
   Map<String, dynamic> _asMap(dynamic response) {
     if (response is Map<String, dynamic>) return response;
-    throw const ServerException(message: 'Unexpected response format.');
+    throw const UnexpectedResponseException();
   }
 }

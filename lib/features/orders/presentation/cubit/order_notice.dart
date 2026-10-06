@@ -15,8 +15,9 @@ final class OrderUpdatedNotice extends OrderNotice {
   OrderUpdatedNotice({required this.orderId, required this.status});
 }
 
-/// HTTP 409: the order changed elsewhere (another device, or the customer
-/// cancelled) since it was loaded. The data is reloaded.
+/// The command hit a stale view of the order (see `isStaleOrder`): it
+/// changed elsewhere (another device, or the customer cancelled) since it
+/// was loaded. The data is reloaded.
 final class OrderConflictNotice extends OrderNotice {
   OrderConflictNotice();
 }

@@ -23,11 +23,32 @@ class ServerException extends AppException {
   @override
   final String? message;
 
-  const ServerException({this.message});
+  /// The HTTP status, when the server answered with one.
+  final int? statusCode;
+
+  /// The API's `errors[].code`, e.g. `order_transition_invalid`.
+  final String? code;
+
+  const ServerException({this.message, this.statusCode, this.code});
 
   @override
   Failure toFailure() {
     return ServerFailure(message: message);
+  }
+
+  @override
+  List<Object?> get props => [message, statusCode, code];
+}
+
+/// The response could not be read (an HTML error page, a missing field...).
+/// Carries no text on purpose: raw payloads and exception strings are not
+/// fit for users, so the UI shows a localized message instead.
+class UnexpectedResponseException extends ServerException {
+  const UnexpectedResponseException();
+
+  @override
+  Failure toFailure() {
+    return const UnexpectedResponseFailure();
   }
 }
 

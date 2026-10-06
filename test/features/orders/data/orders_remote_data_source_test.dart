@@ -1,6 +1,7 @@
 import 'package:ssm_merchant/core/api/api_endpoints.dart';
 import 'package:ssm_merchant/core/error/exceptions.dart';
 import 'package:ssm_merchant/features/orders/data/datasources/orders_remote_data_source.dart';
+import 'package:ssm_merchant/features/orders/data/exceptions/stale_order_exception.dart';
 import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
 import 'package:ssm_merchant/features/orders/domain/params/order_command.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -110,6 +111,80 @@ void main() {
         idempotencyKey: 'key-1',
       ),
       throwsA(isA<ConflictException>()),
+    );
+  });
+
+  test('retry dispatch posts with an idempotency key', () async {
+    client.response = <String, dynamic>{
+      'order': <String, dynamic>{'id': 5, 'ssm_status': 'dispatching'},
+    };
+
+    final change = await dataSource.sendCommand(
+      const OrderCommand(orderId: 5, action: OrderAction.retryDispatch),
+      idempotencyKey: 'key-1',
+    );
+
+    expect(client.calls.single.path, '/vendor/orders/5/retry-dispatch');
+    expect(client.calls.single.headers, <String, String>{
+      'Idempotency-Key': 'key-1',
+    });
+    expect(change.status, OrderStatus.dispatching);
+  });
+
+  group('stale order', () {
+    Future<void> send() => dataSource.sendCommand(
+      const OrderCommand(orderId: 5, action: OrderAction.accept),
+      idempotencyKey: 'key-1',
+    );
+
+    test('a 404 surfaces as a StaleOrderException', () {
+      client.error = const ServerException(message: 'gone', statusCode: 404);
+
+      expect(send, throwsA(isA<StaleOrderException>()));
+    });
+
+    test(
+      'a 422 order_transition_invalid surfaces as a StaleOrderException',
+      () {
+        client.error = const ServerException(
+          message: 'invalid',
+          statusCode: 422,
+          code: 'order_transition_invalid',
+        );
+
+        expect(send, throwsA(isA<StaleOrderException>()));
+      },
+    );
+
+    test('another 422 stays a ServerException', () {
+      client.error = const ServerException(
+        message: 'The reason field is required.',
+        statusCode: 422,
+        code: 'validation_failed',
+      );
+
+      expect(
+        send,
+        throwsA(
+          isA<ServerException>().having(
+            (ServerException e) => e.message,
+            'message',
+            'The reason field is required.',
+          ),
+        ),
+      );
+    });
+  });
+
+  test('an unreadable response is an UnexpectedResponseException', () {
+    client.response = '<html>502 Bad Gateway</html>';
+
+    expect(
+      () => dataSource.sendCommand(
+        const OrderCommand(orderId: 5, action: OrderAction.accept),
+        idempotencyKey: 'key-1',
+      ),
+      throwsA(isA<UnexpectedResponseException>()),
     );
   });
 }

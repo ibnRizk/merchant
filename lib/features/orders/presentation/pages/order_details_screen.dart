@@ -194,9 +194,7 @@ class _OrderDetailsBody extends StatelessWidget {
           )
         else if (next != null)
           PrimaryButton(
-            label: next == OrderAction.startPreparing
-                ? Strings.startPreparing
-                : Strings.statusReadyForPickup,
+            label: next.label,
             isLoading: state.isBusy,
             onPressed: cubit.advance,
           ),

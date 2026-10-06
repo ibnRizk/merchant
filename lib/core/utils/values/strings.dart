@@ -41,6 +41,9 @@ abstract class Strings {
   static const String _somethingWentWrong = 'something_went_wrong';
   static String get somethingWentWrong => _somethingWentWrong.tr;
 
+  static const String _unexpectedResponse = 'unexpected_response';
+  static String get unexpectedResponse => _unexpectedResponse.tr;
+
   static const String _requestCancelled = 'request_cancelled';
   static String get requestCancelled => _requestCancelled.tr;
 
@@ -321,6 +324,9 @@ abstract class Strings {
 
   static const String _orderConflict = 'order_conflict';
   static String get orderConflict => _orderConflict.tr;
+
+  static const String _retryDispatch = 'retry_dispatch';
+  static String get retryDispatch => _retryDispatch.tr;
 
   static const String _orderDetailsTitle = 'order_details_title';
   static String get orderDetailsTitle => _orderDetailsTitle.tr;

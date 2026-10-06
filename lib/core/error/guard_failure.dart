@@ -17,7 +17,7 @@ Future<Either<Failure, T>> guardFailure<T>(Future<T> Function() action) async {
     // A picked file was deleted or moved before upload.
     return Left<Failure, T>(const FetchDataFailure());
   } catch (_) {
-    // No message: raw exception text is not fit to show users.
-    return Left<Failure, T>(const ServerFailure());
+    // Typically a parse error. Raw exception text is not fit to show users.
+    return Left<Failure, T>(const UnexpectedResponseFailure());
   }
 }

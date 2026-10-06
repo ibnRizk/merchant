@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:ssm_merchant/core/error/failures.dart';
 import 'package:ssm_merchant/features/orders/domain/entities/merchant_order.dart';
 import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/domain/failures/stale_order_failure.dart';
 import 'package:ssm_merchant/features/orders/domain/params/order_command.dart';
 import 'package:ssm_merchant/features/orders/presentation/cubit/current_orders/current_orders_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -96,6 +97,23 @@ void main() {
       expect(loaded().busyIds, isEmpty);
     });
 
+    test('a stale order announces it and reloads the list', () async {
+      await cubit.load();
+      repository.onSendCommand = (_) async =>
+          const Left(StaleOrderFailure(message: 'order_transition_invalid'));
+      final Future<CurrentOrdersState> stale = cubit.stream.firstWhere(
+        (CurrentOrdersState s) =>
+            s is CurrentOrdersLoaded && s.notice is OrderConflictNotice,
+      );
+
+      await cubit.accept(orderById(1));
+      await stale;
+      await Future<void>.delayed(Duration.zero);
+
+      expect(repository.currentRequests, 2);
+      expect(loaded().busyIds, isEmpty);
+    });
+
     test('another failure shows its message and keeps the order', () async {
       await cubit.load();
       repository.onSendCommand = (_) async =>
@@ -127,6 +145,19 @@ void main() {
       await cubit.advance(orderById(3));
 
       expect(repository.commands.single.action, OrderAction.readyForPickup);
+    });
+
+    test('retries the dispatch of an order no driver took', () async {
+      repository.onGetCurrent = () async => Right(<MerchantOrder>[
+        anOrder(4, status: OrderStatus.assignmentFailed),
+      ]);
+      await cubit.load();
+
+      await cubit.advance(orderById(4));
+
+      expect(repository.commands.single.action, OrderAction.retryDispatch);
+      expect(repository.commands.single.expectedVersion, 1);
+      expect(orderById(4).status, OrderStatus.dispatching);
     });
 
     test('does nothing for a new order', () async {

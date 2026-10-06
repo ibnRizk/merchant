@@ -18,6 +18,11 @@ class ServerFailure extends Failure {
   const ServerFailure({this.message});
 }
 
+/// See `UnexpectedResponseException`; shown as `Strings.unexpectedResponse`.
+class UnexpectedResponseFailure extends ServerFailure {
+  const UnexpectedResponseFailure();
+}
+
 class UnauthorizedFailure extends Failure {
   @override
   final String? message;

@@ -1,9 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../core/error/failure_message.dart';
-import '../../../../../core/error/failures.dart';
 import '../../../domain/entities/merchant_order.dart';
 import '../../../domain/entities/order_status.dart';
+import '../../../domain/failures/stale_order_failure.dart';
 import '../../../domain/params/order_command.dart';
 import '../../../domain/repos/orders_repository.dart';
 import '../order_notice.dart';
@@ -85,7 +85,8 @@ class CurrentOrdersCubit extends Cubit<CurrentOrdersState> {
     ),
   );
 
-  /// Start preparing, or mark ready for pickup, whichever comes next.
+  /// Start preparing, mark ready for pickup, or retry a failed dispatch,
+  /// whichever comes next.
   Future<void> advance(MerchantOrder order) async {
     final OrderAction? action = order.status.nextAction;
     if (action == null || action == OrderAction.accept) return;
@@ -113,7 +114,7 @@ class CurrentOrdersCubit extends Cubit<CurrentOrdersState> {
     final Set<int> busyIds = <int>{...latest.busyIds}..remove(order.id);
     result.fold(
       (failure) {
-        if (failure is ConflictFailure) {
+        if (failure.isStaleOrder) {
           emit(
             latest.copyWith(busyIds: busyIds, notice: OrderConflictNotice()),
           );

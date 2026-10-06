@@ -3,6 +3,7 @@ import 'package:ssm_merchant/core/error/failures.dart';
 import 'package:ssm_merchant/features/orders/data/datasources/orders_remote_data_source.dart';
 import 'package:ssm_merchant/features/orders/data/repos/orders_repository_impl.dart';
 import 'package:ssm_merchant/features/orders/domain/entities/order_status.dart';
+import 'package:ssm_merchant/features/orders/domain/failures/stale_order_failure.dart';
 import 'package:ssm_merchant/features/orders/domain/params/order_command.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -96,5 +97,33 @@ void main() {
     final result = await repository.sendCommand(accept);
 
     expect(result.fold((Failure f) => f, (_) => null), isA<ConflictFailure>());
+  });
+
+  test('a 404 on a command fails with a StaleOrderFailure', () async {
+    client.error = const ServerException(message: 'gone', statusCode: 404);
+
+    final result = await repository.sendCommand(accept);
+
+    expect(
+      result.fold((Failure f) => f, (_) => null),
+      isA<StaleOrderFailure>(),
+    );
+  });
+
+  test('every command sends a UUID v4 idempotency key by default', () async {
+    repository = OrdersRepositoryImpl(
+      remote: OrdersRemoteDataSourceImpl(client: client),
+    );
+    final RegExp uuidV4 = RegExp(
+      r'^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
+    );
+
+    for (final OrderAction action in OrderAction.values) {
+      await repository.sendCommand(OrderCommand(orderId: 5, action: action));
+    }
+
+    expect(sentKeys(), hasLength(OrderAction.values.length));
+    expect(sentKeys(), everyElement(matches(uuidV4)));
+    expect(sentKeys().toSet(), hasLength(OrderAction.values.length));
   });
 }

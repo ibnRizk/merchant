@@ -270,5 +270,7 @@
   "delete_confirm_word": "DELETE",
   "deletion_requested": "Your deletion request was sent. The administration will process it.",
   "deletion_blocked_orders": "You can't delete your account while orders are still in progress. Finish them first.",
-  "deletion_blocked_wallet": "You can't delete your account until your wallet balance is settled. Please contact support."
+  "deletion_blocked_wallet": "You can't delete your account until your wallet balance is settled. Please contact support.",
+  "unexpected_response": "We couldn't read the server's response. Please try again.",
+  "retry_dispatch": "Retry dispatch"
 }
