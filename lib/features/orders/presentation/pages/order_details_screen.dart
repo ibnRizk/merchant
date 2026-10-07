@@ -19,6 +19,7 @@ import '../cubit/order_details/order_details_cubit.dart';
 import '../utils/order_display.dart';
 import '../utils/order_notice_messages.dart';
 import '../widgets/active_order_detail_card.dart' show progressSteps;
+import '../widgets/cancel_order_button.dart';
 import '../widgets/order_action_buttons.dart';
 import '../widgets/order_card_header.dart';
 import '../widgets/order_details_section.dart';
@@ -240,17 +241,10 @@ class _OrderDetailsBody extends StatelessWidget {
           ),
         ],
         if (order.status.canCancel) ...<Widget>[
-          const SizedBox(height: 8),
-          TextButton(
-            onPressed: state.isBusy ? null : () => _cancel(context),
-            child: Text(
-              Strings.cancelOrder,
-              style: TextStyle(
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.w700,
-                color: colors.error,
-              ),
-            ),
+          const SizedBox(height: 12),
+          CancelOrderButton(
+            isBusy: state.isBusy,
+            onPressed: () => _cancel(context),
           ),
         ],
       ],

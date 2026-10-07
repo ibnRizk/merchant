@@ -193,4 +193,43 @@ void main() {
     expect(loaded().newOrders, isEmpty);
     expect(loaded().activeOrders.map((MerchantOrder o) => o.id), <int>[2, 3]);
   });
+
+  group('cancel', () {
+    test('sends the reason, note and version of an accepted order', () async {
+      await cubit.load();
+
+      await cubit.cancel(
+        orderById(2),
+        reason: CancelReason.itemUnavailable,
+        note: 'no buns',
+      );
+
+      expect(
+        repository.commands.single,
+        OrderCommand.cancel(
+          orderId: 2,
+          reason: CancelReason.itemUnavailable,
+          note: 'no buns',
+          expectedVersion: 1,
+        ),
+      );
+    });
+
+    test('removes a cancelled preparing order from the active list', () async {
+      await cubit.load();
+
+      await cubit.cancel(orderById(3), reason: CancelReason.storeClosing);
+
+      expect(orderById(3).status, OrderStatus.cancelled);
+      expect(loaded().activeOrders.map((MerchantOrder o) => o.id), <int>[2]);
+    });
+
+    test('is not sent for a new order', () async {
+      await cubit.load();
+
+      await cubit.cancel(orderById(1), reason: CancelReason.other);
+
+      expect(repository.commands, isEmpty);
+    });
+  });
 }

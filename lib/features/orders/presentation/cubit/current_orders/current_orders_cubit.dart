@@ -108,6 +108,24 @@ class CurrentOrdersCubit extends Cubit<CurrentOrdersState> {
     ),
   );
 
+  /// Calls off an accepted or preparing order before it goes to dispatch.
+  Future<void> cancel(
+    MerchantOrder order, {
+    required CancelReason reason,
+    String? note,
+  }) async {
+    if (!order.status.canCancel) return;
+    await _send(
+      order,
+      OrderCommand.cancel(
+        orderId: order.id,
+        reason: reason,
+        note: note,
+        expectedVersion: order.statusVersion,
+      ),
+    );
+  }
+
   /// Start preparing, or mark ready for pickup, whichever comes next.
   Future<void> advance(MerchantOrder order) async {
     final OrderAction? action = order.status.nextAction;
