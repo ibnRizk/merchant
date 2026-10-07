@@ -8,6 +8,7 @@ import '../../../app_config/presentation/cubit/app_config_cubit.dart';
 import '../../domain/entities/merchant_order.dart';
 import '../../domain/entities/order_status.dart';
 import '../utils/order_display.dart';
+import 'cancel_order_button.dart';
 import 'order_card_header.dart';
 import 'order_item_row.dart';
 import 'order_progress_stepper.dart';
@@ -15,19 +16,21 @@ import 'system_notice_banner.dart';
 
 /// An accepted order the merchant still has to move: header, the 3-step
 /// progress bar, lines and the next action ("start preparing" or "ready
-/// for pickup").
+/// for pickup"), plus "cancel order" while it can still be called off.
 class ActiveOrderDetailCard extends StatelessWidget {
   const ActiveOrderDetailCard({
     super.key,
     required this.order,
     required this.onAdvance,
     required this.onTap,
+    required this.onCancel,
     this.isBusy = false,
   });
 
   final MerchantOrder order;
   final VoidCallback onAdvance;
   final VoidCallback onTap;
+  final VoidCallback onCancel;
   final bool isBusy;
 
   @override
@@ -82,6 +85,10 @@ class ActiveOrderDetailCard extends StatelessWidget {
               if (next == OrderAction.readyForPickup) ...<Widget>[
                 const SizedBox(height: 12),
                 SystemNoticeBanner(text: Strings.systemWillNotifyDriver),
+              ],
+              if (order.status.canCancel) ...<Widget>[
+                const SizedBox(height: 10),
+                CancelOrderButton(isBusy: isBusy, onPressed: onCancel),
               ],
             ],
           ),

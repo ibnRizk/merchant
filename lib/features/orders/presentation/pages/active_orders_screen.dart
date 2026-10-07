@@ -14,6 +14,7 @@ import '../cubit/current_orders/current_orders_cubit.dart';
 import '../utils/order_notice_messages.dart';
 import '../widgets/active_order_detail_card.dart';
 import '../widgets/collapsed_active_order_card.dart';
+import '../widgets/order_reason_sheet.dart';
 import '../widgets/orders_list_states.dart';
 import '../widgets/orders_screen_header.dart';
 
@@ -25,6 +26,13 @@ class ActiveOrdersScreen extends StatelessWidget {
   const ActiveOrdersScreen({super.key});
 
   static const EdgeInsets _gutter = EdgeInsets.symmetric(horizontal: 20);
+
+  Future<void> _cancel(BuildContext context, MerchantOrder order) async {
+    final CurrentOrdersCubit cubit = context.read<CurrentOrdersCubit>();
+    final CancelDecision? decision = await showCancelOrderSheet(context);
+    if (decision == null || cubit.isClosed) return;
+    cubit.cancel(order, reason: decision.reason, note: decision.note);
+  }
 
   Future<void> _openDetails(BuildContext context, MerchantOrder order) async {
     final CurrentOrdersCubit cubit = context.read<CurrentOrdersCubit>();
@@ -141,6 +149,7 @@ class ActiveOrdersScreen extends StatelessWidget {
                                     isBusy: busyIds.contains(order.id),
                                     onAdvance: () => cubit.advance(order),
                                     onTap: () => _openDetails(context, order),
+                                    onCancel: () => _cancel(context, order),
                                   );
                                 },
                               ),
