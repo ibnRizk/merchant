@@ -97,6 +97,31 @@ void main() {
     });
   });
 
+  test('cancel posts the reason, note and version with its key', () async {
+    client.response = <String, dynamic>{
+      'order': <String, dynamic>{'id': 5, 'ssm_status': 'cancelled'},
+    };
+
+    await dataSource.sendCommand(
+      OrderCommand.cancel(
+        orderId: 5,
+        reason: CancelReason.customerRequest,
+        note: ' customer called to cancel ',
+        expectedVersion: 3,
+      ),
+      idempotencyKey: 'key-1',
+    );
+
+    final call = client.calls.single;
+    expect(call.path, '/vendor/orders/5/cancel');
+    expect(call.headers, <String, String>{'Idempotency-Key': 'key-1'});
+    expect(call.body, <String, dynamic>{
+      'expected_version': 3,
+      'reason': 'customer_request',
+      'note': 'customer called to cancel',
+    });
+  });
+
   test('a stale version surfaces as a ConflictException', () async {
     client.error = const ConflictException(message: 'order-conflict');
 

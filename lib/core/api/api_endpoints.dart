@@ -52,7 +52,7 @@ abstract class ApiEndpoints {
   static const String orderLines = '/vendor/order-details';
 
   /// [command] is `accept`, `reject`, `start-preparing`,
-  /// `ready-for-pickup` or `retry-dispatch`.
+  /// `ready-for-pickup`, `cancel` or `retry-dispatch`.
   static String orderCommand(int id, String command) =>
       '/vendor/orders/$id/$command';
 
