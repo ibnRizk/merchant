@@ -9,8 +9,12 @@ import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/action_card.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
+import '../../../../core/realtime/realtime_event.dart';
+import '../../../../core/widgets/realtime_listener.dart';
 import '../../../../core/widgets/refresh_poller.dart';
 import '../../../../core/widgets/status_views.dart';
+import '../../../notifications/presentation/cubit/unread_count/unread_count_cubit.dart';
+import '../../../notifications/presentation/widgets/notifications_bell.dart';
 import '../../../profile/presentation/cubit/profile/profile_cubit.dart';
 import '../../domain/entities/dashboard_stats.dart';
 import '../../domain/entities/greeting_period.dart';
@@ -54,6 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
     await context.pushNamed(routeName);
     // Orders may have been accepted or moved on that screen.
     if (!dashboard.isClosed) dashboard.refresh();
+  }
+
+  Future<void> _openNotifications() async {
+    final UnreadCountCubit unread = context.read<UnreadCountCubit>();
+    await context.pushNamed(AppRoutes.notificationsName);
+    // Notifications were probably read there.
+    if (!unread.isClosed) unread.refresh();
   }
 
   Future<void> _refresh() async {
@@ -101,71 +112,83 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
         ),
       ],
-      child: RefreshPoller(
-        onRefresh: context.read<DashboardCubit>().poll,
-        child: SafeArea(
-          bottom: false,
-          child: RefreshIndicator(
-            onRefresh: _refresh,
-            color: context.colors.primary,
-            child: ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-              children: <Widget>[
-                BlocSelector<ProfileCubit, ProfileState, String>(
-                  selector: (ProfileState state) => state is ProfileReady
-                      ? state.profile.store?.name ?? ''
-                      : '',
-                  builder: (BuildContext context, String storeName) =>
-                      HomeHeader(
-                        greeting: switch (GreetingPeriod.of(DateTime.now())) {
-                          GreetingPeriod.morning => Strings.goodMorning,
-                          GreetingPeriod.evening => Strings.goodEvening,
-                        },
-                        storeName: storeName,
-                      ),
-                ),
-                const SizedBox(height: 20),
-                BlocBuilder<StoreStatusCubit, StoreStatusState>(
-                  builder: (BuildContext context, StoreStatusState state) =>
-                      StoreStatusBar(
-                        isOpen: state.isOpen,
-                        isUpdating: state.isUpdating,
-                        onChanged: context.read<StoreStatusCubit>().setOpen,
-                      ),
-                ),
-                const SizedBox(height: 20),
-                BlocBuilder<DashboardCubit, DashboardState>(
-                  builder: _buildDashboard,
-                ),
-                const SizedBox(height: 28),
-                const AnalyticsSection(),
-                const SizedBox(height: 28),
-                ActionCard(
-                  title: Strings.walletTitle,
-                  subtitle: Strings.walletShortcutSubtitle,
-                  actionLabel: Strings.view,
-                  onTap: () => context.pushNamed(AppRoutes.walletName),
-                ),
-                BlocSelector<ProfileCubit, ProfileState, bool>(
-                  selector: (ProfileState state) =>
-                      state is ProfileReady &&
-                      (state.profile.store?.category?.isPharmacy ?? false),
-                  builder: (BuildContext context, bool isPharmacy) => isPharmacy
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: ActionCard(
-                            title: Strings.pharmacyRequestsTitle,
-                            subtitle: Strings.pharmacyShortcutSubtitle,
-                            actionLabel: Strings.view,
-                            onTap: () => context.pushNamed(
-                              AppRoutes.pharmacyRequestsName,
-                            ),
+      child: RealtimeListener(
+        when: (RealtimeEvent event) => event.affectsOrders,
+        onEvent: context.read<DashboardCubit>().poll,
+        child: RefreshPoller(
+          onRefresh: context.read<DashboardCubit>().poll,
+          child: SafeArea(
+            bottom: false,
+            child: RefreshIndicator(
+              onRefresh: _refresh,
+              color: context.colors.primary,
+              child: ListView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                children: <Widget>[
+                  BlocSelector<ProfileCubit, ProfileState, String>(
+                    selector: (ProfileState state) => state is ProfileReady
+                        ? state.profile.store?.name ?? ''
+                        : '',
+                    builder: (BuildContext context, String storeName) =>
+                        HomeHeader(
+                          greeting: switch (GreetingPeriod.of(DateTime.now())) {
+                            GreetingPeriod.morning => Strings.goodMorning,
+                            GreetingPeriod.evening => Strings.goodEvening,
+                          },
+                          storeName: storeName,
+                          action: BlocBuilder<UnreadCountCubit, int>(
+                            builder: (BuildContext context, int unread) =>
+                                NotificationsBell(
+                                  unreadCount: unread,
+                                  onTap: _openNotifications,
+                                ),
                           ),
-                        )
-                      : const SizedBox.shrink(),
-                ),
-              ],
+                        ),
+                  ),
+                  const SizedBox(height: 20),
+                  BlocBuilder<StoreStatusCubit, StoreStatusState>(
+                    builder: (BuildContext context, StoreStatusState state) =>
+                        StoreStatusBar(
+                          isOpen: state.isOpen,
+                          isUpdating: state.isUpdating,
+                          onChanged: context.read<StoreStatusCubit>().setOpen,
+                        ),
+                  ),
+                  const SizedBox(height: 20),
+                  BlocBuilder<DashboardCubit, DashboardState>(
+                    builder: _buildDashboard,
+                  ),
+                  const SizedBox(height: 28),
+                  const AnalyticsSection(),
+                  const SizedBox(height: 28),
+                  ActionCard(
+                    title: Strings.walletTitle,
+                    subtitle: Strings.walletShortcutSubtitle,
+                    actionLabel: Strings.view,
+                    onTap: () => context.pushNamed(AppRoutes.walletName),
+                  ),
+                  BlocSelector<ProfileCubit, ProfileState, bool>(
+                    selector: (ProfileState state) =>
+                        state is ProfileReady &&
+                        (state.profile.store?.category?.isPharmacy ?? false),
+                    builder: (BuildContext context, bool isPharmacy) =>
+                        isPharmacy
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: ActionCard(
+                              title: Strings.pharmacyRequestsTitle,
+                              subtitle: Strings.pharmacyShortcutSubtitle,
+                              actionLabel: Strings.view,
+                              onTap: () => context.pushNamed(
+                                AppRoutes.pharmacyRequestsName,
+                              ),
+                            ),
+                          )
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

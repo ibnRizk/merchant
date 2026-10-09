@@ -37,16 +37,19 @@ extension OrderStatusDisplay on OrderStatus {
 
   /// Pill colors: (background, text).
   (Color, Color) pillColors(AppColors colors) {
-    if (isCompleted)
+    if (isCompleted) {
       return (colors.successContainer, colors.success);
-    if (isCancelled)
+    }
+    if (isCancelled) {
       return (colors.errorContainer, colors.error);
+    }
     if (isNew) return (colors.primaryLight, colors.primary);
-    if (isActive)
+    if (isActive) {
       return (
         colors.info.withValues(alpha: 0.12),
         colors.info,
       );
+    }
     return (colors.border, colors.textSecondary);
   }
 }
@@ -55,7 +58,8 @@ extension OrderDisplay on MerchantOrder {
   /// `#1048`, kept left-to-right so `#` never jumps to the end in RTL.
   String get number => '#$id'.ltrIsolated;
 
-  String amountLabel(String currency) => formatOrderAmount(amount, currency);
+  String amountLabel(String currency) =>
+      formatOrderAmount(amount, currency);
 
   String get itemsLabel =>
       '$itemsCount ${itemsCount == 1 ? Strings.itemSingular : Strings.itemsPlural}';
@@ -85,7 +89,8 @@ extension OrderLineDisplay on OrderLine {
   String get extrasLabel =>
       extras.map((String e) => e.bidiIsolated).join(' · ');
 
-  String totalLabel(String currency) => formatOrderAmount(total, currency);
+  String totalLabel(String currency) =>
+      formatOrderAmount(total, currency);
 }
 
 /// `28.50 EGP`, with the number kept left-to-right inside Arabic text.

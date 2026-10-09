@@ -33,6 +33,27 @@ abstract class AppEnv {
   static int? get defaultModuleId =>
       int.tryParse(dotenv.get('DEFAULT_MODULE_ID', fallback: ''));
 
+  // --- Realtime (Pusher protocol) ---
+  // The app key is public by design (it ships in every Pusher client); the
+  // secret stays on the server. Leave PUSHER_APP_KEY empty to run without
+  // realtime: screens then rely on polling alone.
+
+  static String get pusherAppKey => dotenv.get('PUSHER_APP_KEY', fallback: '');
+
+  /// Pusher Channels cluster, e.g. `eu`. Ignored when [pusherHost] is set.
+  static String get pusherCluster =>
+      dotenv.get('PUSHER_APP_CLUSTER', fallback: '');
+
+  /// Self-hosted server (Reverb, Soketi), e.g. `ws.example.com`.
+  static String get pusherHost => dotenv.get('PUSHER_HOST', fallback: '');
+
+  static int get pusherPort =>
+      int.tryParse(dotenv.get('PUSHER_PORT', fallback: '')) ?? 443;
+
+  /// `wss` (default) or `ws`.
+  static String get pusherScheme =>
+      dotenv.get('PUSHER_SCHEME', fallback: 'wss');
+
   static Duration get connectTimeout => _duration('CONNECT_TIMEOUT_MS', 30000);
 
   static Duration get receiveTimeout => _duration('RECEIVE_TIMEOUT_MS', 30000);

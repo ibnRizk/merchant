@@ -355,5 +355,16 @@
   "quote_amount_invalid": "أدخل سعرًا أكبر من 0.",
   "quote_summary_required": "اذكر الأدوية المشمولة.",
   "pharmacy_request_not_actionable": "لم يعد بالإمكان تسعير هذا الطلب. نعرض لك آخر حالة له.",
-  "pharmacy_request_closed": "هذا الطلب مغلق."
+  "pharmacy_request_closed": "هذا الطلب مغلق.",
+  "notifications_title": "الإشعارات",
+  "mark_all_read": "قراءة الكل",
+  "no_notifications": "لا جديد الآن",
+  "no_notifications_hint": "ستظهر هنا الطلبات الجديدة وتحديثات متجرك.",
+  "notifications_earlier": "سابقًا",
+  "notification_view_order": "عرض الطلب",
+  "notification_kind_new_order": "طلب جديد",
+  "notification_kind_order_update": "تحديث على الطلب",
+  "notification_kind_delivery": "تحديث التوصيل",
+  "notification_kind_wallet": "تحديث المحفظة",
+  "notification_kind_general": "إشعار"
 }

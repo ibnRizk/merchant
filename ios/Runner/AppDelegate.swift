@@ -1,6 +1,7 @@
 import Flutter
 import GoogleMaps
 import UIKit
+import UserNotifications
 
 @main
 @objc class AppDelegate: FlutterAppDelegate {
@@ -13,6 +14,9 @@ import UIKit
        !apiKey.isEmpty {
       GMSServices.provideAPIKey(apiKey)
     }
+    // Lets flutter_local_notifications show notifications while the app is
+    // in the foreground and receive their taps.
+    UNUserNotificationCenter.current().delegate = self as UNUserNotificationCenterDelegate
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

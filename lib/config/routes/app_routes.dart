@@ -30,6 +30,10 @@ import '../../features/menu/presentation/cubit/product_form/product_form_cubit.d
 import '../../features/menu/presentation/cubit/product_options/product_options_cubit.dart';
 import '../../features/menu/presentation/pages/product_form_screen.dart';
 import '../../features/menu/presentation/pages/product_options_screen.dart';
+import '../../features/notifications/presentation/cubit/live_updates/live_updates_cubit.dart';
+import '../../features/notifications/presentation/cubit/notifications/notifications_cubit.dart';
+import '../../features/notifications/presentation/cubit/unread_count/unread_count_cubit.dart';
+import '../../features/notifications/presentation/pages/notifications_screen.dart';
 import '../../features/orders/presentation/cubit/current_orders/current_orders_cubit.dart';
 import '../../features/orders/presentation/cubit/order_details/order_details_cubit.dart';
 import '../../features/orders/presentation/cubit/orders_history/orders_history_cubit.dart';
@@ -68,6 +72,7 @@ abstract class AppRoutes {
   static const String wallet = '/wallet';
   static const String pharmacyRequests = '/pharmacy-requests';
   static const String pharmacyRequest = '/pharmacy-requests/:id';
+  static const String notifications = '/notifications';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
   static const String splashName = 'splash';
@@ -88,6 +93,7 @@ abstract class AppRoutes {
   static const String walletName = 'wallet';
   static const String pharmacyRequestsName = 'pharmacyRequests';
   static const String pharmacyRequestName = 'pharmacyRequest';
+  static const String notificationsName = 'notifications';
 
   static final GoRouter router = GoRouter(
     initialLocation: splash,
@@ -154,6 +160,17 @@ abstract class AppRoutes {
             BlocProvider<WorkingHoursCubit>(
               create: (_) =>
                   ServiceLocator.instance<WorkingHoursCubit>()..load(),
+            ),
+            BlocProvider<UnreadCountCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<UnreadCountCubit>()..refresh(),
+            ),
+            // The session's push token and realtime socket. Closing it (the
+            // session leaving home) disconnects the socket.
+            BlocProvider<LiveUpdatesCubit>(
+              lazy: false,
+              create: (_) =>
+                  ServiceLocator.instance<LiveUpdatesCubit>()..start(),
             ),
           ],
           child: const MainScaffold(),
@@ -232,12 +249,11 @@ abstract class AppRoutes {
         // `extra` is the status already known (login, splash or a 403), so
         // the right copy shows at once; the cubit then re-checks it.
         builder: (_, GoRouterState state) => BlocProvider<PendingApprovalCubit>(
-          create: (_) =>
-              ServiceLocator.instance<PendingApprovalCubit>(
-                param1:
-                    state.extra as MerchantApprovalStatus? ??
-                    MerchantApprovalStatus.pending,
-              )..check(silent: true),
+          create: (_) => ServiceLocator.instance<PendingApprovalCubit>(
+            param1:
+                state.extra as MerchantApprovalStatus? ??
+                MerchantApprovalStatus.pending,
+          )..check(silent: true),
           child: const PendingApprovalScreen(),
         ),
       ),
@@ -298,6 +314,14 @@ abstract class AppRoutes {
             child: PharmacyRequestScreen(requestId: id),
           );
         },
+      ),
+      GoRoute(
+        path: notifications,
+        name: notificationsName,
+        builder: (_, __) => BlocProvider<NotificationsCubit>(
+          create: (_) => ServiceLocator.instance<NotificationsCubit>()..load(),
+          child: const NotificationsScreen(),
+        ),
       ),
       GoRoute(
         path: photoViewer,

@@ -23,6 +23,25 @@ abstract class ApiEndpoints {
   /// `DELETE` requests account deletion; an admin completes it.
   static const String vendorAccount = '/vendor/account';
 
+  /// `{merchant: {id}}`: the id the realtime channel is named after.
+  static const String sessionValidate = '/vendor/session/validate';
+
+  // --- Push notifications (token) ---
+  static const String updateFcmToken = '/vendor/update-fcm-token';
+
+  /// Call before [vendorLogout], while the token still works.
+  static const String removeFcmToken = '/vendor/remove-fcm-token';
+
+  // --- Notification inbox (token) ---
+  static const String notifications = '/vendor/notifications';
+  static const String notificationsUnreadCount = '$notifications/unread-count';
+  static const String notificationsReadAll = '$notifications/read-all';
+  static String notificationRead(String id) => '$notifications/$id/read';
+
+  // --- Realtime (token) ---
+  /// Signs a Pusher private-channel subscription. Not under `/vendor`.
+  static const String broadcastingAuth = '/broadcasting/auth';
+
   // --- Onboarding (token, works while pending) ---
   static const String onboardingStatus = '/vendor/onboarding-status';
 

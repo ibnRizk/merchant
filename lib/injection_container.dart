@@ -10,6 +10,7 @@ import 'core/api/app_interceptors.dart';
 import 'core/api/auth_event_bus.dart';
 import 'core/api/dio_consumer.dart';
 import 'core/api/redacting_log_interceptor.dart';
+import 'core/realtime/realtime_hub.dart';
 import 'core/services/local_storage/app_secure_storage.dart';
 import 'core/services/local_storage/app_shared_preferences.dart';
 import 'core/utils/values/app_colors.dart';
@@ -19,6 +20,7 @@ import 'features/home/home_injection.dart';
 import 'features/hours/hours_injection.dart';
 import 'features/launch/launch_injection.dart';
 import 'features/menu/menu_injection.dart';
+import 'features/notifications/notifications_injection.dart';
 import 'features/orders/orders_injection.dart';
 import 'features/pharmacy/pharmacy_injection.dart';
 import 'features/profile/profile_injection.dart';
@@ -41,6 +43,7 @@ abstract class ServiceLocator {
     await _injectSharedPreferences();
     _injectSecureStorage();
     _injectEventBus();
+    instance.registerLazySingleton<RealtimeHub>(RealtimeHub.new);
     _injectAppInterceptors();
     _injectLogInterceptor();
     _injectDioConsumer();
@@ -61,6 +64,7 @@ abstract class ServiceLocator {
     await initLaunchFeatureInjection();
     await initWalletFeatureInjection();
     await initPharmacyFeatureInjection();
+    await initNotificationsFeatureInjection();
     // Register new features here.
   }
 

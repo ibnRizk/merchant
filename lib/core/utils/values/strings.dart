@@ -330,8 +330,10 @@ abstract class Strings {
   static const String _cancelReasonLabel = 'cancel_reason_label';
   static String get cancelReasonLabel => _cancelReasonLabel.tr;
 
-  static const String _cancelReasonCustomerRequest = 'cancel_reason_customer_request';
-  static String get cancelReasonCustomerRequest => _cancelReasonCustomerRequest.tr;
+  static const String _cancelReasonCustomerRequest =
+      'cancel_reason_customer_request';
+  static String get cancelReasonCustomerRequest =>
+      _cancelReasonCustomerRequest.tr;
 
   static const String _orderCancelled = 'order_cancelled';
   static String get orderCancelled => _orderCancelled.tr;
@@ -513,8 +515,7 @@ abstract class Strings {
 
   static const String _deleteProductConfirmTitle =
       'delete_product_confirm_title';
-  static String get deleteProductConfirmTitle =>
-      _deleteProductConfirmTitle.tr;
+  static String get deleteProductConfirmTitle => _deleteProductConfirmTitle.tr;
 
   static const String _deleteProductConfirmMessage =
       'delete_product_confirm_message';
@@ -931,8 +932,10 @@ abstract class Strings {
   static const String _withdrawAmountTooLow = 'withdraw_amount_too_low';
   static String get withdrawAmountTooLow => _withdrawAmountTooLow.tr;
 
-  static const String _withdrawAmountAboveBalance = 'withdraw_amount_above_balance';
-  static String get withdrawAmountAboveBalance => _withdrawAmountAboveBalance.tr;
+  static const String _withdrawAmountAboveBalance =
+      'withdraw_amount_above_balance';
+  static String get withdrawAmountAboveBalance =>
+      _withdrawAmountAboveBalance.tr;
 
   // --- Analytics ---
 
@@ -1105,9 +1108,47 @@ abstract class Strings {
   static const String _quoteSummaryRequired = 'quote_summary_required';
   static String get quoteSummaryRequired => _quoteSummaryRequired.tr;
 
-  static const String _pharmacyRequestNotActionable = 'pharmacy_request_not_actionable';
-  static String get pharmacyRequestNotActionable => _pharmacyRequestNotActionable.tr;
+  static const String _pharmacyRequestNotActionable =
+      'pharmacy_request_not_actionable';
+  static String get pharmacyRequestNotActionable =>
+      _pharmacyRequestNotActionable.tr;
 
   static const String _pharmacyRequestClosed = 'pharmacy_request_closed';
   static String get pharmacyRequestClosed => _pharmacyRequestClosed.tr;
+
+  // --- Notifications ---
+  static const String _notificationsTitle = 'notifications_title';
+  static String get notificationsTitle => _notificationsTitle.tr;
+
+  static const String _markAllRead = 'mark_all_read';
+  static String get markAllRead => _markAllRead.tr;
+
+  static const String _noNotifications = 'no_notifications';
+  static String get noNotifications => _noNotifications.tr;
+
+  static const String _noNotificationsHint = 'no_notifications_hint';
+  static String get noNotificationsHint => _noNotificationsHint.tr;
+
+  static const String _notificationsEarlier = 'notifications_earlier';
+  static String get notificationsEarlier => _notificationsEarlier.tr;
+
+  static const String _notificationViewOrder = 'notification_view_order';
+  static String get notificationViewOrder => _notificationViewOrder.tr;
+
+  static const String _notificationKindNewOrder = 'notification_kind_new_order';
+  static String get notificationKindNewOrder => _notificationKindNewOrder.tr;
+
+  static const String _notificationKindOrderUpdate =
+      'notification_kind_order_update';
+  static String get notificationKindOrderUpdate =>
+      _notificationKindOrderUpdate.tr;
+
+  static const String _notificationKindDelivery = 'notification_kind_delivery';
+  static String get notificationKindDelivery => _notificationKindDelivery.tr;
+
+  static const String _notificationKindWallet = 'notification_kind_wallet';
+  static String get notificationKindWallet => _notificationKindWallet.tr;
+
+  static const String _notificationKindGeneral = 'notification_kind_general';
+  static String get notificationKindGeneral => _notificationKindGeneral.tr;
 }

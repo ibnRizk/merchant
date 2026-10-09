@@ -15,7 +15,10 @@ Future<void> initProfileFeatureInjection() async {
       () => ProfileCubit(repository: ServiceLocator.instance()),
     )
     ..registerFactory<LogoutCubit>(
-      () => LogoutCubit(repository: ServiceLocator.instance()),
+      () => LogoutCubit(
+        repository: ServiceLocator.instance(),
+        pushTokens: ServiceLocator.instance(),
+      ),
     )
     ..registerFactory<DeleteAccountCubit>(
       () => DeleteAccountCubit(repository: ServiceLocator.instance()),

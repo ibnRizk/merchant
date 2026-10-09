@@ -8,6 +8,7 @@ import 'config/env/app_env.dart';
 import 'config/locale/app_localizations_setup.dart';
 import 'config/locale/locale_cubit.dart';
 import 'config/routes/app_routes.dart';
+import 'config/routes/push_tap_router.dart';
 import 'config/themes/app_theme.dart';
 import 'config/themes/theme_cubit.dart';
 import 'core/entities/merchant_approval_status.dart';
@@ -33,6 +34,8 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    // Notification taps, including the one that launched the app.
+    ServiceLocator.instance<PushTapRouter>().attach();
     // Any 401 from a token-protected request lands here. Clear the session
     // and bounce back to login.
     _unauthorizedSub = eventBus.unauthorizedStream.listen((_) async {
@@ -54,6 +57,7 @@ class _AppState extends State<App> {
   void dispose() {
     _unauthorizedSub?.cancel();
     _restrictedSub?.cancel();
+    ServiceLocator.instance<PushTapRouter>().dispose();
     super.dispose();
   }
 

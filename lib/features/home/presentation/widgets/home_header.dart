@@ -3,20 +3,24 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/bidi_text.dart';
 import '../../../../core/utils/values/app_colors.dart';
 
-/// Greeting + store name at the start, a navy initial avatar at the end.
-/// The name ellipsizes and keeps its own direction (e.g. an English store
-/// name in the Arabic layout).
+/// Greeting + store name at the start, an optional [action] (the
+/// notifications bell) and a navy initial avatar at the end. The name
+/// ellipsizes and keeps its own direction (e.g. an English store name in
+/// the Arabic layout).
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
     super.key,
     required this.greeting,
     required this.storeName,
+    this.action,
   });
 
   final String greeting;
 
   /// Empty while the profile is loading.
   final String storeName;
+
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +62,7 @@ class HomeHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
+        if (action != null) ...<Widget>[action!, const SizedBox(width: 10)],
         Container(
           width: 48,
           height: 48,

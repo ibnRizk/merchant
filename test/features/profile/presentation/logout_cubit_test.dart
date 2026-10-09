@@ -3,15 +3,18 @@ import 'package:ssm_merchant/core/error/failures.dart';
 import 'package:ssm_merchant/features/profile/presentation/cubit/logout/logout_cubit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../notifications/notifications_fakes.dart';
 import '../profile_fakes.dart';
 
 void main() {
   late FakeProfileRepository repository;
+  late FakePushTokenRepository pushTokens;
   late LogoutCubit cubit;
 
   setUp(() {
     repository = FakeProfileRepository();
-    cubit = LogoutCubit(repository: repository);
+    pushTokens = FakePushTokenRepository();
+    cubit = LogoutCubit(repository: repository, pushTokens: pushTokens);
   });
 
   tearDown(() => cubit.close());
@@ -41,6 +44,18 @@ void main() {
     await cubit.logout();
     await cubit.logout();
 
+    expect(repository.logoutCalls, 1);
+  });
+
+  test('removes the push token before the session token is revoked', () async {
+    int? logoutsBeforeUnregister;
+    pushTokens.onUnregister = () =>
+        logoutsBeforeUnregister = repository.logoutCalls;
+
+    await cubit.logout();
+
+    expect(pushTokens.unregisterCalls, 1);
+    expect(logoutsBeforeUnregister, 0);
     expect(repository.logoutCalls, 1);
   });
 }

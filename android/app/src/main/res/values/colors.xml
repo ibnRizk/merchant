@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="ic_launcher_background">#FFFFFF</color>
+    <!-- Tints notifications the OS shows while the app is in the background. -->
+    <color name="notification_color">#F6921E</color>
 </resources>

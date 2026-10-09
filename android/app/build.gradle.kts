@@ -7,6 +7,14 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Firebase config is added per environment and is not in VCS yet. Without
+// it the build still works and the app runs without push notifications.
+if (file("google-services.json").exists()) {
+    apply(plugin = "com.google.gms.google-services")
+} else {
+    logger.warn("w: android/app/google-services.json is missing; push notifications are disabled in this build.")
+}
+
 // Secrets live in the git-ignored android/local.properties, never in VCS.
 val localProperties = Properties().apply {
     val file = rootProject.file("local.properties")
@@ -21,6 +29,8 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        // Required by flutter_local_notifications.
+        isCoreLibraryDesugaringEnabled = true
     }
 
 
@@ -56,4 +66,8 @@ flutter {
 
 kotlin {
     jvmToolchain(17)
+}
+
+dependencies {
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
 }

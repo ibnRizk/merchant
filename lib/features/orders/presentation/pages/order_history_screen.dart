@@ -4,10 +4,13 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../config/locale/locale_cubit.dart';
 import '../../../../config/routes/app_routes.dart';
+import '../../../../core/realtime/realtime_event.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/app_search_field.dart';
 import '../../../../core/widgets/brand_snack_bar.dart';
+import '../../../../core/widgets/load_more_footer.dart';
+import '../../../../core/widgets/realtime_listener.dart';
 import '../../../../core/widgets/status_views.dart';
 import '../../domain/entities/merchant_order.dart';
 import '../cubit/orders_history/orders_history_cubit.dart';
@@ -83,65 +86,69 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
             context,
             state is OrdersHistoryLoaded ? state.notice : null,
           ),
-      child: SafeArea(
-        bottom: false,
-        child: RefreshIndicator(
-          onRefresh: _cubit.refresh,
-          color: context.colors.primary,
-          child: CustomScrollView(
-            controller: _scrollController,
-            physics: const AlwaysScrollableScrollPhysics(),
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            slivers: <Widget>[
-              SliverPadding(
-                padding: _gutter.copyWith(top: 12),
-                sliver: SliverToBoxAdapter(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: <Widget>[
-                      OrderHistoryHeader(
-                        title: Strings.orderHistory,
-                        exportLabel: Strings.export,
-                        onExportTap: () => showBrandSnackBar(
-                          context,
-                          Strings.exportComingSoon,
+      child: RealtimeListener(
+        when: (RealtimeEvent event) => event.affectsOrders,
+        onEvent: _cubit.refresh,
+        child: SafeArea(
+          bottom: false,
+          child: RefreshIndicator(
+            onRefresh: _cubit.refresh,
+            color: context.colors.primary,
+            child: CustomScrollView(
+              controller: _scrollController,
+              physics: const AlwaysScrollableScrollPhysics(),
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: _gutter.copyWith(top: 12),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        OrderHistoryHeader(
+                          title: Strings.orderHistory,
+                          exportLabel: Strings.export,
+                          onExportTap: () => showBrandSnackBar(
+                            context,
+                            Strings.exportComingSoon,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      AppSearchField(
-                        controller: _searchController,
-                        hintText: Strings.searchOrderNumber,
-                        onChanged: _cubit.search,
-                      ),
-                      const SizedBox(height: 16),
-                      BlocSelector<
-                        OrdersHistoryCubit,
-                        OrdersHistoryState,
-                        OrderFilter
-                      >(
-                        selector: (OrdersHistoryState state) => state.filter,
-                        builder: (BuildContext context, OrderFilter filter) =>
-                            HistoryFilterTabs(
-                              labels: <String>[
-                                Strings.allOrders,
-                                Strings.completed,
-                                Strings.cancelled,
-                              ],
-                              selectedIndex: filter.index,
-                              onChanged: (int index) => _cubit.selectFilter(
-                                OrderFilter.values[index],
+                        const SizedBox(height: 16),
+                        AppSearchField(
+                          controller: _searchController,
+                          hintText: Strings.searchOrderNumber,
+                          onChanged: _cubit.search,
+                        ),
+                        const SizedBox(height: 16),
+                        BlocSelector<
+                          OrdersHistoryCubit,
+                          OrdersHistoryState,
+                          OrderFilter
+                        >(
+                          selector: (OrdersHistoryState state) => state.filter,
+                          builder: (BuildContext context, OrderFilter filter) =>
+                              HistoryFilterTabs(
+                                labels: <String>[
+                                  Strings.allOrders,
+                                  Strings.completed,
+                                  Strings.cancelled,
+                                ],
+                                selectedIndex: filter.index,
+                                onChanged: (int index) => _cubit.selectFilter(
+                                  OrderFilter.values[index],
+                                ),
                               ),
-                            ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              BlocBuilder<OrdersHistoryCubit, OrdersHistoryState>(
-                builder: _buildBody,
-              ),
-            ],
+                BlocBuilder<OrdersHistoryCubit, OrdersHistoryState>(
+                  builder: _buildBody,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -177,7 +184,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
           separatorBuilder: (_, __) => const SizedBox(height: 12),
           itemBuilder: (BuildContext context, int index) {
             if (index == visibleOrders.length) {
-              return OrdersListFooter(
+              return LoadMoreFooter(
                 hasMore: state.hasMore,
                 isLoadingMore: state.isLoadingMore,
                 loadMoreFailed: state.loadMoreFailed,

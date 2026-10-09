@@ -355,5 +355,16 @@
   "quote_amount_invalid": "Enter a price above 0.",
   "quote_summary_required": "List the medicines included.",
   "pharmacy_request_not_actionable": "This request can no longer be priced. Showing its latest status.",
-  "pharmacy_request_closed": "This request is closed."
+  "pharmacy_request_closed": "This request is closed.",
+  "notifications_title": "Notifications",
+  "mark_all_read": "Mark all as read",
+  "no_notifications": "You're all caught up",
+  "no_notifications_hint": "New orders and store updates will show up here.",
+  "notifications_earlier": "Earlier",
+  "notification_view_order": "View order",
+  "notification_kind_new_order": "New order",
+  "notification_kind_order_update": "Order update",
+  "notification_kind_delivery": "Delivery update",
+  "notification_kind_wallet": "Wallet update",
+  "notification_kind_general": "Notification"
 }

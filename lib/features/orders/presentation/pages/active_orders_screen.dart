@@ -7,6 +7,8 @@ import '../../../../config/routes/app_routes.dart';
 import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_back_button.dart';
+import '../../../../core/realtime/realtime_event.dart';
+import '../../../../core/widgets/realtime_listener.dart';
 import '../../../../core/widgets/refresh_poller.dart';
 import '../../../../core/widgets/status_views.dart';
 import '../../domain/entities/merchant_order.dart';
@@ -62,101 +64,112 @@ class ActiveOrdersScreen extends StatelessWidget {
               context,
               state is CurrentOrdersLoaded ? state.notice : null,
             ),
-        child: RefreshPoller(
-          onRefresh: cubit.poll,
-          child: SafeArea(
-            child: RefreshIndicator(
-              onRefresh: cubit.refresh,
-              color: context.colors.primary,
-              child: CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: <Widget>[
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-                    sliver: SliverToBoxAdapter(
-                      child:
-                          BlocSelector<
-                            CurrentOrdersCubit,
-                            CurrentOrdersState,
-                            int?
-                          >(
-                            selector: (CurrentOrdersState state) =>
-                                state is CurrentOrdersLoaded
-                                ? state.activeOrders.length
-                                : null,
-                            builder: (BuildContext context, int? count) =>
-                                OrdersScreenHeader(
-                                  title: Strings.activeOrdersTitle,
-                                  badgeText: count == null
-                                      ? null
-                                      : '$count ${Strings.ordersCount}',
-                                  leading: const BrandBackButton(),
-                                ),
-                          ),
+        child: RealtimeListener(
+          when: (RealtimeEvent event) => event.affectsOrders,
+          onEvent: cubit.poll,
+          child: RefreshPoller(
+            onRefresh: cubit.poll,
+            child: SafeArea(
+              child: RefreshIndicator(
+                onRefresh: cubit.refresh,
+                color: context.colors.primary,
+                child: CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  slivers: <Widget>[
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+                      sliver: SliverToBoxAdapter(
+                        child:
+                            BlocSelector<
+                              CurrentOrdersCubit,
+                              CurrentOrdersState,
+                              int?
+                            >(
+                              selector: (CurrentOrdersState state) =>
+                                  state is CurrentOrdersLoaded
+                                  ? state.activeOrders.length
+                                  : null,
+                              builder: (BuildContext context, int? count) =>
+                                  OrdersScreenHeader(
+                                    title: Strings.activeOrdersTitle,
+                                    badgeText: count == null
+                                        ? null
+                                        : '$count ${Strings.ordersCount}',
+                                    leading: const BrandBackButton(),
+                                  ),
+                            ),
+                      ),
                     ),
-                  ),
-                  BlocBuilder<CurrentOrdersCubit, CurrentOrdersState>(
-                    builder: (BuildContext context, CurrentOrdersState state) =>
-                        switch (state) {
-                          CurrentOrdersLoading() => const SliverFillRemaining(
-                            hasScrollBody: false,
-                            child: SectionLoadingView(),
-                          ),
-                          CurrentOrdersLoadFailure(:final message) =>
-                            SliverPadding(
-                              padding: _gutter,
-                              sliver: SliverToBoxAdapter(
-                                child: RetryErrorView(
-                                  message: message,
-                                  onRetry: cubit.load,
+                    BlocBuilder<CurrentOrdersCubit, CurrentOrdersState>(
+                      builder:
+                          (
+                            BuildContext context,
+                            CurrentOrdersState state,
+                          ) => switch (state) {
+                            CurrentOrdersLoading() => const SliverFillRemaining(
+                              hasScrollBody: false,
+                              child: SectionLoadingView(),
+                            ),
+                            CurrentOrdersLoadFailure(:final message) =>
+                              SliverPadding(
+                                padding: _gutter,
+                                sliver: SliverToBoxAdapter(
+                                  child: RetryErrorView(
+                                    message: message,
+                                    onRetry: cubit.load,
+                                  ),
                                 ),
                               ),
-                            ),
-                          CurrentOrdersLoaded(:final activeOrders)
-                              when activeOrders.isEmpty =>
-                            SliverFillRemaining(
-                              hasScrollBody: false,
-                              child: OrdersEmptyView(
-                                message: Strings.noActiveOrders,
+                            CurrentOrdersLoaded(:final activeOrders)
+                                when activeOrders.isEmpty =>
+                              SliverFillRemaining(
+                                hasScrollBody: false,
+                                child: OrdersEmptyView(
+                                  message: Strings.noActiveOrders,
+                                ),
                               ),
-                            ),
-                          CurrentOrdersLoaded(
-                            :final activeOrders,
-                            :final busyIds,
-                          ) =>
-                            SliverPadding(
-                              padding: _gutter.copyWith(bottom: 24),
-                              sliver: SliverList.separated(
-                                itemCount: activeOrders.length,
-                                separatorBuilder: (_, __) =>
-                                    const SizedBox(height: 16),
-                                itemBuilder: (BuildContext context, int index) {
-                                  final MerchantOrder order =
-                                      activeOrders[index];
-                                  if (order.status.nextAction == null) {
-                                    return CollapsedActiveOrderCard(
-                                      key: ValueKey<int>(order.id),
-                                      order: order,
-                                      isBusy: busyIds.contains(order.id),
-                                      onTap: () => _openDetails(context, order),
-                                      onRetryDispatch: () =>
-                                          cubit.retryDispatch(order),
-                                    );
-                                  }
-                                  return ActiveOrderDetailCard(
-                                    key: ValueKey<int>(order.id),
-                                    order: order,
-                                    isBusy: busyIds.contains(order.id),
-                                    onAdvance: () => cubit.advance(order),
-                                    onTap: () => _openDetails(context, order),
-                                    onCancel: () => _cancel(context, order),
-                                  );
-                                },
+                            CurrentOrdersLoaded(
+                              :final activeOrders,
+                              :final busyIds,
+                            ) =>
+                              SliverPadding(
+                                padding: _gutter.copyWith(bottom: 24),
+                                sliver: SliverList.separated(
+                                  itemCount: activeOrders.length,
+                                  separatorBuilder: (_, __) =>
+                                      const SizedBox(height: 16),
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                        final MerchantOrder order =
+                                            activeOrders[index];
+                                        if (order.status.nextAction == null) {
+                                          return CollapsedActiveOrderCard(
+                                            key: ValueKey<int>(order.id),
+                                            order: order,
+                                            isBusy: busyIds.contains(order.id),
+                                            onTap: () =>
+                                                _openDetails(context, order),
+                                            onRetryDispatch: () =>
+                                                cubit.retryDispatch(order),
+                                          );
+                                        }
+                                        return ActiveOrderDetailCard(
+                                          key: ValueKey<int>(order.id),
+                                          order: order,
+                                          isBusy: busyIds.contains(order.id),
+                                          onAdvance: () => cubit.advance(order),
+                                          onTap: () =>
+                                              _openDetails(context, order),
+                                          onCancel: () =>
+                                              _cancel(context, order),
+                                        );
+                                      },
+                                ),
                               ),
-                            ),
-                        },
-                  ),
-                ],
+                          },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

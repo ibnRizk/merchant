@@ -7,6 +7,8 @@ import '../../../../core/utils/values/app_colors.dart';
 import '../../../../core/utils/values/strings.dart';
 import '../../../../core/widgets/brand_back_button.dart';
 import '../../../../core/widgets/primary_button.dart';
+import '../../../../core/realtime/realtime_event.dart';
+import '../../../../core/widgets/realtime_listener.dart';
 import '../../../../core/widgets/refresh_poller.dart';
 import '../../../../core/widgets/status_pill.dart';
 import '../../../../core/widgets/status_views.dart';
@@ -34,6 +36,17 @@ import '../widgets/system_notice_banner.dart';
 class OrderDetailsScreen extends StatelessWidget {
   const OrderDetailsScreen({super.key});
 
+  /// Before the order loads its id is unknown, so any order event counts.
+  static bool _concernsShownOrder(
+    OrderDetailsCubit cubit,
+    RealtimeEvent event,
+  ) {
+    final OrderDetailsState state = cubit.state;
+    return state is OrderDetailsLoaded
+        ? event.concernsOrder(state.order.id)
+        : event.affectsOrders;
+  }
+
   @override
   Widget build(BuildContext context) {
     context.watch<LocaleCubit>();
@@ -56,35 +69,41 @@ class OrderDetailsScreen extends StatelessWidget {
         child: SafeArea(
           // Dispatch moves on without the merchant (driver found, no driver
           // found): re-read while the screen is visible, like the lists.
-          child: RefreshPoller(
-            onRefresh: cubit.refresh,
-            child: RefreshIndicator(
+          child: RealtimeListener(
+            when: (RealtimeEvent event) => _concernsShownOrder(cubit, event),
+            onEvent: cubit.refresh,
+            child: RefreshPoller(
               onRefresh: cubit.refresh,
-              color: context.colors.primary,
-              child: ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-                children: <Widget>[
-                  OrdersScreenHeader(
-                    title: Strings.orderDetailsTitle,
-                    leading: const BrandBackButton(),
-                  ),
-                  const SizedBox(height: 16),
-                  BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
-                    builder: (BuildContext context, OrderDetailsState state) =>
-                        switch (state) {
-                          OrderDetailsLoading() => const SectionLoadingView(),
-                          OrderDetailsLoadFailure(:final message) =>
-                            RetryErrorView(
-                              message: message,
-                              onRetry: cubit.refresh,
-                            ),
-                          OrderDetailsLoaded() => _OrderDetailsBody(
-                            state: state,
-                          ),
-                        },
-                  ),
-                ],
+              child: RefreshIndicator(
+                onRefresh: cubit.refresh,
+                color: context.colors.primary,
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+                  children: <Widget>[
+                    OrdersScreenHeader(
+                      title: Strings.orderDetailsTitle,
+                      leading: const BrandBackButton(),
+                    ),
+                    const SizedBox(height: 16),
+                    BlocBuilder<OrderDetailsCubit, OrderDetailsState>(
+                      builder:
+                          (BuildContext context, OrderDetailsState state) =>
+                              switch (state) {
+                                OrderDetailsLoading() =>
+                                  const SectionLoadingView(),
+                                OrderDetailsLoadFailure(:final message) =>
+                                  RetryErrorView(
+                                    message: message,
+                                    onRetry: cubit.refresh,
+                                  ),
+                                OrderDetailsLoaded() => _OrderDetailsBody(
+                                  state: state,
+                                ),
+                              },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
