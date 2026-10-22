@@ -28,9 +28,13 @@ class OrderHistoryCard extends StatelessWidget {
     final (Color pillBackground, Color pillText) = order
         .status
         .pillColors(colors);
-    final String meta = order.metaLine(
-      Localizations.localeOf(context).languageCode,
-    );
+    final String timeLabel = order.createdAt != null
+        ? formatOrderTime(
+            order.createdAt!,
+            Localizations.localeOf(context).languageCode,
+          )
+        : '';
+    final String customerName = order.customerLabel;
 
     return Material(
       color: colors.surface,
@@ -51,7 +55,7 @@ class OrderHistoryCard extends StatelessWidget {
                 textDirection: TextDirection.ltr,
                 child: Row(
                   children: <Widget>[
-                    Flexible(
+                    Expanded(
                       child: Text(
                         order.number,
                         textDirection: textDirection,
@@ -67,9 +71,6 @@ class OrderHistoryCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    const Spacer(),
-                    // Bounded so a long translated status can't push the
-                    // number off screen.
                     Flexible(
                       child: Directionality(
                         textDirection: textDirection,
@@ -83,18 +84,46 @@ class OrderHistoryCard extends StatelessWidget {
                   ],
                 ),
               ),
-              if (meta.isNotEmpty) ...<Widget>[
+              if (timeLabel.isNotEmpty || customerName.isNotEmpty) ...<Widget>[
                 const SizedBox(height: 8),
-                Text(
-                  meta,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: colors.textSecondary,
+                Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Text(
+                          timeLabel.isNotEmpty ? timeLabel : customerName,
+                          textDirection: textDirection,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            color: colors.textSecondary,
+                          ),
+                        ),
+                      ),
+                      if (timeLabel.isNotEmpty && customerName.isNotEmpty) ...<Widget>[
+                        const SizedBox(width: 8),
+                        Flexible(
+                          child: Text(
+                            customerName,
+                            textDirection: textDirection,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
               ],
@@ -103,7 +132,7 @@ class OrderHistoryCard extends StatelessWidget {
                 textDirection: TextDirection.ltr,
                 child: Row(
                   children: <Widget>[
-                    Flexible(
+                    Expanded(
                       child: Text(
                         order.itemsLabel,
                         textDirection: textDirection,
@@ -120,7 +149,6 @@ class OrderHistoryCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Spacer(),
                     const SizedBox(width: 8),
                     Flexible(
                       child: Text(

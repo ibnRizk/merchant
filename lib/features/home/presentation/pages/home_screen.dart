@@ -161,13 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 28),
                   const AnalyticsSection(),
-                  const SizedBox(height: 28),
-                  ActionCard(
-                    title: Strings.walletTitle,
-                    subtitle: Strings.walletShortcutSubtitle,
-                    actionLabel: Strings.view,
-                    onTap: () => context.pushNamed(AppRoutes.walletName),
-                  ),
                   BlocSelector<ProfileCubit, ProfileState, bool>(
                     selector: (ProfileState state) =>
                         state is ProfileReady &&
@@ -175,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (BuildContext context, bool isPharmacy) =>
                         isPharmacy
                         ? Padding(
-                            padding: const EdgeInsets.only(top: 12),
+                            padding: const EdgeInsets.only(top: 28),
                             child: ActionCard(
                               title: Strings.pharmacyRequestsTitle,
                               subtitle: Strings.pharmacyShortcutSubtitle,

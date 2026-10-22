@@ -972,9 +972,6 @@ abstract class Strings {
   static const String _noSalesInPeriod = 'no_sales_in_period';
   static String get noSalesInPeriod => _noSalesInPeriod.tr;
 
-  static const String _walletShortcutSubtitle = 'wallet_shortcut_subtitle';
-  static String get walletShortcutSubtitle => _walletShortcutSubtitle.tr;
-
   // --- Product options ---
 
   static const String _sizesAndAddOns = 'sizes_and_add_ons';

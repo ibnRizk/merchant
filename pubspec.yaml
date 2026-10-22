@@ -1,7 +1,7 @@
 name: ssm_merchant
 description: "SSM Merchant — store owner app for managing orders, menu and working hours."
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.0.1+2
 
 environment:
   sdk: ^3.9.2

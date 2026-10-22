@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart' show LatLng;
+import 'package:google_maps_flutter/google_maps_flutter.dart'
+    show LatLng;
+import 'package:ssm_merchant/features/notifications/presentation/pages/notifications_screen.dart';
 
 import '../../core/widgets/slider_photo.dart';
 import '../../features/auth/domain/entities/merchant_auth_result.dart';
@@ -33,7 +35,6 @@ import '../../features/menu/presentation/pages/product_options_screen.dart';
 import '../../features/notifications/presentation/cubit/live_updates/live_updates_cubit.dart';
 import '../../features/notifications/presentation/cubit/notifications/notifications_cubit.dart';
 import '../../features/notifications/presentation/cubit/unread_count/unread_count_cubit.dart';
-import '../../features/notifications/presentation/pages/notifications_screen.dart';
 import '../../features/orders/presentation/cubit/current_orders/current_orders_cubit.dart';
 import '../../features/orders/presentation/cubit/order_details/order_details_cubit.dart';
 import '../../features/orders/presentation/cubit/orders_history/orders_history_cubit.dart';
@@ -68,10 +69,13 @@ abstract class AppRoutes {
   static const String locationPicker = '/register/location';
   static const String pendingApproval = '/pending-approval';
   static const String productForm = '/menu/product';
-  static const String productOptions = '/menu/product/options';
+  static const String productOptions =
+      '/menu/product/options';
   static const String wallet = '/wallet';
-  static const String pharmacyRequests = '/pharmacy-requests';
-  static const String pharmacyRequest = '/pharmacy-requests/:id';
+  static const String pharmacyRequests =
+      '/pharmacy-requests';
+  static const String pharmacyRequest =
+      '/pharmacy-requests/:id';
   static const String notifications = '/notifications';
 
   // --- Names (for context.goNamed / context.pushNamed) ---
@@ -87,12 +91,15 @@ abstract class AppRoutes {
   static const String forgotPasswordName = 'forgotPassword';
   static const String registerName = 'register';
   static const String locationPickerName = 'locationPicker';
-  static const String pendingApprovalName = 'pendingApproval';
+  static const String pendingApprovalName =
+      'pendingApproval';
   static const String productFormName = 'productForm';
   static const String productOptionsName = 'productOptions';
   static const String walletName = 'wallet';
-  static const String pharmacyRequestsName = 'pharmacyRequests';
-  static const String pharmacyRequestName = 'pharmacyRequest';
+  static const String pharmacyRequestsName =
+      'pharmacyRequests';
+  static const String pharmacyRequestName =
+      'pharmacyRequest';
   static const String notificationsName = 'notifications';
 
   static final GoRouter router = GoRouter(
@@ -104,7 +111,9 @@ abstract class AppRoutes {
         path: splash,
         name: splashName,
         builder: (_, __) => BlocProvider<SplashCubit>(
-          create: (_) => ServiceLocator.instance<SplashCubit>()..start(),
+          create: (_) =>
+              ServiceLocator.instance<SplashCubit>()
+                ..start(),
           child: const SplashScreen(),
         ),
       ),
@@ -112,7 +121,8 @@ abstract class AppRoutes {
         path: onboarding,
         name: onboardingName,
         builder: (_, __) => BlocProvider<OnboardingCubit>(
-          create: (_) => ServiceLocator.instance<OnboardingCubit>(),
+          create: (_) =>
+              ServiceLocator.instance<OnboardingCubit>(),
           child: const OnboardingScreen(),
         ),
       ),
@@ -120,7 +130,8 @@ abstract class AppRoutes {
         path: login,
         name: loginName,
         builder: (_, __) => BlocProvider<LoginCubit>(
-          create: (_) => ServiceLocator.instance<LoginCubit>(),
+          create: (_) =>
+              ServiceLocator.instance<LoginCubit>(),
           child: const LoginScreen(),
         ),
       ),
@@ -132,45 +143,71 @@ abstract class AppRoutes {
         builder: (_, __) => MultiBlocProvider(
           providers: <BlocProvider<StateStreamableSource<Object?>>>[
             BlocProvider<DashboardCubit>(
-              create: (_) => ServiceLocator.instance<DashboardCubit>()..load(),
+              create: (_) =>
+                  ServiceLocator.instance<DashboardCubit>()
+                    ..load(),
             ),
             BlocProvider<StoreStatusCubit>(
-              create: (_) => ServiceLocator.instance<StoreStatusCubit>(),
+              create: (_) =>
+                  ServiceLocator.instance<
+                    StoreStatusCubit
+                  >(),
             ),
             BlocProvider<AnalyticsCubit>(
-              create: (_) => ServiceLocator.instance<AnalyticsCubit>()..load(),
+              create: (_) =>
+                  ServiceLocator.instance<AnalyticsCubit>()
+                    ..load(),
             ),
             BlocProvider<OrdersHistoryCubit>(
               create: (_) =>
-                  ServiceLocator.instance<OrdersHistoryCubit>()..load(),
+                  ServiceLocator.instance<
+                      OrdersHistoryCubit
+                    >()
+                    ..load(),
             ),
             BlocProvider<MenuCubit>(
-              create: (_) => ServiceLocator.instance<MenuCubit>()..load(),
+              create: (_) =>
+                  ServiceLocator.instance<MenuCubit>()
+                    ..load(),
             ),
             BlocProvider<ProfileCubit>(
               create: (_) =>
-                  ServiceLocator.instance<ProfileCubit>()..loadProfile(),
+                  ServiceLocator.instance<ProfileCubit>()
+                    ..loadProfile(),
             ),
             BlocProvider<LogoutCubit>(
-              create: (_) => ServiceLocator.instance<LogoutCubit>(),
+              create: (_) =>
+                  ServiceLocator.instance<LogoutCubit>(),
             ),
             BlocProvider<DeleteAccountCubit>(
-              create: (_) => ServiceLocator.instance<DeleteAccountCubit>(),
+              create: (_) =>
+                  ServiceLocator.instance<
+                    DeleteAccountCubit
+                  >(),
             ),
             BlocProvider<WorkingHoursCubit>(
               create: (_) =>
-                  ServiceLocator.instance<WorkingHoursCubit>()..load(),
+                  ServiceLocator.instance<
+                      WorkingHoursCubit
+                    >()
+                    ..load(),
             ),
             BlocProvider<UnreadCountCubit>(
               create: (_) =>
-                  ServiceLocator.instance<UnreadCountCubit>()..refresh(),
+                  ServiceLocator.instance<
+                      UnreadCountCubit
+                    >()
+                    ..refresh(),
             ),
             // The session's push token and realtime socket. Closing it (the
             // session leaving home) disconnects the socket.
             BlocProvider<LiveUpdatesCubit>(
               lazy: false,
               create: (_) =>
-                  ServiceLocator.instance<LiveUpdatesCubit>()..start(),
+                  ServiceLocator.instance<
+                      LiveUpdatesCubit
+                    >()
+                    ..start(),
             ),
           ],
           child: const MainScaffold(),
@@ -184,31 +221,46 @@ abstract class AppRoutes {
       GoRoute(
         path: newOrders,
         name: newOrdersName,
-        builder: (_, __) => BlocProvider<CurrentOrdersCubit>(
-          create: (_) => ServiceLocator.instance<CurrentOrdersCubit>()..load(),
-          child: const OrdersScreen(),
-        ),
+        builder: (_, __) =>
+            BlocProvider<CurrentOrdersCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<
+                      CurrentOrdersCubit
+                    >()
+                    ..load(),
+              child: const OrdersScreen(),
+            ),
       ),
       GoRoute(
         path: activeOrders,
         name: activeOrdersName,
-        builder: (_, __) => BlocProvider<CurrentOrdersCubit>(
-          create: (_) => ServiceLocator.instance<CurrentOrdersCubit>()..load(),
-          child: const ActiveOrdersScreen(),
-        ),
+        builder: (_, __) =>
+            BlocProvider<CurrentOrdersCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<
+                      CurrentOrdersCubit
+                    >()
+                    ..load(),
+              child: const ActiveOrdersScreen(),
+            ),
       ),
       // Declared after the literal `/orders/new` and `/orders/active` paths.
       GoRoute(
         path: orderDetails,
         name: orderDetailsName,
         builder: (_, GoRouterState state) {
-          final int? id = int.tryParse(state.pathParameters['id'] ?? '');
+          final int? id = int.tryParse(
+            state.pathParameters['id'] ?? '',
+          );
           if (id == null) {
-            return const Scaffold(body: Center(child: Text('Order not found')));
+            return const Scaffold(
+              body: Center(child: Text('Order not found')),
+            );
           }
           return BlocProvider<OrderDetailsCubit>(
             create: (_) =>
-                ServiceLocator.instance<OrderDetailsCubit>()..load(id),
+                ServiceLocator.instance<OrderDetailsCubit>()
+                  ..load(id),
             child: const OrderDetailsScreen(),
           );
         },
@@ -216,24 +268,37 @@ abstract class AppRoutes {
       GoRoute(
         path: forgotPassword,
         name: forgotPasswordName,
-        builder: (_, __) => BlocProvider<ForgotPasswordCubit>(
-          create: (_) => ServiceLocator.instance<ForgotPasswordCubit>(),
-          child: const ForgotPasswordScreen(),
-        ),
+        builder: (_, __) =>
+            BlocProvider<ForgotPasswordCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<
+                    ForgotPasswordCubit
+                  >(),
+              child: const ForgotPasswordScreen(),
+            ),
       ),
       GoRoute(
         path: register,
         name: registerName,
         builder: (_, __) => MultiBlocProvider(
-          providers: <BlocProvider<StateStreamableSource<Object?>>>[
-            BlocProvider<RegisterCubit>(
-              create: (_) => ServiceLocator.instance<RegisterCubit>(),
-            ),
-            BlocProvider<StoreCategoriesCubit>(
-              create: (_) =>
-                  ServiceLocator.instance<StoreCategoriesCubit>()..load(),
-            ),
-          ],
+          providers:
+              <
+                BlocProvider<StateStreamableSource<Object?>>
+              >[
+                BlocProvider<RegisterCubit>(
+                  create: (_) =>
+                      ServiceLocator.instance<
+                        RegisterCubit
+                      >(),
+                ),
+                BlocProvider<StoreCategoriesCubit>(
+                  create: (_) =>
+                      ServiceLocator.instance<
+                          StoreCategoriesCubit
+                        >()
+                        ..load(),
+                ),
+              ],
           child: const RegisterScreen(),
         ),
       ),
@@ -241,21 +306,29 @@ abstract class AppRoutes {
         path: locationPicker,
         name: locationPickerName,
         builder: (_, GoRouterState state) =>
-            LocationPickerScreen(initialLocation: state.extra as LatLng?),
+            LocationPickerScreen(
+              initialLocation: state.extra as LatLng?,
+            ),
       ),
       GoRoute(
         path: pendingApproval,
         name: pendingApprovalName,
         // `extra` is the status already known (login, splash or a 403), so
         // the right copy shows at once; the cubit then re-checks it.
-        builder: (_, GoRouterState state) => BlocProvider<PendingApprovalCubit>(
-          create: (_) => ServiceLocator.instance<PendingApprovalCubit>(
-            param1:
-                state.extra as MerchantApprovalStatus? ??
-                MerchantApprovalStatus.pending,
-          )..check(silent: true),
-          child: const PendingApprovalScreen(),
-        ),
+        builder: (_, GoRouterState state) =>
+            BlocProvider<PendingApprovalCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<
+                      PendingApprovalCubit
+                    >(
+                      param1:
+                          state.extra
+                              as MerchantApprovalStatus? ??
+                          MerchantApprovalStatus.pending,
+                    )
+                    ..check(silent: true),
+              child: const PendingApprovalScreen(),
+            ),
       ),
       GoRoute(
         path: productForm,
@@ -268,7 +341,9 @@ abstract class AppRoutes {
             create: (_) =>
                 ServiceLocator.instance<ProductFormCubit>()
                   ..load(productId: product?.id),
-            child: ProductFormScreen(initialProduct: product),
+            child: ProductFormScreen(
+              initialProduct: product,
+            ),
           );
         },
       ),
@@ -280,7 +355,9 @@ abstract class AppRoutes {
           final Product product = state.extra! as Product;
           return BlocProvider<ProductOptionsCubit>(
             create: (_) =>
-                ServiceLocator.instance<ProductOptionsCubit>()
+                ServiceLocator.instance<
+                    ProductOptionsCubit
+                  >()
                   ..load(product.id),
             child: ProductOptionsScreen(product: product),
           );
@@ -290,27 +367,40 @@ abstract class AppRoutes {
         path: wallet,
         name: walletName,
         builder: (_, __) => BlocProvider<WalletCubit>(
-          create: (_) => ServiceLocator.instance<WalletCubit>()..load(),
+          create: (_) =>
+              ServiceLocator.instance<WalletCubit>()
+                ..load(),
           child: const WalletScreen(),
         ),
       ),
       GoRoute(
         path: pharmacyRequests,
         name: pharmacyRequestsName,
-        builder: (_, __) => BlocProvider<PharmacyRequestsCubit>(
-          create: (_) =>
-              ServiceLocator.instance<PharmacyRequestsCubit>()..load(),
-          child: const PharmacyRequestsScreen(),
-        ),
+        builder: (_, __) =>
+            BlocProvider<PharmacyRequestsCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<
+                      PharmacyRequestsCubit
+                    >()
+                    ..load(),
+              child: const PharmacyRequestsScreen(),
+            ),
       ),
       GoRoute(
         path: pharmacyRequest,
         name: pharmacyRequestName,
         builder: (_, GoRouterState state) {
-          final int id = int.tryParse(state.pathParameters['id'] ?? '') ?? 0;
+          final int id =
+              int.tryParse(
+                state.pathParameters['id'] ?? '',
+              ) ??
+              0;
           return BlocProvider<PharmacyRequestCubit>(
             create: (_) =>
-                ServiceLocator.instance<PharmacyRequestCubit>()..load(id),
+                ServiceLocator.instance<
+                    PharmacyRequestCubit
+                  >()
+                  ..load(id),
             child: PharmacyRequestScreen(requestId: id),
           );
         },
@@ -318,17 +408,23 @@ abstract class AppRoutes {
       GoRoute(
         path: notifications,
         name: notificationsName,
-        builder: (_, __) => BlocProvider<NotificationsCubit>(
-          create: (_) => ServiceLocator.instance<NotificationsCubit>()..load(),
-          child: const NotificationsScreen(),
-        ),
+        builder: (_, __) =>
+            BlocProvider<NotificationsCubit>(
+              create: (_) =>
+                  ServiceLocator.instance<
+                      NotificationsCubit
+                    >()
+                    ..load(),
+              child: const NotificationsScreen(),
+            ),
       ),
       GoRoute(
         path: photoViewer,
         name: photoViewerName,
         builder: (_, GoRouterState state) {
           final Map<String, dynamic> args =
-              (state.extra as Map<String, dynamic>?) ?? <String, dynamic>{};
+              (state.extra as Map<String, dynamic>?) ??
+              <String, dynamic>{};
           return SliderPhotoScreen(
             imagesFiles: args['imagesFiles'],
             images: args['images'],
@@ -338,8 +434,11 @@ abstract class AppRoutes {
         },
       ),
     ],
-    errorBuilder: (_, GoRouterState state) =>
-        Scaffold(body: Center(child: Text('No route found for ${state.uri}'))),
+    errorBuilder: (_, GoRouterState state) => Scaffold(
+      body: Center(
+        child: Text('No route found for ${state.uri}'),
+      ),
+    ),
   );
 
   static String get currentRoute =>
@@ -349,7 +448,8 @@ abstract class AppRoutes {
   static String get currentPath =>
       router.routerDelegate.currentConfiguration.uri.path;
 
-  static void pushRouteToRoutesStack(String route) => routesStack.add(route);
+  static void pushRouteToRoutesStack(String route) =>
+      routesStack.add(route);
 
   static void popRouteFromRoutesStack() {
     if (routesStack.isNotEmpty) routesStack.removeLast();

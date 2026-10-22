@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'app.dart';
 import 'config/env/app_env.dart';
 import 'core/services/bloc_observer/bloc_observer.dart';
@@ -23,7 +22,8 @@ Future<void> main() async {
 
   // Before the first frame: picks up the notification that launched the
   // app, and must listen before any foreground message can arrive.
-  await ServiceLocator.instance<PushNotificationService>().initialize();
+  await ServiceLocator.instance<PushNotificationService>()
+      .initialize();
 
   // 4. System chrome.
   SystemChrome.setSystemUIOverlayStyle(
@@ -33,10 +33,12 @@ Future<void> main() async {
       statusBarIconBrightness: Brightness.dark, // Android
     ),
   );
-  await SystemChrome.setPreferredOrientations(<DeviceOrientation>[
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  await SystemChrome.setPreferredOrientations(
+    <DeviceOrientation>[
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ],
+  );
 
   // 5. Bloc logging.
   Bloc.observer = AppBlocObserver();
